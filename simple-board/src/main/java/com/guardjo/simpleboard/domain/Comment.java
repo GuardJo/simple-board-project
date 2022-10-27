@@ -58,7 +58,7 @@ public class Comment {
         this.hashtag = hashtag;
     }
 
-    public Comment of(Article article, String content, String hashtag) {
+    public static Comment of(Article article, String content, String hashtag) {
         return new Comment(article, content, hashtag);
     }
 
