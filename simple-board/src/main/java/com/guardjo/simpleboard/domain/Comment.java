@@ -21,7 +21,7 @@ import java.util.Objects;
         @Index(columnList = "createTime")
 })
 @Entity
-public class Comment {
+public class Comment extends MetaInfoData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,18 +35,6 @@ public class Comment {
 
     @Setter
     private String hashtag;
-
-    @CreatedBy
-    private String creator;
-
-    @CreatedDate
-    private LocalDateTime createTime;
-
-    @LastModifiedBy
-    private String modifier;
-
-    @LastModifiedDate
-    private LocalDateTime modifiedTime;
 
     protected Comment() {
 

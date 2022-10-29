@@ -23,7 +23,7 @@ import java.util.Set;
         @Index(name = "createTime", columnList = "createTime")
 })
 @Entity
-public class Article {
+public class Article extends MetaInfoData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,18 +38,6 @@ public class Article {
 
     @Setter
     private String hashtag;
-
-    @CreatedBy
-    private String creator;
-
-    @CreatedDate
-    private LocalDateTime createTime;
-
-    @LastModifiedBy
-    private String modifier;
-
-    @LastModifiedDate
-    private LocalDateTime modifiedTime;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     @OrderBy("id")
