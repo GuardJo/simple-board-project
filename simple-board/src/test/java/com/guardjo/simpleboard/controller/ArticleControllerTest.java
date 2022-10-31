@@ -24,7 +24,7 @@ class ArticleControllerTest {
     void testGetArticleView() throws Exception {
         mockMvc.perform(get("/article"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_HTML))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(model().attributeExists("articles"));
     }
 
@@ -33,7 +33,7 @@ class ArticleControllerTest {
     void testGetArticleDetailView() throws Exception {
         mockMvc.perform(get("/article/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_HTML))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(model().attributeExists("article"))
                 .andExpect(model().attributeExists("comments"));
     }
@@ -43,7 +43,7 @@ class ArticleControllerTest {
     void testGetArticleSearchView() throws Exception {
         mockMvc.perform(get("/article/search"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_HTML));
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML));
     }
 
     @DisplayName("Hashtag 검색 페이지(임시) 반환 테스트")
@@ -51,6 +51,6 @@ class ArticleControllerTest {
     void testGetArticleHashtagSearchView() throws Exception {
         mockMvc.perform(get("/article/search-hashtag"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_HTML));
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML));
     }
 }
