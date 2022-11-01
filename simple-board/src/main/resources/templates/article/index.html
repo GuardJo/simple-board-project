@@ -1,36 +1,37 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>게시판 페이지</title>
 </head>
 <body>
-<header th:replace="~{header :: header}"></header>
+<header id="header"></header>
 
-<form>
-    <label>
-        <select name="search-type">
-            <option>제목</option>
-            <option>본문</option>
-            <option>해시태그</option>
-            <option>작성자</option>
-            <option>작성일시</option>
-        </select>
-    </label>
-    <input type="text" placeholder="검색어 입력" />
-    <button type="submit">검색</button>
-</form>
+<main>
+    <form>
+        <label>
+            <select name="search-type">
+                <option>제목</option>
+                <option>본문</option>
+                <option>해시태그</option>
+                <option>작성자</option>
+                <option>작성일시</option>
+            </select>
+        </label>
+        <input type="text" placeholder="검색어 입력"/>
+        <button type="submit">검색</button>
+    </form>
 
-<table>
-    <thead>
+    <table>
+        <thead>
         <tr>
             <th>제목</th>
             <th>해시태그</th>
             <th>작성자</th>
             <th>작성일시</th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         <tr>
             <td>첫 글</td>
             <td>#첫글</td>
@@ -49,12 +50,12 @@
             <td>kyeongho</td>
             <td>2022-01-03</td>
         </tr>
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
-<nav>
-    <table>
-        <tbody>
+    <nav>
+        <table>
+            <tbody>
             <tr>
                 <td>prev</td>
                 <td>1</td>
@@ -62,10 +63,11 @@
                 <td>3</td>
                 <td>next</td>
             </tr>
-        </tbody>
-    </table>
-</nav>
-<footer th:replace="~{footer :: footer}"></footer>
+            </tbody>
+        </table>
+    </nav>
+</main>
+<footer id="header"></footer>
 
 </body>
 </html>
