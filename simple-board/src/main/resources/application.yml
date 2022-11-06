@@ -17,7 +17,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/simple_board
     username: kyeongho
-    password: 1234
+    password: 1q2w3e4r
   jpa:
     defer-datasource-initialization: true
     hibernate:
@@ -36,3 +36,5 @@ spring:
     rest:
       base-path: "/api"
       detection-strategy: annotated
+  thymeleaf3:
+    decoupled-logic: true

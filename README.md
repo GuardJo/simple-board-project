@@ -12,3 +12,6 @@
 - 게시판 내 특정 게시글 검색이 가능하다
 - 게시판 내 댓글에 대한 생성/조회/수정/삭제가 가능하다
 - 게시글에 해시태그를 넣을 수 있다
+
+# 관련 노션 링크
+- https://trapezoidal-curiosity-d38.notion.site/Simple-Board-Project-67af6d60db854a2786edefe35d0a4c3d
