@@ -1,7 +1,9 @@
 package com.guardjo.simpleboard.service;
 
+import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
 import com.guardjo.simpleboard.dto.ArticleDto;
+import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.repository.ArticleRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,9 +19,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceTest {
@@ -76,6 +81,56 @@ class ArticleServiceTest {
         ArticleDto articleDto = articleService.findArticle(1L);
 
         assertThat(articleDto).isNotNull();
+    }
+
+    @DisplayName("게시글의 제목, 본문, 해시태그 수정 테스트")
+    @Test
+    void testUpdateArticle() {
+        ArticleUpdateDto updateDto = ArticleUpdateDto.of("title2", "content2", "#hashtag2");
+
+        given(articleRepository.save(any(Article.class))).willReturn(null);
+
+        articleService.updateArticle(1L, updateDto);
+
+        then(articleRepository).should().save(any(Article.class));
+    }
+
+    @DisplayName("게시글 저장 테스트")
+    @Test
+    void testSaveArticle() {
+        given(articleRepository.save(any(Article.class))).willReturn(any(Article.class));
+
+        articleService.saveArticle(ArticleDto.of("tester", LocalDateTime.now(), "title", "content", "#hashtag"));
+
+        then(articleRepository).should().save(any(Article.class));
+    }
+
+    @DisplayName("게시글 삭제 테스트")
+    @Test
+    void testDeleteArticle() {
+        willDoNothing().given(articleRepository).deleteById(any(Long.class));
+
+        articleService.deleteArticle(1L);
+
+        then(articleRepository).should().deleteById(any(Long.class));
+    }
+
+    @DisplayName("현재 게시글의 이전 게시글 반환 테스트")
+    @Test
+    void testFindPreviousArticle() {
+        given(articleRepository.findById(any(Long.class))).willReturn(Optional.of(Article.of("prev", "prev", "#prev")));
+        ArticleDto articleDto = articleService.findPrevArticle(1L);
+
+        assertThat(articleDto.title()).isEqualTo("prev");
+    }
+
+    @DisplayName("현재 게시글의 다음 게시글 반환 테스트")
+    @Test
+    void testFindNextArticle() {
+        given(articleRepository.findById(any(Long.class))).willReturn(Optional.of(Article.of("next", "next", "#next")));
+        ArticleDto articleDto = articleService.findPrevArticle(1L);
+
+        assertThat(articleDto.title()).isEqualTo("next");
     }
 
     private static Stream<Arguments> searchParams() {
