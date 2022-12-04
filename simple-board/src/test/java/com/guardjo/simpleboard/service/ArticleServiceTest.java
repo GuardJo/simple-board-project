@@ -4,6 +4,7 @@ import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
+import com.guardjo.simpleboard.generator.TestDataGenerator;
 import com.guardjo.simpleboard.repository.ArticleRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,8 @@ class ArticleServiceTest {
     private ArticleService articleService;
     @Mock
     private ArticleRepository articleRepository;
+
+    private TestDataGenerator testDataGenerator = new TestDataGenerator();
 
     @DisplayName("제목, 본문, 해시태그 등 특정 검색 타입으로 게시글 검색 테스트")
     @ParameterizedTest
@@ -86,7 +89,7 @@ class ArticleServiceTest {
     @DisplayName("게시글의 제목, 본문, 해시태그 수정 테스트")
     @Test
     void testUpdateArticle() {
-        ArticleUpdateDto updateDto = ArticleUpdateDto.of("title2", "content2", "#hashtag2");
+        ArticleUpdateDto updateDto = testDataGenerator.generateArticleUpdateDto("changeContent");
 
         given(articleRepository.save(any(Article.class))).willReturn(null);
 
@@ -100,7 +103,7 @@ class ArticleServiceTest {
     void testSaveArticle() {
         given(articleRepository.save(any(Article.class))).willReturn(any(Article.class));
 
-        articleService.saveArticle(ArticleDto.of("tester", LocalDateTime.now(), "title", "content", "#hashtag"));
+        articleService.saveArticle(testDataGenerator.convertArticleDto(testDataGenerator.generateArticle("test")));
 
         then(articleRepository).should().save(any(Article.class));
     }
@@ -118,7 +121,7 @@ class ArticleServiceTest {
     @DisplayName("현재 게시글의 이전 게시글 반환 테스트")
     @Test
     void testFindPreviousArticle() {
-        given(articleRepository.findById(any(Long.class))).willReturn(Optional.of(Article.of("prev", "prev", "#prev")));
+        given(articleRepository.findById(any(Long.class))).willReturn(Optional.of(testDataGenerator.generateArticle("prev")));
         ArticleDto articleDto = articleService.findPrevArticle(1L);
 
         assertThat(articleDto.title()).isEqualTo("prev");
@@ -127,7 +130,7 @@ class ArticleServiceTest {
     @DisplayName("현재 게시글의 다음 게시글 반환 테스트")
     @Test
     void testFindNextArticle() {
-        given(articleRepository.findById(any(Long.class))).willReturn(Optional.of(Article.of("next", "next", "#next")));
+        given(articleRepository.findById(any(Long.class))).willReturn(Optional.of(testDataGenerator.generateArticle("next")));
         ArticleDto articleDto = articleService.findPrevArticle(1L);
 
         assertThat(articleDto.title()).isEqualTo("next");

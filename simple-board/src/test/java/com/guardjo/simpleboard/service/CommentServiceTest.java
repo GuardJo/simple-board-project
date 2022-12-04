@@ -3,6 +3,7 @@ package com.guardjo.simpleboard.service;
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.Comment;
 import com.guardjo.simpleboard.dto.CommentDto;
+import com.guardjo.simpleboard.generator.TestDataGenerator;
 import com.guardjo.simpleboard.repository.ArticleRepository;
 import com.guardjo.simpleboard.repository.CommentRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -28,10 +29,12 @@ class CommentServiceTest {
     @Mock
     private ArticleRepository articleRepository;
 
+    private TestDataGenerator testDataGenerator = new TestDataGenerator();
+
     @DisplayName("게시글 id를 통해 해당 게시글의 댓글 리스트 반환 테스트")
     @Test
     void testFindComments() {
-        Article article = Article.of("title", "content", "#hashtag");
+        Article article = testDataGenerator.generateArticle("test");
         given(articleRepository.findById(any(Long.class))).willReturn(Optional.of(article));
 
         List<CommentDto> commentDtoList = commentService.findComments(1L);
