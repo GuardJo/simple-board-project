@@ -3,13 +3,8 @@ package com.guardjo.simpleboard.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -26,8 +21,14 @@ public class Comment extends MetaInfoData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @ManyToOne(optional = false)
     private Article article;
+
+    @Setter
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "memberId")
+    private Member member;
 
     @Setter
     @Column(nullable = false, length = 500)
@@ -36,18 +37,23 @@ public class Comment extends MetaInfoData {
     @Setter
     private String hashtag;
 
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
     protected Comment() {
 
     }
 
-    private Comment(Article article, String content, String hashtag) {
+    private Comment(Member member, Article article, String content, String hashtag) {
+        this.member = member;
         this.article = article;
         this.content = content;
         this.hashtag = hashtag;
     }
 
-    public static Comment of(Article article, String content, String hashtag) {
-        return new Comment(article, content, hashtag);
+    public static Comment of(Member member, Article article, String content, String hashtag) {
+        return new Comment(member, article, content, hashtag);
     }
 
     @Override
