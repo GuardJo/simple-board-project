@@ -6,6 +6,7 @@ import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ public class ArticleService {
     @Autowired
     private ArticleRepository articleRepository;
 
-    public Page<ArticleDto> findArticles(ArticleSearchType searchType, String searchValue) {
+    public Page<ArticleDto> findArticles(ArticleSearchType searchType, String searchValue, Pageable pageable) {
         return null;
     }
 

@@ -17,13 +17,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
@@ -40,7 +43,8 @@ class ArticleServiceTest {
     @ParameterizedTest
     @MethodSource("searchParams")
     void testSearchArticles(ArticleSearchType searchType, String searchValue) {
-        Page<ArticleDto> articleDtoList = articleService.findArticles(searchType, searchValue);
+        Pageable pageable = Pageable.ofSize(10);
+        Page<ArticleDto> articleDtoList = articleService.findArticles(searchType, searchValue, pageable);
 
         assertThat(articleDtoList).isNotNull();
     }
@@ -73,7 +77,7 @@ class ArticleServiceTest {
     @ParameterizedTest
     @MethodSource("searchParams")
     void testPaginationArticles(ArticleSearchType searchType, String searchValue) {
-        Page<ArticleDto> articleDtoPage = articleService.findArticles(searchType, searchValue);
+        Page<ArticleDto> articleDtoPage = articleService.findArticles(searchType, searchValue, Pageable.ofSize(10));
 
         assertThat(articleDtoPage.getTotalPages()).isNotEqualTo(0);
     }
@@ -84,6 +88,14 @@ class ArticleServiceTest {
         ArticleDto articleDto = articleService.findArticle(1L);
 
         assertThat(articleDto).isNotNull();
+    }
+
+    @DisplayName("특정 게시글 클릭 시 해당 게시글 정보가 없을 시 예외 처리 테스트")
+    @Test
+    void testNotFoundArticle() {
+        ArticleDto articleDto = articleService.findArticle(0L);
+
+        assertThatCode(() -> articleService.findArticle(0L)).hasCauseInstanceOf(EntityNotFoundException.class);
     }
 
     @DisplayName("게시글의 제목, 본문, 해시태그 수정 테스트")
