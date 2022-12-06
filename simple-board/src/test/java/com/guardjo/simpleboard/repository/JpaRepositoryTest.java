@@ -3,6 +3,7 @@ package com.guardjo.simpleboard.repository;
 import com.guardjo.simpleboard.config.JpaConfig;
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.Comment;
+import com.guardjo.simpleboard.domain.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @DataJpaTest
 @Import(JpaConfig.class)
 class JpaRepositoryTest {
+    private final int MEMBER_TEST_DATA_SIZE = 50;
     private final int ARTICLE_TEST_DATA_SIZE = 100;
     private final int COMMENT_TEST_DATA_SIZE = 500;
 
@@ -25,10 +27,16 @@ class JpaRepositoryTest {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     @DisplayName("게시글 저장 테스트")
     @Test
     void testSaveArticle() {
-        articleRepository.save(Article.of("title", "content", "#hashtag"));
+        Member member = memberRepository.findById(1L).orElseThrow();
+
+        articleRepository.save(Article.of(member,
+                "title", "content", "#hashtag"));
 
         assertThat(articleRepository.count()).isEqualTo(101);
     }
@@ -72,8 +80,10 @@ class JpaRepositoryTest {
     void testSaveComment() {
         Article article = articleRepository.findById(1L).orElseThrow();
         int oldCount = article.getComments().size();
+        Member member = memberRepository.findById(1L).orElseThrow();
 
-        commentRepository.save(Comment.of(article, "content", "#hashtag"));
+        commentRepository.save(Comment.of(member,
+                article, "content", "#hashtag"));
 
         assertThat(commentRepository.count()).isEqualTo(COMMENT_TEST_DATA_SIZE + 1);
         assertThat(article.getComments().size()).isEqualTo(oldCount);
@@ -106,5 +116,43 @@ class JpaRepositoryTest {
         commentRepository.deleteById(1L);
 
         assertThat(commentRepository.count()).isEqualTo(COMMENT_TEST_DATA_SIZE - 1);
+    }
+
+    @DisplayName("회원 추가 테스트")
+    @Test
+    void testSaveMember() {
+        memberRepository.save(Member.of("test@mail.com", "test", "1234"));
+
+        assertThat(memberRepository.count()).isEqualTo(MEMBER_TEST_DATA_SIZE + 1);
+    }
+
+    @DisplayName("회원 목록 반환 테스트")
+    @Test
+    void testReadMembers() {
+        List<Member> members = memberRepository.findAll();
+
+        assertThat(members.size()).isEqualTo(MEMBER_TEST_DATA_SIZE);
+    }
+
+    @DisplayName("회원 비밀번호 변경 테스트")
+    @Test
+    void testUpdateMember() {
+        Member member = memberRepository.findById(1L).orElseThrow();
+
+        member.setPassword("0000");
+
+        memberRepository.saveAndFlush(member);
+
+        Member updateMemeber = memberRepository.findById(1L).orElseThrow();
+
+        assertThat(updateMemeber.getPassword()).isEqualTo(member.getPassword());
+    }
+
+    @DisplayName("회원 삭제 테스트")
+    @Test
+    void testDeleteMember() {
+        memberRepository.deleteById(4L);
+
+        assertThat(memberRepository.count()).isEqualTo(MEMBER_TEST_DATA_SIZE - 1);
     }
 }
