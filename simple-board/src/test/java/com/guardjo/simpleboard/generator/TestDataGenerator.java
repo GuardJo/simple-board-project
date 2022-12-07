@@ -12,11 +12,13 @@ public class TestDataGenerator {
         return Member.of("test@mail.com", "tester", "1234");
     }
     public Article generateArticle(String title) {
+        Article article = Article.of(generateMember(), title, "content", "#hashtag");
         return Article.of(generateMember(), title, "content", "#hashtag");
     }
 
     public ArticleDto convertArticleDto(Article article) {
         return ArticleDto.of(
+                article.getId(),
                 article.getCreator(),
                 article.getCreateTime(),
                 article.getTitle(),
@@ -25,8 +27,8 @@ public class TestDataGenerator {
         );
     }
 
-    public ArticleUpdateDto generateArticleUpdateDto(String changeContent) {
-        return ArticleUpdateDto.of("title", changeContent, "#update");
+    public ArticleUpdateDto generateArticleUpdateDto(Long id, String changeContent) {
+        return ArticleUpdateDto.of(id, "title", changeContent, "#update");
     }
 
     public Comment generateComment(String content) {
@@ -35,6 +37,7 @@ public class TestDataGenerator {
 
     public CommentDto convertCommentDto(Comment comment) {
         return CommentDto.of(
+                comment.getId(),
                 comment.getCreator(),
                 comment.getCreateTime(),
                 comment.getContent(),
