@@ -31,8 +31,7 @@ public class ArticleService {
     private DtoConverter dtoConverter = new DtoConverter();
 
     @Transactional(readOnly = true)
-    public Page<ArticleDto> findArticles(ArticleSearchType searchType, @Nullable String searchValue, int pageSize) {
-        Pageable pageable = Pageable.ofSize(pageSize);
+    public Page<ArticleDto> findArticles(ArticleSearchType searchType, @Nullable String searchValue, Pageable pageable) {
         if (searchValue == null || searchValue.isEmpty() || searchValue.isBlank()) {
             return articleRepository.findAll(pageable).map(DtoConverter::from);
         }

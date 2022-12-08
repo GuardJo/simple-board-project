@@ -18,20 +18,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.support.PageableExecutionUtils;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
-import java.util.function.LongSupplier;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
@@ -59,7 +55,7 @@ class ArticleServiceTest {
             case TITLE -> given(articleRepository.findByTitleContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
         }
 
-        Page<ArticleDto> articleDtoList = articleService.findArticles(searchType, searchValue, PAGE_SIZE);
+        Page<ArticleDto> articleDtoList = articleService.findArticles(searchType, searchValue, Pageable.ofSize(PAGE_SIZE));
 
         assertThat(articleDtoList).isNotNull();
     }
@@ -72,7 +68,7 @@ class ArticleServiceTest {
 
         given(articleRepository.findAll(pageable)).willReturn(Page.empty(pageable));
 
-        Page<ArticleDto> articleDtoList = articleService.findArticles(searchType, null, PAGE_SIZE);
+        Page<ArticleDto> articleDtoList = articleService.findArticles(searchType, null, Pageable.ofSize(PAGE_SIZE));
 
         assertThat(articleDtoList).isEmpty();
     }
@@ -117,7 +113,7 @@ class ArticleServiceTest {
             case TITLE -> given(articleRepository.findByTitleContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
         }
 
-        Page<ArticleDto> articleDtoPage = articleService.findArticles(searchType, searchValue, PAGE_SIZE);
+        Page<ArticleDto> articleDtoPage = articleService.findArticles(searchType, searchValue, Pageable.ofSize(PAGE_SIZE));
 
         assertThat(articleDtoPage.getSize()).isNotEqualTo(0);
     }
