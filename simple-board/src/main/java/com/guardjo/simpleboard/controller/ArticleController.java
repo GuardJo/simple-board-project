@@ -5,6 +5,7 @@ import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.response.ArticleResponse;
 import com.guardjo.simpleboard.response.ArticleWithCommentResponse;
 import com.guardjo.simpleboard.service.ArticleService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/article")
 public class ArticleController {
@@ -33,6 +35,8 @@ public class ArticleController {
                                   @RequestParam(required = false) String searchValue,
                                   @PageableDefault(size = 10, sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable,
                                   ModelMap modelMap) {
+        log.info("[Test] Requested /");
+
         Page<ArticleResponse> articleResponseList = articleService.findArticles(articleSearchType, searchValue, pageable).map(ArticleResponse::from);
 
         modelMap.addAttribute("articles", articleResponseList);
@@ -41,6 +45,8 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     public String findArticle(@PathVariable Long articleId, ModelMap modelMap) {
+        log.info("[Test] Requested /{}", articleId);
+
         ArticleWithCommentResponse article = ArticleWithCommentResponse.from(articleService.findArticle(articleId));
         modelMap.addAttribute("article", article);
         modelMap.addAttribute("comments", article.commentResponses());
