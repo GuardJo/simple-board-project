@@ -3,13 +3,8 @@ package com.guardjo.simpleboard.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -39,6 +34,11 @@ public class Article extends MetaInfoData {
     @Setter
     private String hashtag;
 
+    @Setter
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "memberId")
+    private Member member;
+
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     @OrderBy("id")
     private final Set<Comment> comments = new LinkedHashSet<>();
@@ -47,26 +47,26 @@ public class Article extends MetaInfoData {
 
     }
 
-    private Article(String title, String content, String hashtag) {
+    private Article(Member member, String title, String content, String hashtag) {
+        this.member = member;
         this.title = title;
         this.content = content;
         this.hashtag = hashtag;
     }
 
-    public static Article of(String title, String content, String hashtag) {
-        return new Article(title, content, hashtag);
+    public static Article of(Member member, String title, String content, String hashtag) {
+        return new Article(member, title, content, hashtag);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Article)) return false;
-        Article article = (Article) o;
-        return id != null && Objects.equals(id, article.id);
+        if (!(o instanceof Article article)) return false;
+        return Objects.equals(title, article.title) && Objects.equals(content, article.content) && Objects.equals(hashtag, article.hashtag) && Objects.equals(member, article.member) && Objects.equals(comments, article.comments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(title, content, hashtag, member, comments);
     }
 }

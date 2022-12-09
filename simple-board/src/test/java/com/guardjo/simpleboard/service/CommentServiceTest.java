@@ -2,6 +2,7 @@ package com.guardjo.simpleboard.service;
 
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.Comment;
+import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.CommentDto;
 import com.guardjo.simpleboard.generator.TestDataGenerator;
 import com.guardjo.simpleboard.repository.ArticleRepository;
@@ -31,6 +32,8 @@ class CommentServiceTest {
 
     private TestDataGenerator testDataGenerator = new TestDataGenerator();
 
+    private Member testMember = Member.of("test@mail.com", "tester", "1234");
+
     @DisplayName("게시글 id를 통해 해당 게시글의 댓글 리스트 반환 테스트")
     @Test
     void testFindComments() {
@@ -55,8 +58,8 @@ class CommentServiceTest {
     @Test
     void testSaveComment() {
         given(commentRepository.save(any(Comment.class))).willReturn(any(Comment.class));
-        commentService.saveComment(Comment.of(
-                Article.of("title", "content", "#hashtag"),
+        commentService.saveComment(Comment.of(testMember,
+                Article.of(testMember, "title", "content", "#hashtag"),
                 "content",
                 "#hashtag"
         ));
