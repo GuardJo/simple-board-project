@@ -1,5 +1,19 @@
 <?xml version="1.0"?>
 <thlogic>
-    <attr sel="#header" th:replace="header :: header" />
-    <attr sel="#footer" th:replace="footer :: footer" />
+    <attr sel="#header" th:replace="header :: header"/>
+    <attr sel="#footer" th:replace="footer :: footer"/>
+    <attr sel="#article-title" th:text="${article.articleResponse.title}"/>
+    <attr sel="#article-content" th:text="${article.content}"/>
+
+    <attr sel="#article-creator" th:text="${article.articleResponse.creator}"/>
+    <attr sel="#article-create-time" th:datetime="${article.articleResponse.createTime}"
+          th:text="${#temporals.format(article.articleResponse.createTime, 'yyyy-MM-dd HH:mm:ss')}"/>
+    <attr sel="#article-hashtag" th:text="${article.articleResponse.hashtag}"/>
+
+    <attr sel="#comment-list" th:each="comment : ${comments}">
+        <attr sel="time.comment-create-time" th:datetime="${comment.createTime}"
+              th:text="${#temporals.format(comment.createTime, 'yyyy-MM-dd HH:mm:ss')}"/>
+        <attr sel="strong.comment-creator" th:text="${comment.creator}"/>
+        <attr sel="p.comment-content" th:text="${comment.content}"/>
+    </attr>
 </thlogic>

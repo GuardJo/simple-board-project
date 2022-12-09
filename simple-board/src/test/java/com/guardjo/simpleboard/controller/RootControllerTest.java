@@ -6,27 +6,26 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Import(SecurityConfig.class)
 @WebMvcTest(RootController.class)
-public class LoginControllerTest {
+class RootControllerTest {
     private final MockMvc mockMvc;
 
-    public LoginControllerTest(@Autowired MockMvc mockMvc) {
+    RootControllerTest(@Autowired MockMvc mockMvc) {
         this.mockMvc = mockMvc;
     }
 
-    @DisplayName("spring security 라이브러리로 추가된 login 페이지 출력 테스트")
+    @DisplayName("root 경로 접근 시 redirect 테스트")
     @Test
-    void testLogin() throws Exception {
-        mockMvc.perform(get("/login"))
-                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(status().isOk());
+    void testRootRedirect() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().is3xxRedirection())
+                .andDo(print());
     }
 }
