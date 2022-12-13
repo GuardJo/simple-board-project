@@ -1,10 +1,10 @@
 package com.guardjo.simpleboard.controller;
 
 import com.guardjo.simpleboard.domain.ArticleSearchType;
-import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.response.ArticleResponse;
 import com.guardjo.simpleboard.response.ArticleWithCommentResponse;
 import com.guardjo.simpleboard.service.ArticleService;
+import com.guardjo.simpleboard.service.PaginationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,9 +25,12 @@ import java.util.List;
 @RequestMapping("/article")
 public class ArticleController {
     private final ArticleService articleService;
+    private final PaginationService paginationService;
 
-    public ArticleController(@Autowired ArticleService articleService) {
+    public ArticleController(@Autowired ArticleService articleService,
+                             @Autowired PaginationService paginationService) {
         this.articleService = articleService;
+        this.paginationService = paginationService;
     }
 
     @GetMapping
@@ -38,8 +41,10 @@ public class ArticleController {
         log.info("[Test] Requested /");
 
         Page<ArticleResponse> articleResponseList = articleService.findArticles(articleSearchType, searchValue, pageable).map(ArticleResponse::from);
+        List<Integer> paginationNumbers = paginationService.getPaginationNumbers(pageable.getPageNumber(), articleResponseList.getTotalPages());
 
         modelMap.addAttribute("articles", articleResponseList);
+        modelMap.addAttribute("paginationNumbers", paginationNumbers);
         return "article/index";
     }
 

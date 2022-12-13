@@ -16,4 +16,8 @@
         <attr sel="strong.comment-creator" th:text="${comment.creator}"/>
         <attr sel="p.comment-content" th:text="${comment.content}"/>
     </attr>
+
+    <attr sel="#prev-article" th:href="@{'/article/' + ${article.id - 1}}"></attr>
+    <attr sel="#next-article" th:href="@{'/article/' + ${article.id + 1}}"></attr>
+
 </thlogic>

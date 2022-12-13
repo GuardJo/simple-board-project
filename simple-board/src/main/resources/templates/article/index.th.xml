@@ -12,4 +12,15 @@
             </attr>
         </attr>
     </attr>
+
+    <attr sel="#article-pagination-bar">
+        <attr sel="li[0]/a" th:href="@{/article(page=${articles.number - 1})}"
+              th:class="'page-link' + (${articles.number} <= 0 ? ' disabled' : '')" />
+        <attr sel="li[1]" th:class="page-item" th:each="pageNumber : ${paginationNumbers}">
+            <attr sel="a" th:text="${pageNumber + 1}" th:href="@{/article(page=${pageNumber})}"
+                  th:class="'page-link' + (${pageNumber} == ${articles.number} ? ' disabled' : '')"/>
+        </attr>
+        <attr sel="li[2]/a" th:href="@{/article(page=${articles.number + 1})}"
+              th:class="'page-link' + (${articles.number} >= ${articles.totalPages - 1} ? ' disabled' : '')" />
+    </attr>
 </thlogic>
