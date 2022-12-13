@@ -1,26 +1,44 @@
 <?xml version="1.0"?>
 <thlogic>
-    <attr sel="#header" th:replace="header :: header" />
-    <attr sel="#footer" th:replace="footer :: footer" />
+    <attr sel="#header" th:replace="header :: header"/>
+    <attr sel="#footer" th:replace="footer :: footer"/>
     <attr sel="#article-table">
+        <attr sel="thead">
+            <attr sel="tr[0]">
+                <attr sel="th.article-title/a" th:href="@{/article(
+            page=${articles.number},
+            sort='title' + (${articles.sort.getOrderFor('title')} != null ? (${articles.sort.getOrderFor('title').direction.name} != 'DESC' ? ',desc' : '') : ''))}"></attr>
+                <attr sel="th.article-hashtag/a" th:href="@{/article(
+            page=${articles.number},
+            sort='hashtag' + (${articles.sort.getOrderFor('hashtag')} != null ? (${articles.sort.getOrderFor('hashtag').direction.name} != 'DESC' ? ',desc' : '') : ''))}"></attr>
+                <attr sel="th.article-creator/a" th:href="@{/article(
+            page=${articles.number},
+            sort='creator' + (${articles.sort.getOrderFor('creator')} != null ? (${articles.sort.getOrderFor('creator').direction.name} != 'DESC' ? ',desc' : '') : ''))}"></attr>
+                <attr sel="th.article-create-time/a" th:href="@{/article(
+            page=${articles.number},
+            sort='createTime' + (${articles.sort.getOrderFor('createTime')} != null ? (${articles.sort.getOrderFor('createTime').direction.name} != 'DESC' ? ',desc' : '') : ''))}"></attr>
+            </attr>
+        </attr>
         <attr sel="tbody" th:remove="all-but-first">
             <attr sel="tr[0]" th:each="article : ${articles}">
-                <attr sel="td.article-title/a" th:text="${article.title}" th:href="@{'/article/' + ${article.id}}"></attr>
+                <attr sel="td.article-title/a" th:text="${article.title}"
+                      th:href="@{'/article/' + ${article.id}}"></attr>
                 <attr sel="td.article-hashtag" th:text="${article.hashtag}"></attr>
                 <attr sel="td.article-creator" th:text="${article.creator}"></attr>
-                <attr sel="td.article-create-time" th:datetime="${article.createTime}" th:text="${#temporals.format(article.createTime, 'yyyy-MM-dd')}"></attr>
+                <attr sel="td.article-create-time" th:datetime="${article.createTime}"
+                      th:text="${#temporals.format(article.createTime, 'yyyy-MM-dd')}"></attr>
             </attr>
         </attr>
     </attr>
 
     <attr sel="#article-pagination-bar">
         <attr sel="li[0]/a" th:href="@{/article(page=${articles.number - 1})}"
-              th:class="'page-link' + (${articles.number} <= 0 ? ' disabled' : '')" />
+              th:class="'page-link' + (${articles.number} <= 0 ? ' disabled' : '')"/>
         <attr sel="li[1]" th:class="page-item" th:each="pageNumber : ${paginationNumbers}">
             <attr sel="a" th:text="${pageNumber + 1}" th:href="@{/article(page=${pageNumber})}"
                   th:class="'page-link' + (${pageNumber} == ${articles.number} ? ' disabled' : '')"/>
         </attr>
         <attr sel="li[2]/a" th:href="@{/article(page=${articles.number + 1})}"
-              th:class="'page-link' + (${articles.number} >= ${articles.totalPages - 1} ? ' disabled' : '')" />
+              th:class="'page-link' + (${articles.number} >= ${articles.totalPages - 1} ? ' disabled' : '')"/>
     </attr>
 </thlogic>

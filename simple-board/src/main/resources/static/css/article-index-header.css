@@ -1,0 +1,9 @@
+#article-table > thead tr th a {
+    text-decoration: none;
+    color: black;
+}
+
+td.article-title > a {
+    text-decoration: none;
+    color: black;
+}
