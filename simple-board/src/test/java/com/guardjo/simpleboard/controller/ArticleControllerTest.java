@@ -138,12 +138,25 @@ class ArticleControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML));
     }
 
-    @Disabled
-    @DisplayName("Hashtag 검색 페이지(임시) 반환 테스트")
+    @DisplayName("Hashtag 검색 페이지 반환 테스트")
     @Test
     void testGetArticleHashtagSearchView() throws Exception {
-        mockMvc.perform(get("/article/search-hashtag"))
+        String searchValue = "hashtag1";
+        Pageable pageable = Pageable.ofSize(10);
+        List<Integer> paginationBarNumbers = List.of(0, 1, 2, 3, 4);
+
+        given(articleService.findArticlesViaHashtag(eq(searchValue), any(Pageable.class))).willReturn(Page.empty(pageable));
+        given(paginationService.getPaginationNumbers(anyInt(), anyInt())).willReturn(paginationBarNumbers);
+
+        mockMvc.perform(get("/article/search-hashtag")
+                        .queryParam("searchValue", searchValue)
+                )
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML));
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(view().name("article/search-hashtag"))
+                .andExpect(model().attribute("articles", Page.empty(pageable)))
+                .andExpect(model().attributeExists("paginationNumbers"));
+
+        then(articleService).should().findArticlesViaHashtag(eq(searchValue), any(Pageable.class));
     }
 }
