@@ -102,10 +102,17 @@ public class ArticleService {
     }
 
     public List<String> findAllHashtags() {
-        return null;
+        return articleRepository.findAllDistinctHashtags();
     }
 
     public Page<ArticleDto> findArticlesViaHashtag(String searchValue, Pageable pageable) {
-        return Page.empty(pageable);
+        log.info("[Test] Find Articles With Hashtag = {}", searchValue);
+
+        if (searchValue == null || searchValue.isEmpty() || searchValue.isBlank()) {
+            log.warn("[Test] Search Params is Null");
+            return Page.empty(pageable);
+        }
+
+        return articleRepository.findByHashtag(searchValue, pageable).map(DtoConverter::from);
     }
 }

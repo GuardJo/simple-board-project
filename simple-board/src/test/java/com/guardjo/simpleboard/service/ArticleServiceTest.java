@@ -105,9 +105,12 @@ class ArticleServiceTest {
     void testFindDistinctHashtagsInAllOfArticles() {
         List<String> hashtagList = List.of("hashtag1", "hashtag2", "hashtag3");
 
+        given(articleRepository.findAllDistinctHashtags()).willReturn(hashtagList);
+
         List<String> actual = articleService.findAllHashtags();
 
         assertThat(actual).isEqualTo(hashtagList);
+        then(articleRepository).should().findAllDistinctHashtags();
     }
 
     @DisplayName("제목, 해시태그, 작성자, 작성일시 순 게시글 정렬(ASC) 기능 테스트")
