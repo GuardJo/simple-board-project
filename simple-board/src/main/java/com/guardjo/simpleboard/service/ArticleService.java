@@ -100,4 +100,12 @@ public class ArticleService {
 
         articleRepository.deleteById(articleId);
     }
+
+    public List<String> findAllHashtags() {
+        return null;
+    }
+
+    public Page<ArticleDto> findArticlesViaHashtag(String searchValue, Pageable pageable) {
+        return Page.empty(pageable);
+    }
 }

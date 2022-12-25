@@ -23,6 +23,7 @@ import org.springframework.data.domain.Sort;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -63,13 +64,50 @@ class ArticleServiceTest {
     @ParameterizedTest
     @MethodSource("searchParams")
     void testSearchArticlesWithOutSearchValue(ArticleSearchType searchType) {
-        Pageable pageable = Pageable.ofSize(10);
+        Pageable pageable = Pageable.ofSize(PAGE_SIZE);
 
         given(articleRepository.findAll(pageable)).willReturn(Page.empty(pageable));
 
         Page<ArticleDto> articleDtoList = articleService.findArticles(searchType, null, Pageable.ofSize(PAGE_SIZE));
 
         assertThat(articleDtoList).isEmpty();
+    }
+
+    @DisplayName("해시태그 검색 시 검색 요청 값이 없을 경우 빈 페이지 반환 테스트")
+    @Test
+    void testSearchHashTagWithOutSearchValue() {
+        Pageable pageable = Pageable.ofSize(PAGE_SIZE);
+        ArticleSearchType searchType = ArticleSearchType.HASHTAG;
+
+        Page<ArticleDto> articleDtos = articleService.findArticlesViaHashtag(null, pageable);
+
+        // 검색 값이 없을 경우 빈 페이지를 반환하도록 한다
+        assertThat(articleDtos).isEqualTo(Page.empty(pageable));
+        then(articleRepository).shouldHaveNoInteractions();
+    }
+
+    @DisplayName("해시태그 검색 시 검색 요청 값이 존재할 경우 테스트")
+    @Test
+    void testSearchHashTagWithSearchValue() {
+        Pageable pageable = Pageable.ofSize(PAGE_SIZE);
+        String searchValue = "test";
+
+        given(articleRepository.findByHashtag(searchValue, pageable)).willReturn(Page.empty(pageable));
+
+        Page<ArticleDto> articleDtos = articleService.findArticlesViaHashtag(searchValue, pageable);
+
+        assertThat(articleDtos).isEqualTo(Page.empty(pageable));
+        then(articleRepository).should().findByHashtag(searchValue, pageable);
+    }
+
+    @DisplayName("전체 게시글들의 해시태그 목록 반환 테스트")
+    @Test
+    void testFindDistinctHashtagsInAllOfArticles() {
+        List<String> hashtagList = List.of("hashtag1", "hashtag2", "hashtag3");
+
+        List<String> actual = articleService.findAllHashtags();
+
+        assertThat(actual).isEqualTo(hashtagList);
     }
 
     @DisplayName("제목, 해시태그, 작성자, 작성일시 순 게시글 정렬(ASC) 기능 테스트")
