@@ -44,7 +44,6 @@ public class ArticleService {
             case CONTENT -> articleRepository.findByContentContaining(searchValue, pageable).map(DtoConverter::from);
             case CREATOR -> articleRepository.findByCreatorContaining(searchValue, pageable).map(DtoConverter::from);
             case HASHTAG -> articleRepository.findByHashtag(searchValue, pageable).map(DtoConverter::from);
-            case CREATETIME -> articleRepository.findByCreateTimeEquals(searchValue, pageable).map(DtoConverter::from);
         };
 
         return articleDtoPage;

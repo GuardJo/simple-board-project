@@ -48,7 +48,6 @@ class ArticleServiceTest {
         Pageable pageable = Pageable.ofSize(PAGE_SIZE);
 
         switch (searchType) {
-            case CREATETIME -> given(articleRepository.findByCreateTimeEquals(searchValue, pageable)).willReturn(Page.empty(pageable));
             case HASHTAG -> given(articleRepository.findByHashtag(searchValue, pageable)).willReturn(Page.empty(pageable));
             case CREATOR -> given(articleRepository.findByCreatorContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
             case CONTENT -> given(articleRepository.findByContentContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
@@ -106,7 +105,6 @@ class ArticleServiceTest {
         Pageable pageable = Pageable.ofSize(PAGE_SIZE);
 
         switch (searchType) {
-            case CREATETIME -> given(articleRepository.findByCreateTimeEquals(searchValue, pageable)).willReturn(Page.empty(pageable));
             case HASHTAG -> given(articleRepository.findByHashtag(searchValue, pageable)).willReturn(Page.empty(pageable));
             case CREATOR -> given(articleRepository.findByCreatorContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
             case CONTENT -> given(articleRepository.findByContentContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
@@ -188,8 +186,7 @@ class ArticleServiceTest {
                 Arguments.of(ArticleSearchType.TITLE, "title"),
                 Arguments.of(ArticleSearchType.CONTENT, "Content"),
                 Arguments.of(ArticleSearchType.HASHTAG, "Hashtag"),
-                Arguments.of(ArticleSearchType.CREATOR, "Creator"),
-                Arguments.of(ArticleSearchType.CREATETIME, LocalDateTime.now().toString())
+                Arguments.of(ArticleSearchType.CREATOR, "Creator")
         );
     }
 }
