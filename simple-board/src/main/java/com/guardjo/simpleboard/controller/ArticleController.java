@@ -67,9 +67,11 @@ public class ArticleController {
 
         Page<ArticleResponse> articleResponseList = articleService.findArticlesViaHashtag(searchValue, pageable).map(ArticleResponse::from);
         List<Integer> paginationNumbers = paginationService.getPaginationNumbers(pageable.getPageNumber(), articleResponseList.getTotalPages());
+        List<String> hashtags = articleService.findAllHashtags();
 
         modelMap.addAttribute("articles", articleResponseList);
         modelMap.addAttribute("paginationNumbers", paginationNumbers);
+        modelMap.addAttribute("hashtags", hashtags);
 
         return "article/search-hashtag";
     }
