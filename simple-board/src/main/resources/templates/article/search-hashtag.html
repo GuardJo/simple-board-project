@@ -2,9 +2,94 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>해시태그 검색 페이지</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link href="/css/article-index.css" rel="stylesheet"/>
+    <link href="/css/article-index-header.css" rel="stylesheet"/>
 </head>
-<body>
+<body class="container">
+<header id="header"></header>
 
+<main>
+    <!-- hashtag list -->
+    <header class="py-5 text-center">
+        <h1>Hashtags</h1>
+    </header>
+
+    <div id="hashtags" class="col-9 d-flex flex-wrap justify-content-evenly">
+        <div class="p-2">
+            <h2 class="text-center lh-lg font-monospace"><a href="#">#java</a></h2>
+        </div>
+    </div>
+    <!-- main -->
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <hr>
+    <div class="bootstrap snippets bootdey">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="main-box no-header clearfix">
+                    <div class="main-box-body clearfix">
+                        <div class="table-responsive">
+                            <table id="article-table" class="table user-list">
+                                <thead>
+                                <tr>
+                                    <th class="article-title col-7"><a href="#">제목</a></th>
+                                    <th class="article-content col-4"><a href="#">본문</a></th>
+                                    <th class="article-creator"><a href="#">작성자</a></th>
+                                    <th class="article-create-time"><a href="#">작성일시</a></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="article-title user-subhead">
+                                        <a>Member</a>
+                                    </td>
+                                    <td class="article-content text-center">
+                                        <span class="d-inline-block text-truncate" style="max-width: 300px;">
+                                            contents
+                                        </span>
+                                    </td>
+                                    <td class="article-creator">
+                                        <a href="#">dagh1218@naver.com</a>
+                                    </td>
+                                    <td class="article-create-time">
+                                        <time>2022/08/12</time>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- pagination -->
+    <nav id="article-pagination-bar" class="d-flex justify-content-center">
+        <ul class="pagination pagination-base pagination-boxed pagination-square mb-0">
+            <li class="page-item">
+                <a class="page-link no-border" href="#">
+                    <span aria-hidden="true">«</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link no-border" href="#">1</a></li>
+            <li class="page-item">
+                <a class="page-link no-border" href="#">
+                    <span aria-hidden="true">»</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</main>
+<footer id="footer"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
 </body>
 </html>
