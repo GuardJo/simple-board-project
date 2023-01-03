@@ -101,10 +101,12 @@ public class ArticleService {
         articleRepository.deleteById(articleId);
     }
 
+    @Transactional(readOnly = true)
     public List<String> findAllHashtags() {
         return articleRepository.findAllDistinctHashtags();
     }
 
+    @Transactional(readOnly = true)
     public Page<ArticleDto> findArticlesViaHashtag(String searchValue, Pageable pageable) {
         log.info("[Test] Find Articles With Hashtag = {}", searchValue);
 

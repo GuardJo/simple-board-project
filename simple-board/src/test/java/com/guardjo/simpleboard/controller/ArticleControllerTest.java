@@ -156,7 +156,8 @@ class ArticleControllerTest {
                 .andExpect(view().name("article/search-hashtag"))
                 .andExpect(model().attribute("articles", Page.empty(pageable)))
                 .andExpect(model().attributeExists("paginationNumbers"))
-                .andExpect(model().attributeExists("hashtags"));
+                .andExpect(model().attributeExists("hashtags"))
+                .andExpect(model().attribute("articleSearchType", ArticleSearchType.HASHTAG));
 
         then(articleService).should().findArticlesViaHashtag(eq(searchValue), any(Pageable.class));
     }

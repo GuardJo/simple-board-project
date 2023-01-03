@@ -72,6 +72,7 @@ public class ArticleController {
         modelMap.addAttribute("articles", articleResponseList);
         modelMap.addAttribute("paginationNumbers", paginationNumbers);
         modelMap.addAttribute("hashtags", hashtags);
+        modelMap.addAttribute("articleSearchType", ArticleSearchType.HASHTAG);
 
         return "article/search-hashtag";
     }
