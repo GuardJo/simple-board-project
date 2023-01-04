@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>게시판 페이지</title>
+    <title>해시태그 검색 페이지</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link href="/css/article-index.css" rel="stylesheet"/>
@@ -13,39 +13,14 @@
 <header id="header"></header>
 
 <main>
-    <!-- search bar -->
-    <div class="card search-form">
-        <div class="card-body p-0">
-            <form id="search-form">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="row no-gutters">
-                            <div class="col-lg-3 col-md-3 col-sm-12 p-0"><select class="form-control"
-                                                                                 id="exampleFormControlSelect1"
-                                                                                 name="articleSearchType">
-                                <option>제목</option>
-                                <option>본문</option>
-                                <option>해시태그</option>
-                                <option>작성자</option>
-                                <option>작성일시</option>
-                            </select></div>
-                            <div class="col-lg-8 col-md-6 col-sm-12 p-0"><input type="text" placeholder="Search..."
-                                                                                class="form-control" id="search"
-                                                                                name="searchValue"></div>
-                            <div class="col-lg-1 col-md-3 col-sm-12 p-0">
-                                <button type="submit" class="btn btn-base">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                         stroke-linejoin="round" class="feather feather-search">
-                                        <circle cx="11" cy="11" r="8"></circle>
-                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+    <!-- hashtag list -->
+    <header class="py-5 text-center">
+        <h1>Hashtags</h1>
+    </header>
+
+    <div id="hashtags" class="col-9 d-flex flex-wrap justify-content-evenly">
+        <div class="p-2">
+            <h2 class="text-center lh-lg font-monospace"><a href="#">#java</a></h2>
         </div>
     </div>
     <!-- main -->
@@ -61,7 +36,7 @@
                                 <thead>
                                 <tr>
                                     <th class="article-title col-7"><a href="#">제목</a></th>
-                                    <th class="article-hashtag text-center"><a href="#">해시태그</a></th>
+                                    <th class="article-content col-4"><a href="#">본문</a></th>
                                     <th class="article-creator"><a href="#">작성자</a></th>
                                     <th class="article-create-time"><a href="#">작성일시</a></th>
                                 </tr>
@@ -71,8 +46,10 @@
                                     <td class="article-title user-subhead">
                                         <a>Member</a>
                                     </td>
-                                    <td class="article-hashtag text-center label label-default">
-                                        #pending
+                                    <td class="article-content text-center">
+                                        <span class="d-inline-block text-truncate" style="max-width: 300px;">
+                                            contents
+                                        </span>
                                     </td>
                                     <td class="article-creator">
                                         <a href="#">dagh1218@naver.com</a>

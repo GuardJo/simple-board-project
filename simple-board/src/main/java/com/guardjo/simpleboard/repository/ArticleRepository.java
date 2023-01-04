@@ -2,6 +2,7 @@ package com.guardjo.simpleboard.repository;
 
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.QArticle;
+import com.guardjo.simpleboard.repository.querydsl.ArticleHashtagRepository;
 import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import org.springframework.data.domain.Page;
@@ -13,14 +14,13 @@ import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
-public interface ArticleRepository extends JpaRepository<Article, Long>,
+public interface ArticleRepository extends JpaRepository<Article, Long>, ArticleHashtagRepository,
         QuerydslPredicateExecutor<Article>, QuerydslBinderCustomizer<QArticle> {
 
     Page<Article> findByTitleContaining(String title, Pageable pageable);
     Page<Article> findByContentContaining(String content, Pageable pageable);
     Page<Article> findByCreatorContaining(String creator, Pageable pageable);
     Page<Article> findByHashtag(String hashtag, Pageable pageable);
-    Page<Article> findByCreateTimeEquals(String createTime, Pageable pageable);
 
     @Override
     default void customize(QuerydslBindings bindings, QArticle root) {

@@ -1,6 +1,7 @@
 package com.guardjo.simpleboard.controller;
 
 import com.guardjo.simpleboard.config.SecurityConfig;
+import com.guardjo.simpleboard.domain.ArticleSearchType;
 import com.guardjo.simpleboard.generator.TestDataGenerator;
 import com.guardjo.simpleboard.service.ArticleService;
 import com.guardjo.simpleboard.service.PaginationService;
@@ -8,7 +9,8 @@ import com.guardjo.simpleboard.util.DtoConverter;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -65,7 +66,7 @@ class ArticleControllerTest {
     @Test
     void testGetArticlesWithPagingAndSorting() throws Exception {
         String sortField = "title";
-        int pageNumber= 0;
+        int pageNumber = 0;
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.Direction.DESC, sortField);
         List<Integer> paginationBarNumbers = List.of(0, 1, 2, 3, 4);
@@ -85,6 +86,31 @@ class ArticleControllerTest {
 
         then(articleService).should().findArticles(null, null, pageable);
         then(paginationService).should().getPaginationNumbers(pageNumber, Page.empty(pageable).getTotalPages());
+    }
+
+    @DisplayName("Article 목록을 반환 (articleSearchType 및  searchValue 포함) 테스트")
+    @ParameterizedTest
+    @EnumSource(ArticleSearchType.class)
+    void testGetArticlesWithSearchValue(ArticleSearchType searchType) throws Exception {
+        Pageable pageable = Pageable.ofSize(5);
+        List<Integer> paginationBarNumbers = List.of(0, 1, 2, 3, 4);
+        String searchValue = "test";
+
+        given(articleService.findArticles(any(ArticleSearchType.class), any(String.class), any(Pageable.class))).willReturn(Page.empty(pageable));
+        given(paginationService.getPaginationNumbers(anyInt(), anyInt())).willReturn(paginationBarNumbers);
+
+        mockMvc.perform(get("/article")
+                        .queryParam("articleSearchType", searchType.name())
+                        .queryParam("searchValue", searchValue)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(model().attributeExists("articles"))
+                .andExpect(model().attributeExists("paginationNumbers"))
+                .andExpect(model().attributeExists("articleSearchTypes"));
+
+        then(articleService).should().findArticles(any(ArticleSearchType.class), any(String.class), any(Pageable.class));
+        then(paginationService).should().getPaginationNumbers(0, Page.empty(pageable).getTotalPages());
     }
 
     @DisplayName("특정 Artile 페이지 반환 테스트")
@@ -112,12 +138,27 @@ class ArticleControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML));
     }
 
-    @Disabled
-    @DisplayName("Hashtag 검색 페이지(임시) 반환 테스트")
+    @DisplayName("Hashtag 검색 페이지 반환 테스트")
     @Test
     void testGetArticleHashtagSearchView() throws Exception {
-        mockMvc.perform(get("/article/search-hashtag"))
+        String searchValue = "hashtag1";
+        Pageable pageable = Pageable.ofSize(10);
+        List<Integer> paginationBarNumbers = List.of(0, 1, 2, 3, 4);
+
+        given(articleService.findArticlesViaHashtag(eq(searchValue), any(Pageable.class))).willReturn(Page.empty(pageable));
+        given(paginationService.getPaginationNumbers(anyInt(), anyInt())).willReturn(paginationBarNumbers);
+
+        mockMvc.perform(get("/article/search-hashtag")
+                        .queryParam("searchValue", searchValue)
+                )
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML));
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(view().name("article/search-hashtag"))
+                .andExpect(model().attribute("articles", Page.empty(pageable)))
+                .andExpect(model().attributeExists("paginationNumbers"))
+                .andExpect(model().attributeExists("hashtags"))
+                .andExpect(model().attribute("articleSearchType", ArticleSearchType.HASHTAG));
+
+        then(articleService).should().findArticlesViaHashtag(eq(searchValue), any(Pageable.class));
     }
 }

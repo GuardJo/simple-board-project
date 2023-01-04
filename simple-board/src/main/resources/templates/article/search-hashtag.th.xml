@@ -3,32 +3,36 @@
     <attr sel="#header" th:replace="header :: header"/>
     <attr sel="#footer" th:replace="footer :: footer"/>
 
-    <attr sel="#exampleFormControlSelect1" th:remove="all-but-first">
-        <attr sel="option[0]" th:each="searchType : ${articleSearchTypes}"
-              th:text="${searchType.description}"
-              th:value="${searchType.name}"
-              th:selected="${param.articleSearchType != null && (param.articleSearchType.toString == searchType.name)}"/>
+    <attr sel="#hashtags" th:remove="all-but-first">
+        <attr sel="div" th:each="hashtag : ${hashtags}">
+            <attr sel="a" th:class="'text-reset'" th:text="${hashtag}" th:href="@{/article/search-hashtag(
+            page=${param.page},
+            sort=${param.sort},
+            searchType=${articleSearchType.name},
+            searchValue=${hashtag}
+        )}" />
+        </attr>
     </attr>
 
     <attr sel="#article-table">
         <attr sel="thead">
             <attr sel="tr[0]">
-                <attr sel="th.article-title/a" th:href="@{/article(
+                <attr sel="th.article-title/a" th:href="@{/article/search-hashtag(
             page=${articles.number},
             sort='title' + (${articles.sort.getOrderFor('title')} != null ? (${articles.sort.getOrderFor('title').direction.name} != 'DESC' ? ',desc' : '') : ''),
             articleSearchType=${param.articleSearchType},
             searchValue=${param.searchValue})}"/>
-                <attr sel="th.article-hashtag/a" th:href="@{/article(
+                <attr sel="th.article-content/a" th:href="@{/article/search-hashtag(
             page=${articles.number},
-            sort='hashtag' + (${articles.sort.getOrderFor('hashtag')} != null ? (${articles.sort.getOrderFor('hashtag').direction.name} != 'DESC' ? ',desc' : '') : ''),
+            sort='content' + (${articles.sort.getOrderFor('content')} != null ? (${articles.sort.getOrderFor('content').direction.name} != 'DESC' ? ',desc' : '') : ''),
             articleSearchType=${param.articleSearchType},
             searchValue=${param.searchValue})}"/>
-                <attr sel="th.article-creator/a" th:href="@{/article(
+                <attr sel="th.article-creator/a" th:href="@{/article/search-hashtag(
             page=${articles.number},
             sort='creator' + (${articles.sort.getOrderFor('creator')} != null ? (${articles.sort.getOrderFor('creator').direction.name} != 'DESC' ? ',desc' : '') : ''),
             articleSearchType=${param.articleSearchType},
             searchValue=${param.searchValue})}"/>
-                <attr sel="th.article-create-time/a" th:href="@{/article(
+                <attr sel="th.article-create-time/a" th:href="@{/article/search-hashtag(
             page=${articles.number},
             sort='createTime' + (${articles.sort.getOrderFor('createTime')} != null ? (${articles.sort.getOrderFor('createTime').direction.name} != 'DESC' ? ',desc' : '') : ''),
             articleSearchType=${param.articleSearchType},
@@ -39,7 +43,7 @@
             <attr sel="tr[0]" th:each="article : ${articles}">
                 <attr sel="td.article-title/a" th:text="${article.title}"
                       th:href="@{'/article/' + ${article.id}}"/>
-                <attr sel="td.article-hashtag" th:text="${article.hashtag}"/>
+                <attr sel="td.article-content/span" th:text="${article.content}"/>
                 <attr sel="td.article-creator" th:text="${article.creator}"/>
                 <attr sel="td.article-create-time" th:datetime="${article.createTime}"
                       th:text="${#temporals.format(article.createTime, 'yyyy-MM-dd')}"/>
@@ -48,17 +52,17 @@
     </attr>
 
     <attr sel="#article-pagination-bar">
-        <attr sel="li[0]/a" th:href="@{/article(page=${articles.number - 1},
+        <attr sel="li[0]/a" th:href="@{/article/search-hashtag(page=${articles.number - 1},
         articleSearchType=${param.articleSearchType},
         searchValue=${param.searchValue})}"
               th:class="'page-link' + (${articles.number} <= 0 ? ' disabled' : '')"/>
         <attr sel="li[1]" th:class="page-item" th:each="pageNumber : ${paginationNumbers}">
-            <attr sel="a" th:text="${pageNumber + 1}" th:href="@{/article(page=${pageNumber},
+            <attr sel="a" th:text="${pageNumber + 1}" th:href="@{/article/search-hashtag(page=${pageNumber},
             articleSearchType=${param.articleSearchType},
         searchValue=${param.searchValue})}"
                   th:class="'page-link' + (${pageNumber} == ${articles.number} ? ' disabled' : '')"/>
         </attr>
-        <attr sel="li[2]/a" th:href="@{/article(page=${articles.number + 1},
+        <attr sel="li[2]/a" th:href="@{/article/search-hashtag(page=${articles.number + 1},
         articleSearchType=${param.articleSearchType},
         searchValue=${param.searchValue})}"
               th:class="'page-link' + (${articles.number} >= ${articles.totalPages - 1} ? ' disabled' : '')"/>

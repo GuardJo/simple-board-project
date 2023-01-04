@@ -44,7 +44,6 @@ public class ArticleService {
             case CONTENT -> articleRepository.findByContentContaining(searchValue, pageable).map(DtoConverter::from);
             case CREATOR -> articleRepository.findByCreatorContaining(searchValue, pageable).map(DtoConverter::from);
             case HASHTAG -> articleRepository.findByHashtag(searchValue, pageable).map(DtoConverter::from);
-            case CREATETIME -> articleRepository.findByCreateTimeEquals(searchValue, pageable).map(DtoConverter::from);
         };
 
         return articleDtoPage;
@@ -100,5 +99,22 @@ public class ArticleService {
         log.info("[Test] Delete Article, id = {}", articleId);
 
         articleRepository.deleteById(articleId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> findAllHashtags() {
+        return articleRepository.findAllDistinctHashtags();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ArticleDto> findArticlesViaHashtag(String searchValue, Pageable pageable) {
+        log.info("[Test] Find Articles With Hashtag = {}", searchValue);
+
+        if (searchValue == null || searchValue.isEmpty() || searchValue.isBlank()) {
+            log.warn("[Test] Search Params is Null");
+            return Page.empty(pageable);
+        }
+
+        return articleRepository.findByHashtag(searchValue, pageable).map(DtoConverter::from);
     }
 }
