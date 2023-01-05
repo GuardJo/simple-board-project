@@ -76,4 +76,14 @@ public class ArticleController {
 
         return "article/search-hashtag";
     }
+
+    @GetMapping("/update-view/{articleId}")
+    public String updateArticle(@PathVariable Long articleId, ModelMap modelMap) {
+        log.info("[Test] Request /update-article/{}", articleId);
+
+        ArticleWithCommentResponse article = ArticleWithCommentResponse.from(articleService.findArticle(articleId));
+        modelMap.addAttribute("article", article);
+
+        return "article/update-detail";
+    }
 }

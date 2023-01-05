@@ -1,7 +1,11 @@
 package com.guardjo.simpleboard.controller;
 
 import com.guardjo.simpleboard.config.SecurityConfig;
+import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
+import com.guardjo.simpleboard.dto.ArticleDto;
+import com.guardjo.simpleboard.dto.ArticleUpdateDto;
+import com.guardjo.simpleboard.dto.ArticleWithCommentDto;
 import com.guardjo.simpleboard.generator.TestDataGenerator;
 import com.guardjo.simpleboard.service.ArticleService;
 import com.guardjo.simpleboard.service.PaginationService;
@@ -25,8 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -160,5 +163,22 @@ class ArticleControllerTest {
                 .andExpect(model().attribute("articleSearchType", ArticleSearchType.HASHTAG));
 
         then(articleService).should().findArticlesViaHashtag(eq(searchValue), any(Pageable.class));
+    }
+
+    @DisplayName("게시글 수정 페이지 반환 테스트")
+    @Test
+    void testUpdateFormView() throws Exception {
+        Long articleId = 1L;
+        ArticleWithCommentDto article = DtoConverter.fromArticleWithComment(testDataGenerator.generateArticle("update test"));
+
+        given(articleService.findArticle(articleId)).willReturn(article);
+
+        mockMvc.perform(get("/article/update-view/"  + articleId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(view().name("article/update-detail"))
+                .andExpect(model().attributeExists("article"));
+
+        then(articleService).should().findArticle(articleId);
     }
 }
