@@ -9,6 +9,7 @@
     <attr sel="#article-create-time" th:datetime="${article.articleResponse.createTime}"
           th:text="${#temporals.format(article.articleResponse.createTime, 'yyyy-MM-dd HH:mm:ss')}"/>
     <attr sel="#article-hashtag" th:text="${article.articleResponse.hashtag}"/>
+    <attr sel="#article-update-view" th:href="@{'/article/update-view/' + ${article.id}}"/>
 
     <attr sel="#comment-list" th:each="comment : ${comments}">
         <attr sel="time.comment-create-time" th:datetime="${comment.createTime}"
