@@ -1,6 +1,8 @@
 package com.guardjo.simpleboard.controller;
 
+import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
+import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.response.ArticleResponse;
 import com.guardjo.simpleboard.response.ArticleWithCommentResponse;
 import com.guardjo.simpleboard.service.ArticleService;
@@ -13,10 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -78,12 +77,21 @@ public class ArticleController {
     }
 
     @GetMapping("/update-view/{articleId}")
-    public String updateArticle(@PathVariable Long articleId, ModelMap modelMap) {
+    public String updateArticleView(@PathVariable Long articleId, ModelMap modelMap) {
         log.info("[Test] Request /update-article/{}", articleId);
 
         ArticleWithCommentResponse article = ArticleWithCommentResponse.from(articleService.findArticle(articleId));
         modelMap.addAttribute("article", article);
 
-        return "article/update-detail";
+        return "article/form";
+    }
+
+    @PostMapping("/update-view/{articleId}")
+    public String updateArticle(@PathVariable Long articleId, ArticleUpdateDto articleUpdateDto) {
+        log.info("Request Update Article : {}", articleUpdateDto.title());
+
+        articleService.updateArticle(articleUpdateDto);
+
+        return "redirect:/article/" + articleId;
     }
 }

@@ -25,12 +25,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Import(SecurityConfig.class)
@@ -180,5 +184,25 @@ class ArticleControllerTest {
                 .andExpect(model().attributeExists("article"));
 
         then(articleService).should().findArticle(articleId);
+    }
+
+    @DisplayName("게시글 수정 요청 테스트")
+    @Test
+    void testUpdateForm() throws Exception {
+        Long articleId = 1L;
+        ArticleUpdateDto articleUpdateDto = new ArticleUpdateDto(1L, "test", "test2", "hashtag");
+        MultiValueMap<String, String> formParams = new LinkedMultiValueMap<>();
+
+        formParams.add("id", Long.toString(articleUpdateDto.id()));
+        formParams.add("title", articleUpdateDto.title());
+        formParams.add("content", articleUpdateDto.content());
+
+        mockMvc.perform(post("/article/update-view/" + articleId)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .queryParams(formParams)
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/article/" + articleId))
+                .andExpect(redirectedUrl("/article/" + articleId));
     }
 }
