@@ -35,8 +35,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Import(SecurityConfig.class)
@@ -136,6 +135,22 @@ class ArticleControllerTest {
                 .andExpect(model().attributeExists("comments"));
 
         then(articleService).should().findArticle(1L);
+    }
+
+    @DisplayName("특정 Article 삭제 요청 테스트")
+    @Test
+    void testDeleteArticle() throws Exception {
+        Long articleId = 1L;
+
+        willDoNothing().given(articleService).deleteArticle(articleId);
+
+        mockMvc.perform(delete("/article/" + articleId)
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/article"))
+                .andExpect(redirectedUrl("/article"));
+
+        then(articleService).should().deleteArticle(articleId);
     }
 
     @Disabled

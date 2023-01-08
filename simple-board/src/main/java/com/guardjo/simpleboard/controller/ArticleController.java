@@ -62,6 +62,15 @@ public class ArticleController {
         return "article/detail";
     }
 
+    @DeleteMapping("/{articleId}")
+    public String deleteArticle(@PathVariable Long articleId) {
+        log.info("Request Delete Article (id : {})", articleId);
+
+        articleService.deleteArticle(articleId);
+
+        return "redirect:/article";
+    }
+
     @GetMapping("/search-hashtag")
     public String searchHashtag(@RequestParam(required = false) String searchValue,
                                 @PageableDefault(size = 10, sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable,
