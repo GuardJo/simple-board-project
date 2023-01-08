@@ -4,6 +4,7 @@ import com.guardjo.simpleboard.config.SecurityConfig;
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
 import com.guardjo.simpleboard.domain.FormType;
+import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.dto.ArticleWithCommentDto;
@@ -199,6 +200,8 @@ class ArticleControllerTest {
         formParams.add("title", articleUpdateDto.title());
         formParams.add("content", articleUpdateDto.content());
 
+        willDoNothing().given(articleService).updateArticle(any(ArticleUpdateDto.class));
+
         mockMvc.perform(post("/article/update-view/" + articleId)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .queryParams(formParams)
@@ -206,6 +209,8 @@ class ArticleControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/article/" + articleId))
                 .andExpect(redirectedUrl("/article/" + articleId));
+
+        then(articleService).should().updateArticle(any(ArticleUpdateDto.class));
     }
 
     @DisplayName("게시글 생성 페이지 요청 테스트")
@@ -215,5 +220,29 @@ class ArticleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("formType", FormType.CREATE))
                 .andExpect(view().name("article/form"));
+    }
+
+    @DisplayName("게시글 생성 요청 테스트")
+    @Test
+    void testCreateForm() throws Exception {
+        Article article = testDataGenerator.generateArticle("save test");
+
+        MultiValueMap<String , String> params = new LinkedMultiValueMap<>();
+
+        params.add("title", article.getTitle());
+        params.add("content", article.getContent());
+        params.add("hashtag", article.getHashtag());
+
+        willDoNothing().given(articleService).saveArticle(any(ArticleDto.class), any(Member.class));
+
+        mockMvc.perform(post("/article/create-view")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .queryParams(params)
+                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/article"))
+                .andExpect(redirectedUrl("/article"));
+
+        then(articleService).should().saveArticle(any(ArticleDto.class), any(Member.class));
     }
 }

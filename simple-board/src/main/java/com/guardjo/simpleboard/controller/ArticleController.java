@@ -3,6 +3,8 @@ package com.guardjo.simpleboard.controller;
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
 import com.guardjo.simpleboard.domain.FormType;
+import com.guardjo.simpleboard.domain.Member;
+import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.response.ArticleResponse;
 import com.guardjo.simpleboard.response.ArticleWithCommentResponse;
@@ -104,5 +106,14 @@ public class ArticleController {
         modelMap.addAttribute("formType", FormType.CREATE);
 
         return "article/form";
+    }
+
+    @PostMapping("/create-view")
+    public String createArticle(ArticleDto articleDto) {
+        log.info("[Test] Request Create Article : {}", articleDto.title());
+
+        articleService.saveArticle(articleDto, Member.of("test@mail.com", "tester", "pwd"));
+
+        return "redirect:/article";
     }
 }
