@@ -38,11 +38,15 @@ class CommentServiceTest {
     @Test
     void testFindComments() {
         Article article = testDataGenerator.generateArticle("test");
-        given(articleRepository.findById(any(Long.class))).willReturn(Optional.of(article));
+
+        article.getComments().add(Comment.of(testMember, article, "test comtent", "hahstag"));
+
+        given(articleRepository.getReferenceById(any(Long.class))).willReturn(article);
 
         List<CommentDto> commentDtoList = commentService.findComments(1L);
 
-        assertThat(commentDtoList.isEmpty()).isFalse();
+        assertThat(commentDtoList.size()).isEqualTo(1);
+        assertThat(commentDtoList.get(0).content()).isEqualTo("test comtent");
     }
 
     @DisplayName("특정 댓글 삭제 테스트")
@@ -57,13 +61,15 @@ class CommentServiceTest {
     @DisplayName("특정 댓글 저장 테스트")
     @Test
     void testSaveComment() {
-        given(commentRepository.save(any(Comment.class))).willReturn(any(Comment.class));
-        commentService.saveComment(Comment.of(testMember,
-                Article.of(testMember, "title", "content", "#hashtag"),
-                "content",
-                "#hashtag"
-        ));
+        Article article = Article.of(testMember, "title", "content", "#hashtag");
+        CommentDto commentDto = testDataGenerator.convertCommentDto(testDataGenerator.generateComment("test content", 1L));
 
+        given(articleRepository.getReferenceById(anyLong())).willReturn(article);
+        given(commentRepository.save(any(Comment.class))).willReturn(any(Comment.class));
+
+        commentService.saveComment(commentDto);
+
+        then(articleRepository).should().getReferenceById(anyLong());
         then(commentRepository).should().save(any(Comment.class));
     }
 }

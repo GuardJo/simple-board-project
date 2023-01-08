@@ -32,7 +32,7 @@ class DtoConverterTest {
     @DisplayName("Comment -> CommentDto 테스트")
     @Test
     void testConvertCommentToCommentDto() {
-        Comment comment = testDataGenerator.generateComment("test");
+        Comment comment = testDataGenerator.generateComment("test", 1L);
         CommentDto commentDto = dtoConverter.from(comment);
 
         assertThat(commentDto.creator()).isEqualTo(comment.getCreator());

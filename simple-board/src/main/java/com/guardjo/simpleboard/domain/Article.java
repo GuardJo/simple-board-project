@@ -47,7 +47,8 @@ public class Article extends MetaInfoData {
 
     }
 
-    private Article(Member member, String title, String content, String hashtag) {
+    private Article(Long id, Member member, String title, String content, String hashtag) {
+        this.id = id;
         this.member = member;
         this.title = title;
         this.content = content;
@@ -55,7 +56,11 @@ public class Article extends MetaInfoData {
     }
 
     public static Article of(Member member, String title, String content, String hashtag) {
-        return new Article(member, title, content, hashtag);
+        return new Article(null, member, title, content, hashtag);
+    }
+
+    public static Article of(Long id, Member member, String title, String content, String hashtag) {
+        return new Article(id, member, title, content, hashtag);
     }
 
     @Override
