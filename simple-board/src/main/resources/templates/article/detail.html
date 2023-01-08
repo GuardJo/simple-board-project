@@ -26,21 +26,28 @@
                           readonly></textarea>
             </div>
         </div>
-        <!-- Address -->
+        <!-- Comment -->
         <div class="card mb-4">
             <div class="card-body">
                 <h3 class="h6 mb-4">댓글</h3>
                 <div id="comment-list" class="mb-3">
-                    <label class="form-label">
+                    <label class="form-label d-flex">
                         <strong class="comment-creator">kyeongho2</strong>
                         <time class="comment-create-time">2022-01-01</time>
+                        <form id="comment-delete-form" class="justify-content-end">
+                            <input type="hidden" class="article-id" name="articleId"/>
+                            <button type="submit" class="btn btn-danger px-1 py-0">X</button>
+                        </form>
                     </label>
                     <p class="comment-content">댓글</p>
                 </div>
             </div>
             <div class="card-body">
-                <input type="text" class="form-control" placeholder="댓글1" />
-                <button class="btn btn-light btn-sm btn-icon-text"><i class="bi bi-x"></i> <span class="text">쓰기</span></button>
+                <form id="comment-form">
+                    <input type="hidden" class="article-id" name="articleId"/>
+                    <input type="text" class="form-control" placeholder="댓글" name="content"/>
+                    <button class="btn btn-light btn-sm btn-icon-text">쓰기</button>
+                </form>
             </div>
         </div>
     </div>
@@ -70,7 +77,9 @@
                     </li>
                     <li class="list-group-item px-0 d-flex justify-content-between align-items-start">
                         <div class="ms-2 me-auto">
-                            <button class="btn btn-primary btn-sm btn-icon-text" href="#"><i class="bi bi-x"></i><span class="text"><a id="article-update-view" href="#" style="color: white;text-decoration: none">게시글 수정</a></span>
+                            <button class="btn btn-primary btn-sm btn-icon-text" href="#"><i class="bi bi-x"></i><span
+                                    class="text"><a id="article-update-view" href="#"
+                                                    style="color: white;text-decoration: none">게시글 수정</a></span>
                             </button>
                         </div>
                         <form id="article-delete-form">
@@ -83,9 +92,11 @@
     </aside>
     <nav>
         <div class="hstack gap-3">
-            <button class="btn btn-light btn-sm btn-icon-text" href="#"><i class="bi bi-x"></i><span class="text"><a id="prev-article" href="#" style="color: black;text-decoration: none">이전 글</a></span>
+            <button class="btn btn-light btn-sm btn-icon-text" href="#"><i class="bi bi-x"></i><span class="text"><a
+                    id="prev-article" href="#" style="color: black;text-decoration: none">이전 글</a></span>
             </button>
-            <button class="btn btn-primary btn-sm btn-icon-text" href="#"><i class="bi bi-x"></i><span class="text"><a id="next-article" href="#" style="color: white;text-decoration: none">다음 글</a></span>
+            <button class="btn btn-primary btn-sm btn-icon-text" href="#"><i class="bi bi-x"></i><span class="text"><a
+                    id="next-article" href="#" style="color: white;text-decoration: none">다음 글</a></span>
             </button>
         </div>
     </nav>
