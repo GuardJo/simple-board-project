@@ -3,7 +3,7 @@
     <attr sel="#header" th:replace="header :: header"/>
     <attr sel="#footer" th:replace="footer :: footer"/>
 
-    <attr sel="#article-form" th:action="${formType.toString() == 'UPDATE'} ? '/article/update-view/' + ${article.id} : '/article/create-view/'" th:method="post"/>
+    <attr sel="#article-form" th:action="${formType.toString() == 'UPDATE'} ? '/article/update-view/' + ${article.id} : '/article/create-view'" th:method="post"/>
 
     <attr sel="#article-id" th:value="${article?.id} ?: _"/>
     <attr sel="#article-title" th:value="${article?.articleResponse?.title} ?: _"/>
