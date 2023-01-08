@@ -63,4 +63,6 @@
         searchValue=${param.searchValue})}"
               th:class="'page-link' + (${articles.number} >= ${articles.totalPages - 1} ? ' disabled' : '')"/>
     </attr>
+
+    <attr sel="#article-create-button" th:href="@{/article/create-view}"/>
 </thlogic>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<thlogic>
+    <attr sel="#header" th:replace="header :: header"/>
+    <attr sel="#footer" th:replace="footer :: footer"/>
+
+    <attr sel="#article-form" th:action="${formType.toString() == 'UPDATE'} ? '/article/update-view/' + ${article.id} : '/article/create-view'" th:method="post"/>
+
+    <attr sel="#article-id" th:value="${article?.id} ?: _"/>
+    <attr sel="#article-title" th:value="${article?.articleResponse?.title} ?: _"/>
+    <attr sel="#article-content" th:text="${article?.content} ?: _"/>
+    <attr sel="#article-hashtag" th:value="${article?.articleResponse?.hashtag} ?: _"/>
+
+    <attr sel="#cancel-update" th:onclick="'history.back()'"></attr>
+    <attr sel="#save-update" th:text="저장"></attr>
+
+</thlogic>

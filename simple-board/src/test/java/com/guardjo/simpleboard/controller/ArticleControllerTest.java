@@ -1,7 +1,13 @@
 package com.guardjo.simpleboard.controller;
 
 import com.guardjo.simpleboard.config.SecurityConfig;
+import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
+import com.guardjo.simpleboard.domain.FormType;
+import com.guardjo.simpleboard.domain.Member;
+import com.guardjo.simpleboard.dto.ArticleDto;
+import com.guardjo.simpleboard.dto.ArticleUpdateDto;
+import com.guardjo.simpleboard.dto.ArticleWithCommentDto;
 import com.guardjo.simpleboard.generator.TestDataGenerator;
 import com.guardjo.simpleboard.service.ArticleService;
 import com.guardjo.simpleboard.service.PaginationService;
@@ -21,13 +27,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Import(SecurityConfig.class)
@@ -129,6 +137,22 @@ class ArticleControllerTest {
         then(articleService).should().findArticle(1L);
     }
 
+    @DisplayName("특정 Article 삭제 요청 테스트")
+    @Test
+    void testDeleteArticle() throws Exception {
+        Long articleId = 1L;
+
+        willDoNothing().given(articleService).deleteArticle(articleId);
+
+        mockMvc.perform(delete("/article/" + articleId)
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/article"))
+                .andExpect(redirectedUrl("/article"));
+
+        then(articleService).should().deleteArticle(articleId);
+    }
+
     @Disabled
     @DisplayName("검색 페이지(임시) 반환 테스트")
     @Test
@@ -160,5 +184,80 @@ class ArticleControllerTest {
                 .andExpect(model().attribute("articleSearchType", ArticleSearchType.HASHTAG));
 
         then(articleService).should().findArticlesViaHashtag(eq(searchValue), any(Pageable.class));
+    }
+
+    @DisplayName("게시글 수정 페이지 반환 테스트")
+    @Test
+    void testUpdateFormView() throws Exception {
+        Long articleId = 1L;
+        ArticleWithCommentDto article = DtoConverter.fromArticleWithComment(testDataGenerator.generateArticle("update test"));
+
+        given(articleService.findArticle(articleId)).willReturn(article);
+
+        mockMvc.perform(get("/article/update-view/"  + articleId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(view().name("article/form"))
+                .andExpect(model().attribute("formType", FormType.UPDATE))
+                .andExpect(model().attributeExists("article"));
+
+        then(articleService).should().findArticle(articleId);
+    }
+
+    @DisplayName("게시글 수정 요청 테스트")
+    @Test
+    void testUpdateForm() throws Exception {
+        Long articleId = 1L;
+        ArticleUpdateDto articleUpdateDto = new ArticleUpdateDto(1L, "test", "test2", "hashtag");
+        MultiValueMap<String, String> formParams = new LinkedMultiValueMap<>();
+
+        formParams.add("id", Long.toString(articleUpdateDto.id()));
+        formParams.add("title", articleUpdateDto.title());
+        formParams.add("content", articleUpdateDto.content());
+
+        willDoNothing().given(articleService).updateArticle(any(ArticleUpdateDto.class));
+
+        mockMvc.perform(post("/article/update-view/" + articleId)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .queryParams(formParams)
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/article/" + articleId))
+                .andExpect(redirectedUrl("/article/" + articleId));
+
+        then(articleService).should().updateArticle(any(ArticleUpdateDto.class));
+    }
+
+    @DisplayName("게시글 생성 페이지 요청 테스트")
+    @Test
+    void testCreateView() throws Exception {
+        mockMvc.perform(get("/article/create-view"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("formType", FormType.CREATE))
+                .andExpect(view().name("article/form"));
+    }
+
+    @DisplayName("게시글 생성 요청 테스트")
+    @Test
+    void testCreateForm() throws Exception {
+        Article article = testDataGenerator.generateArticle("save test");
+
+        MultiValueMap<String , String> params = new LinkedMultiValueMap<>();
+
+        params.add("title", article.getTitle());
+        params.add("content", article.getContent());
+        params.add("hashtag", article.getHashtag());
+
+        willDoNothing().given(articleService).saveArticle(any(ArticleDto.class), any(Member.class));
+
+        mockMvc.perform(post("/article/create-view")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .queryParams(params)
+                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/article"))
+                .andExpect(redirectedUrl("/article"));
+
+        then(articleService).should().saveArticle(any(ArticleDto.class), any(Member.class));
     }
 }
