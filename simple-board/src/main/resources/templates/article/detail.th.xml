@@ -11,6 +11,8 @@
     <attr sel="#article-hashtag" th:text="${article.articleResponse.hashtag}"/>
     <attr sel="#article-update-view" th:href="@{'/article/update-view/' + ${article.id}}"/>
 
+    <attr sel="#article-delete-form" th:action="@{'/article/' + ${article.id}}" th:method="delete" />
+
     <attr sel="#comment-list" th:each="comment : ${comments}">
         <attr sel="time.comment-create-time" th:datetime="${comment.createTime}"
               th:text="${#temporals.format(comment.createTime, 'yyyy-MM-dd HH:mm:ss')}"/>
