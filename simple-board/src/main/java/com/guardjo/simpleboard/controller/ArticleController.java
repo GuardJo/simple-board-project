@@ -1,6 +1,5 @@
 package com.guardjo.simpleboard.controller;
 
-import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
 import com.guardjo.simpleboard.domain.FormType;
 import com.guardjo.simpleboard.domain.Member;
