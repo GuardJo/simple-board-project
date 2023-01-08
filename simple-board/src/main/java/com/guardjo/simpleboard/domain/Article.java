@@ -35,7 +35,7 @@ public class Article extends MetaInfoData {
     private String hashtag;
 
     @Setter
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "memberId")
     private Member member;
 
