@@ -3,6 +3,7 @@ package com.guardjo.simpleboard.controller;
 import com.guardjo.simpleboard.config.SecurityConfig;
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
+import com.guardjo.simpleboard.domain.FormType;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.dto.ArticleWithCommentDto;
@@ -180,7 +181,8 @@ class ArticleControllerTest {
         mockMvc.perform(get("/article/update-view/"  + articleId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(view().name("article/update-detail"))
+                .andExpect(view().name("article/form"))
+                .andExpect(model().attribute("formType", FormType.UPDATE))
                 .andExpect(model().attributeExists("article"));
 
         then(articleService).should().findArticle(articleId);
@@ -204,5 +206,14 @@ class ArticleControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/article/" + articleId))
                 .andExpect(redirectedUrl("/article/" + articleId));
+    }
+
+    @DisplayName("게시글 생성 페이지 요청 테스트")
+    @Test
+    void testCreateView() throws Exception {
+        mockMvc.perform(get("/article/create-view"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("formType", FormType.CREATE))
+                .andExpect(view().name("article/form"));
     }
 }

@@ -2,6 +2,7 @@ package com.guardjo.simpleboard.controller;
 
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
+import com.guardjo.simpleboard.domain.FormType;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.response.ArticleResponse;
 import com.guardjo.simpleboard.response.ArticleWithCommentResponse;
@@ -82,6 +83,7 @@ public class ArticleController {
 
         ArticleWithCommentResponse article = ArticleWithCommentResponse.from(articleService.findArticle(articleId));
         modelMap.addAttribute("article", article);
+        modelMap.addAttribute("formType", FormType.UPDATE);
 
         return "article/form";
     }
@@ -93,5 +95,14 @@ public class ArticleController {
         articleService.updateArticle(articleUpdateDto);
 
         return "redirect:/article/" + articleId;
+    }
+
+    @GetMapping("/create-view")
+    public String createArticleView(ModelMap modelMap) {
+        log.info("[Test] Request /create-view");
+
+        modelMap.addAttribute("formType", FormType.CREATE);
+
+        return "article/form";
     }
 }
