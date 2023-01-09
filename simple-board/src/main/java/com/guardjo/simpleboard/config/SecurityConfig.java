@@ -21,7 +21,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeRequests((auth) ->
-                auth.mvcMatchers(
+                auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                        .permitAll()
+                        .mvcMatchers(
                                 HttpMethod.GET,
                                 "/",
                                 "/article",
@@ -31,13 +33,6 @@ public class SecurityConfig {
         ).formLogin(Customizer.withDefaults());
 
         return httpSecurity.build();
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> {
-            web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-        };
     }
 
     @Bean
