@@ -16,8 +16,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -66,6 +65,8 @@ class CommentControllerTest {
         Long articleId = 1L;
         Long commentId = 1L;
 
+        willDoNothing().given(commentService).deleteComment(commentId);
+
         mockMvc.perform(delete("/comment/" + commentId)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .queryParam("articleId", String.valueOf(articleId))
@@ -73,5 +74,7 @@ class CommentControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/article/" + articleId))
                 .andExpect(redirectedUrl("/article/" + articleId));
+
+        then(commentService).should().deleteComment(commentId);
     }
 }
