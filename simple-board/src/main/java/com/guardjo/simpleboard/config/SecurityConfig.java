@@ -21,16 +21,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeRequests((auth) ->
-                auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                        .permitAll()
-                        .mvcMatchers(
-                                HttpMethod.GET,
-                                "/",
-                                "/article",
-                                "/article/search-hashtag"
-                        ).permitAll()
-                        .anyRequest().authenticated()
-        ).formLogin(Customizer.withDefaults());
+                        auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                                .permitAll()
+                                .mvcMatchers(
+                                        HttpMethod.GET,
+                                        "/",
+                                        "/article",
+                                        "/article/search-hashtag"
+                                ).permitAll()
+                                .anyRequest().authenticated()
+                ).formLogin()
+                .and()
+                .logout()
+                .logoutSuccessUrl("/");
 
         return httpSecurity.build();
     }
