@@ -22,6 +22,8 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, Article
     Page<Article> findByCreatorContaining(String creator, Pageable pageable);
     Page<Article> findByHashtag(String hashtag, Pageable pageable);
 
+    void deleteByIdAndMember_Email(Long articleId, String mail);
+
     @Override
     default void customize(QuerydslBindings bindings, QArticle root) {
         bindings.excludeUnlistedProperties(true);

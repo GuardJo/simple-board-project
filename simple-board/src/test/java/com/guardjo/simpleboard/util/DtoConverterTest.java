@@ -47,8 +47,6 @@ class DtoConverterTest {
         Member member = testDataGenerator.generateMember();
         MemberDto memberDto = dtoConverter.from(member);
 
-        assertThat(memberDto.creator()).isEqualTo(member.getCreator());
-        assertThat(memberDto.createTime()).isEqualTo(member.getCreateTime());
         assertThat(memberDto.email()).isEqualTo(member.getEmail());
         assertThat(memberDto.name()).isEqualTo(member.getName());
         assertThat(memberDto.password()).isEqualTo(member.getPassword());

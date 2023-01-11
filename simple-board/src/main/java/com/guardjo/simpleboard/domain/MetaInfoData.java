@@ -1,6 +1,7 @@
 package com.guardjo.simpleboard.domain;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 public class MetaInfoData {
     @CreatedBy
     @Column(nullable = false, updatable = false)
+    @Setter
     private String creator;
 
     @CreatedDate

@@ -14,7 +14,7 @@ public record ArticleDto(Long id, String creator, LocalDateTime createTime, Stri
         return new ArticleDto(id, creator, createTime, title, content, hashtag);
     }
 
-    public static Article toEntity(ArticleDto articleDto, Member member) {
-        return Article.of(member, articleDto.title(), articleDto.content(), articleDto.hashtag());
+    public static Article toEntity(ArticleDto articleDto, MemberDto memberDto) {
+        return Article.of(MemberDto.toEntity(memberDto), articleDto.title(), articleDto.content(), articleDto.hashtag());
     }
 }

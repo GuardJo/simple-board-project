@@ -2,11 +2,14 @@ package com.guardjo.simpleboard.service;
 
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
+import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.dto.ArticleWithCommentDto;
 import com.guardjo.simpleboard.generator.TestDataGenerator;
 import com.guardjo.simpleboard.repository.ArticleRepository;
+import com.guardjo.simpleboard.repository.MemberRepository;
+import com.guardjo.simpleboard.util.DtoConverter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,6 +41,8 @@ class ArticleServiceTest {
     private ArticleService articleService;
     @Mock
     private ArticleRepository articleRepository;
+    @Mock
+    private MemberRepository memberRepository;
 
     private TestDataGenerator testDataGenerator = new TestDataGenerator();
     private final int PAGE_SIZE = 10;
@@ -179,23 +184,29 @@ class ArticleServiceTest {
     @DisplayName("게시글의 제목, 본문, 해시태그 수정 테스트")
     @Test
     void testUpdateArticle() {
+        String memberMail = "test@mail.com";
         ArticleUpdateDto updateDto = testDataGenerator.generateArticleUpdateDto(1L, "changeContent");
+        Article article = testDataGenerator.generateArticle("test");
+        article.setCreator(memberMail);
 
-        given(articleRepository.getReferenceById(1L)).willReturn(testDataGenerator.generateArticle("test"));
+        given(articleRepository.getReferenceById(1L)).willReturn(article);
+        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(Member.of(memberMail, "tester", "pwd")));
 
-        articleService.updateArticle(updateDto);
+        articleService.updateArticle(updateDto, memberMail);
 
         then(articleRepository).should().getReferenceById(1L);
+        then(memberRepository).should().findByEmail(anyString());
     }
 
     @DisplayName("게시글의 제목, 본문, 해시태그 수정 시 기존 값이 없을 경우 테스트")
     @Test
     void testUpdateArticleButNull() {
         ArticleUpdateDto updateDto = testDataGenerator.generateArticleUpdateDto(0L, "changeContent");
+        String memberMail = "test@mail.com";
 
         given(articleRepository.getReferenceById(0L)).willReturn(null);
 
-        Throwable t = catchThrowable(() -> articleService.updateArticle(updateDto));
+        Throwable t = catchThrowable(() -> articleService.updateArticle(updateDto, memberMail));
 
         assertThat(t).isInstanceOf(EntityNotFoundException.class);
     }
@@ -207,7 +218,7 @@ class ArticleServiceTest {
         given(articleRepository.save(any(Article.class))).willReturn(article);
 
         articleService.saveArticle(testDataGenerator.convertArticleDto(testDataGenerator.generateArticle("test")),
-                testDataGenerator.generateMember());
+                DtoConverter.from(testDataGenerator.generateMember()));
 
         then(articleRepository).should().save(any(Article.class));
     }
@@ -215,11 +226,11 @@ class ArticleServiceTest {
     @DisplayName("게시글 삭제 테스트")
     @Test
     void testDeleteArticle() {
-        willDoNothing().given(articleRepository).deleteById(any(Long.class));
+        willDoNothing().given(articleRepository).deleteByIdAndMember_Email(anyLong(), anyString());
 
-        articleService.deleteArticle(1L);
+        articleService.deleteArticle(1L, "test@mail.com");
 
-        then(articleRepository).should().deleteById(any(Long.class));
+        then(articleRepository).should().deleteByIdAndMember_Email(anyLong(), anyString());
     }
 
     private static Stream<Arguments> searchParams() {
