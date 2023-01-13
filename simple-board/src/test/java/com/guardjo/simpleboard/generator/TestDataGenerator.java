@@ -42,7 +42,6 @@ public class TestDataGenerator {
 
     public CommentDto convertCommentDto(Comment comment) {
         return CommentDto.of(
-                comment.getId(),
                 comment.getArticle().getId(),
                 comment.getCreator(),
                 comment.getCreateTime(),

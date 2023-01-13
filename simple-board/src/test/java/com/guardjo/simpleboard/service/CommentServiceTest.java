@@ -4,15 +4,20 @@ import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.Comment;
 import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.CommentDto;
+import com.guardjo.simpleboard.dto.MemberDto;
 import com.guardjo.simpleboard.generator.TestDataGenerator;
 import com.guardjo.simpleboard.repository.ArticleRepository;
 import com.guardjo.simpleboard.repository.CommentRepository;
+import com.guardjo.simpleboard.repository.MemberRepository;
+import com.guardjo.simpleboard.util.DtoConverter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithUserDetails;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +34,8 @@ class CommentServiceTest {
     private CommentRepository commentRepository;
     @Mock
     private ArticleRepository articleRepository;
+    @Mock
+    private MemberRepository memberRepository;
 
     private TestDataGenerator testDataGenerator = new TestDataGenerator();
 
@@ -52,10 +59,11 @@ class CommentServiceTest {
     @DisplayName("특정 댓글 삭제 테스트")
     @Test
     void testDeleteComment() {
-        willDoNothing().given(commentRepository).deleteById(any(Long.class));
-        commentService.deleteComment(1L);
+        String memberMail = "test@mail.com";
+        willDoNothing().given(commentRepository).deleteByIdAndMember_Email(anyLong(), anyString());
+        commentService.deleteComment(1L, memberMail);
 
-        then(commentRepository).should().deleteById(any(Long.class));
+        then(commentRepository).should().deleteByIdAndMember_Email(anyLong(), anyString());
     }
 
     @DisplayName("특정 댓글 저장 테스트")
@@ -63,13 +71,16 @@ class CommentServiceTest {
     void testSaveComment() {
         Article article = Article.of(testMember, "title", "content", "#hashtag");
         CommentDto commentDto = testDataGenerator.convertCommentDto(testDataGenerator.generateComment("test content", 1L));
+        String memberId = testMember.getEmail();
 
         given(articleRepository.getReferenceById(anyLong())).willReturn(article);
-        given(commentRepository.save(any(Comment.class))).willReturn(any(Comment.class));
+        given(commentRepository.save(any(Comment.class))).willReturn(CommentDto.toEntity(commentDto, DtoConverter.from(testMember), DtoConverter.from(article)));
+        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(testMember));
 
-        commentService.saveComment(commentDto);
+        commentService.saveComment(commentDto, memberId);
 
         then(articleRepository).should().getReferenceById(anyLong());
         then(commentRepository).should().save(any(Comment.class));
+        then(memberRepository).should().findByEmail(anyString());
     }
 }

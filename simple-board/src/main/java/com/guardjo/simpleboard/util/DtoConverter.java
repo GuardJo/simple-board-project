@@ -26,7 +26,6 @@ public class DtoConverter {
 
     public static CommentDto from(Comment comment) {
         return CommentDto.of(
-                comment.getId(),
                 comment.getArticle().getId(),
                 comment.getCreator(),
                 comment.getCreateTime(),
