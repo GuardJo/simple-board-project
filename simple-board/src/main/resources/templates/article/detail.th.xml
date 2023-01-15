@@ -9,22 +9,28 @@
     <attr sel="#article-create-time" th:datetime="${article.articleResponse.createTime}"
           th:text="${#temporals.format(article.articleResponse.createTime, 'yyyy-MM-dd HH:mm:ss')}"/>
     <attr sel="#article-hashtag" th:text="${article.articleResponse.hashtag}"/>
-    <attr sel="#article-update-view" th:href="@{'/article/update-view/' + ${article.id}}"/>
 
-    <attr sel="#article-delete-form" th:action="@{'/article/' + ${article.id}}" th:method="delete" />
+    <attr sel="#article-control-li"
+          th:if="${#authorization.expression('isAuthenticated()')} and ${article.articleResponse.creator} == ${#authentication.getName()}">
+        <attr sel="#article-update-view">
+            <attr sel="button/span/a" th:href="@{'/article/update-view/' + ${article.id}}"/>
+        </attr>
+        <attr sel="#article-delete-form" th:action="@{'/article/' + ${article.id}}" th:method="delete"/>
+    </attr>
 
     <attr sel="#comment-list" th:each="comment : ${comments}">
         <attr sel="time.comment-create-time" th:datetime="${comment.createTime}"
               th:text="${#temporals.format(comment.createTime, 'yyyy-MM-dd HH:mm:ss')}"/>
         <attr sel="strong.comment-creator" th:text="${comment.creator}"/>
         <attr sel="p.comment-content" th:text="${comment.content}"/>
-        <attr sel="#comment-delete-form" th:action="@{'/comment/' + ${comment.id}}" th:method="delete">
-            <attr sel="input.article-id" th:value="${article.id}" />
+        <attr sel="#comment-delete-form" th:action="@{'/comment/' + ${comment.id}}" th:method="delete"
+              th:if="${#authorization.expression('isAuthenticated()')} and ${comment.creator} == ${#authentication.getName()}">
+            <attr sel="input.article-id" th:value="${article.id}"/>
         </attr>
     </attr>
 
     <attr sel="#comment-form" th:action="@{/comment}" th:method="post">
-        <attr sel="input.article-id" th:value="${article.id}" />
+        <attr sel="input.article-id" th:value="${article.id}"/>
     </attr>
 
     <attr sel="#prev-article" th:href="@{'/article/' + ${article.id - 1}}"></attr>
