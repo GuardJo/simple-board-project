@@ -1,6 +1,6 @@
 -- 50개의 Member test data
-insert into member (email, name, password, creator, create_time, modifier, modified_time) values ('test@mail.com', 'tester', 'pwd', 'Vikki MacKonochie', '2021-12-12 20:17:13', 'Reinold Blazhevich', '2022-08-04 03:36:45');
-insert into member (email, name, password, creator, create_time, modifier, modified_time) values ('abexley1@google.cn', 'Ahmed Dulanty', 'RYjDhu5JlD3w', 'Elysha Peggrem', '2022-10-23 16:06:39', 'Aubrey Bexley', '2022-07-27 07:44:04');
+insert into member (email, name, password, creator, create_time, modifier, modified_time) values ('test@mail.com', 'tester', '{noop}pwd', 'Vikki MacKonochie', '2021-12-12 20:17:13', 'Reinold Blazhevich', '2022-08-04 03:36:45');
+insert into member (email, name, password, creator, create_time, modifier, modified_time) values ('test2@mail.com', 'tester2', '{noop}pwd', 'Elysha Peggrem', '2022-10-23 16:06:39', 'Aubrey Bexley', '2022-07-27 07:44:04');
 insert into member (email, name, password, creator, create_time, modifier, modified_time) values ('tcullinane2@hc360.com', 'Yanaton Habble', 'iC0iGZAjjdZ', 'Jessy Manass', '2022-06-06 16:05:28', 'Tristan Cullinane', '2022-02-20 04:36:45');
 insert into member (email, name, password, creator, create_time, modifier, modified_time) values ('tborg3@usda.gov', 'Dolores Custy', 'EwXxSwpL6es', 'Henka Hogbourne', '2022-07-27 10:02:53', 'Terrye Borg', '2022-08-13 09:41:05');
 insert into member (email, name, password, creator, create_time, modifier, modified_time) values ('bmeneyer4@umich.edu', 'Milly Stace', 'BFAgpGyrH3', 'Carleen Mundie', '2022-04-10 10:49:01', 'Barrie Meneyer', '2021-11-13 15:00:51');
