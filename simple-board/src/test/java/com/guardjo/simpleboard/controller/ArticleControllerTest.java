@@ -328,7 +328,7 @@ class ArticleControllerTest {
         params.add("content", article.getContent());
         params.add("hashtag", article.getHashtag());
 
-        willDoNothing().given(articleService).saveArticle(any(ArticleDto.class), any(MemberDto.class));
+        willDoNothing().given(articleService).saveArticle(any(ArticleDto.class), anyString());
 
         mockMvc.perform(post("/article/create-view")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -338,6 +338,6 @@ class ArticleControllerTest {
                 .andExpect(view().name("redirect:/article"))
                 .andExpect(redirectedUrl("/article"));
 
-        then(articleService).should().saveArticle(any(ArticleDto.class), any(MemberDto.class));
+        then(articleService).should().saveArticle(any(ArticleDto.class), anyString());
     }
 }

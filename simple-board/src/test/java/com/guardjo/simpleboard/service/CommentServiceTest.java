@@ -73,13 +73,13 @@ class CommentServiceTest {
         CommentDto commentDto = testDataGenerator.convertCommentDto(testDataGenerator.generateComment("test content", 1L));
         String memberId = testMember.getEmail();
 
-        given(articleRepository.getReferenceById(anyLong())).willReturn(article);
-        given(commentRepository.save(any(Comment.class))).willReturn(CommentDto.toEntity(commentDto, DtoConverter.from(testMember), DtoConverter.from(article)));
+        given(articleRepository.getReferenceById(any())).willReturn(article);
+        given(commentRepository.save(any(Comment.class))).willReturn(CommentDto.toEntity(commentDto, testMember, article));
         given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(testMember));
 
         commentService.saveComment(commentDto, memberId);
 
-        then(articleRepository).should().getReferenceById(anyLong());
+        then(articleRepository).should().getReferenceById(any());
         then(commentRepository).should().save(any(Comment.class));
         then(memberRepository).should().findByEmail(anyString());
     }

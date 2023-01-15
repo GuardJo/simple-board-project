@@ -216,9 +216,10 @@ class ArticleServiceTest {
     void testSaveArticle() {
         Article article = testDataGenerator.generateArticle("test");
         given(articleRepository.save(any(Article.class))).willReturn(article);
+        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(Member.of("test@mail.com", "tester", "pwd")));
 
         articleService.saveArticle(testDataGenerator.convertArticleDto(testDataGenerator.generateArticle("test")),
-                DtoConverter.from(testDataGenerator.generateMember()));
+                "test@mail.com");
 
         then(articleRepository).should().save(any(Article.class));
     }

@@ -6,7 +6,6 @@ import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.dto.ArticleWithCommentDto;
-import com.guardjo.simpleboard.dto.MemberDto;
 import com.guardjo.simpleboard.repository.ArticleRepository;
 import com.guardjo.simpleboard.repository.MemberRepository;
 import com.guardjo.simpleboard.util.DtoConverter;
@@ -91,21 +90,20 @@ public class ArticleService {
 
         if (member.isEmpty()) {
             throw new EntityNotFoundException("Not Found User " + userMail);
-        }
-        else if (member.get().getEmail() != article.getCreator()) {
-            throw  new EntityNotFoundException("This User is No forbidden Update Article, " + userMail);
-        }
-        else {
+        } else if (member.get().getEmail() != article.getCreator()) {
+            throw new EntityNotFoundException("This User is No forbidden Update Article, " + userMail);
+        } else {
             article.setTitle(updateDto.title());
             article.setContent(updateDto.content());
             article.setHashtag(updateDto.hashtag());
         }
     }
 
-    public void saveArticle(ArticleDto articleDto, MemberDto memberDto) {
+    public void saveArticle(ArticleDto articleDto, String memberMail) {
         log.info("[Test] Save Article, title = {}", articleDto.title());
+        Member member = memberRepository.findByEmail(memberMail).get();
+        Article article = ArticleDto.toEntity(articleDto, member);
 
-        Article article = ArticleDto.toEntity(articleDto, memberDto);
         articleRepository.save(article);
     }
 

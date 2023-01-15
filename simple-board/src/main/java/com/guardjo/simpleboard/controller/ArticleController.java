@@ -2,7 +2,6 @@ package com.guardjo.simpleboard.controller;
 
 import com.guardjo.simpleboard.domain.ArticleSearchType;
 import com.guardjo.simpleboard.domain.FormType;
-import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.dto.security.SimpleBoardPrincipal;
@@ -10,7 +9,6 @@ import com.guardjo.simpleboard.response.ArticleResponse;
 import com.guardjo.simpleboard.response.ArticleWithCommentResponse;
 import com.guardjo.simpleboard.service.ArticleService;
 import com.guardjo.simpleboard.service.PaginationService;
-import com.guardjo.simpleboard.util.DtoConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -125,7 +123,7 @@ public class ArticleController {
     public String createArticle(ArticleDto articleDto, @AuthenticationPrincipal SimpleBoardPrincipal principal) {
         log.info("[Test] Request Create Article : {}", articleDto.title());
 
-        articleService.saveArticle(articleDto, DtoConverter.form(principal));
+        articleService.saveArticle(articleDto, principal.getUsername());
 
         return "redirect:/article";
     }

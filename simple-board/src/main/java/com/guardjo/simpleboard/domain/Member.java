@@ -35,11 +35,21 @@ public class Member extends MetaInfoData{
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("id")
+    @ToString.Exclude
     private Set<Article> articles = new HashSet<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("id")
+    @ToString.Exclude
     private Set<Comment> comments = new HashSet<>();
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void setArticles(Set<Article> articles) {
+        this.articles = articles;
+    }
 
     protected Member(String email, String name, String password) {
         this.email = email;

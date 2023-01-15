@@ -11,6 +11,7 @@ import com.guardjo.simpleboard.repository.ArticleRepository;
 import com.guardjo.simpleboard.repository.CommentRepository;
 import com.guardjo.simpleboard.repository.MemberRepository;
 import com.guardjo.simpleboard.util.DtoConverter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
+@Transactional
 public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
@@ -46,6 +48,6 @@ public class CommentService {
         Article article = articleRepository.getReferenceById(commentDto.articleId());
         Member member = memberRepository.findByEmail(memberMail).get();
 
-        commentRepository.save(CommentDto.toEntity(commentDto, DtoConverter.from(member), DtoConverter.from(article)));
+        commentRepository.save(CommentDto.toEntity(commentDto, member, article));
     }
 }

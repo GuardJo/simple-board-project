@@ -48,7 +48,7 @@ class CommentControllerTest {
         CommentDto commentDto = testDataGenerator.convertCommentDto(testDataGenerator.generateComment("test content", articleId));
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("articleId", String.valueOf(commentDto.articleId()));
+        params.add("articleId", String.valueOf(articleId));
         params.add("content", commentDto.content());
 
         willDoNothing().given(commentService).saveComment(any(CommentDto.class), anyString());

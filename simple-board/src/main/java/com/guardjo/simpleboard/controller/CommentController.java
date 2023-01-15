@@ -1,6 +1,5 @@
 package com.guardjo.simpleboard.controller;
 
-import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.CommentDto;
 import com.guardjo.simpleboard.dto.security.SimpleBoardPrincipal;
 import com.guardjo.simpleboard.service.CommentService;

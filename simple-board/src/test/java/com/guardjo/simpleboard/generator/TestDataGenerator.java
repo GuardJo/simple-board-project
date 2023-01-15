@@ -16,11 +16,6 @@ public class TestDataGenerator {
         return Article.of(generateMember(), title, "content", "#hashtag");
     }
 
-    public Article generateArticle(String title, Long id) {
-        Article article = Article.of(id, generateMember(), title, "content", "#hashtag");
-        return article;
-    }
-
     public ArticleDto convertArticleDto(Article article) {
         return ArticleDto.of(
                 article.getId(),
@@ -37,11 +32,12 @@ public class TestDataGenerator {
     }
 
     public Comment generateComment(String content, Long articleId) {
-        return Comment.of(generateMember(), generateArticle("test", articleId), content, "#commment");
+        return Comment.of(generateMember(), generateArticle("test"), content, "#commment");
     }
 
     public CommentDto convertCommentDto(Comment comment) {
         return CommentDto.of(
+                comment.getId(),
                 comment.getArticle().getId(),
                 comment.getCreator(),
                 comment.getCreateTime(),
