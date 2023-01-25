@@ -7,6 +7,7 @@ import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleWithCommentDto;
 import com.guardjo.simpleboard.dto.CommentDto;
 import com.guardjo.simpleboard.dto.MemberDto;
+import com.guardjo.simpleboard.dto.security.SimpleBoardPrincipal;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -46,9 +47,6 @@ public class DtoConverter {
 
     public static MemberDto from(Member member) {
         return MemberDto.of(
-                member.getMemberId(),
-                member.getCreator(),
-                member.getCreateTime(),
                 member.getEmail(),
                 member.getName(),
                 member.getPassword()
@@ -68,5 +66,9 @@ public class DtoConverter {
                 from(article.getMember()),
                 from(article.getComments())
         );
+    }
+
+    public static MemberDto form(SimpleBoardPrincipal principal) {
+        return MemberDto.of(principal.email(), principal.name(), principal.password());
     }
 }

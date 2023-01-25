@@ -35,7 +35,7 @@ public class Article extends MetaInfoData {
     private String hashtag;
 
     @Setter
-    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "memberId")
     private Member member;
 
@@ -47,8 +47,7 @@ public class Article extends MetaInfoData {
 
     }
 
-    private Article(Long id, Member member, String title, String content, String hashtag) {
-        this.id = id;
+    private Article(Member member, String title, String content, String hashtag) {
         this.member = member;
         this.title = title;
         this.content = content;
@@ -56,11 +55,7 @@ public class Article extends MetaInfoData {
     }
 
     public static Article of(Member member, String title, String content, String hashtag) {
-        return new Article(null, member, title, content, hashtag);
-    }
-
-    public static Article of(Long id, Member member, String title, String content, String hashtag) {
-        return new Article(id, member, title, content, hashtag);
+        return new Article(member, title, content, hashtag);
     }
 
     @Override

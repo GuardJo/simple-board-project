@@ -7,6 +7,7 @@ import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.dto.ArticleWithCommentDto;
 import com.guardjo.simpleboard.repository.ArticleRepository;
+import com.guardjo.simpleboard.repository.MemberRepository;
 import com.guardjo.simpleboard.util.DtoConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Transactional
 @Service
 public class ArticleService {
+    @Autowired
+    private MemberRepository memberRepository;
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -74,31 +78,39 @@ public class ArticleService {
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Article : " + id));
     }
 
-    public void updateArticle(ArticleUpdateDto updateDto) {
+    public void updateArticle(ArticleUpdateDto updateDto, String userMail) {
         log.info("[Test] Request Update Article, id = {}", updateDto.id());
 
         Article article = articleRepository.getReferenceById(updateDto.id());
+        Optional<Member> member = memberRepository.findByEmail(userMail);
 
         if (article == null) {
             throw new EntityNotFoundException("Not Found Article " + updateDto.id());
         }
 
-        article.setTitle(updateDto.title());
-        article.setContent(updateDto.content());
-        article.setHashtag(updateDto.hashtag());
+        if (member.isEmpty()) {
+            throw new EntityNotFoundException("Not Found User " + userMail);
+        } else if (member.get().getEmail() != article.getCreator()) {
+            throw new EntityNotFoundException("This User is No forbidden Update Article, " + userMail);
+        } else {
+            article.setTitle(updateDto.title());
+            article.setContent(updateDto.content());
+            article.setHashtag(updateDto.hashtag());
+        }
     }
 
-    public void saveArticle(ArticleDto articleDto, Member member) {
+    public void saveArticle(ArticleDto articleDto, String memberMail) {
         log.info("[Test] Save Article, title = {}", articleDto.title());
-
+        Member member = memberRepository.findByEmail(memberMail).get();
         Article article = ArticleDto.toEntity(articleDto, member);
+
         articleRepository.save(article);
     }
 
-    public void deleteArticle(long articleId) {
+    public void deleteArticle(long articleId, String userId) {
         log.info("[Test] Delete Article, id = {}", articleId);
 
-        articleRepository.deleteById(articleId);
+        articleRepository.deleteByIdAndMember_Email(articleId, userId);
     }
 
     @Transactional(readOnly = true)

@@ -1,6 +1,7 @@
 package com.guardjo.simpleboard.repository;
 
 import com.guardjo.simpleboard.config.JpaConfig;
+import com.guardjo.simpleboard.config.TestJpaConfig;
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.Comment;
 import com.guardjo.simpleboard.domain.Member;
@@ -15,7 +16,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
-@Import(JpaConfig.class)
+@Import(TestJpaConfig.class)
 class JpaRepositoryTest {
     private final int MEMBER_TEST_DATA_SIZE = 50;
     private final int ARTICLE_TEST_DATA_SIZE = 100;

@@ -2,9 +2,9 @@ package com.guardjo.simpleboard.controller;
 
 import com.guardjo.simpleboard.domain.ArticleSearchType;
 import com.guardjo.simpleboard.domain.FormType;
-import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
+import com.guardjo.simpleboard.dto.security.SimpleBoardPrincipal;
 import com.guardjo.simpleboard.response.ArticleResponse;
 import com.guardjo.simpleboard.response.ArticleWithCommentResponse;
 import com.guardjo.simpleboard.service.ArticleService;
@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -62,10 +63,11 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{articleId}")
-    public String deleteArticle(@PathVariable Long articleId) {
+    public String deleteArticle(@PathVariable Long articleId,
+                                @AuthenticationPrincipal SimpleBoardPrincipal principal) {
         log.info("Request Delete Article (id : {})", articleId);
 
-        articleService.deleteArticle(articleId);
+        articleService.deleteArticle(articleId, principal.getUsername());
 
         return "redirect:/article";
     }
@@ -99,10 +101,11 @@ public class ArticleController {
     }
 
     @PostMapping("/update-view/{articleId}")
-    public String updateArticle(@PathVariable Long articleId, ArticleUpdateDto articleUpdateDto) {
+    public String updateArticle(@PathVariable Long articleId, ArticleUpdateDto articleUpdateDto,
+                                @AuthenticationPrincipal SimpleBoardPrincipal simpleBoardPrincipal) {
         log.info("Request Update Article : {}", articleUpdateDto.title());
 
-        articleService.updateArticle(articleUpdateDto);
+        articleService.updateArticle(articleUpdateDto, simpleBoardPrincipal.getUsername());
 
         return "redirect:/article/" + articleId;
     }
@@ -117,10 +120,10 @@ public class ArticleController {
     }
 
     @PostMapping("/create-view")
-    public String createArticle(ArticleDto articleDto) {
+    public String createArticle(ArticleDto articleDto, @AuthenticationPrincipal SimpleBoardPrincipal principal) {
         log.info("[Test] Request Create Article : {}", articleDto.title());
 
-        articleService.saveArticle(articleDto, Member.of("test@mail.com", "tester", "pwd"));
+        articleService.saveArticle(articleDto, principal.getUsername());
 
         return "redirect:/article";
     }

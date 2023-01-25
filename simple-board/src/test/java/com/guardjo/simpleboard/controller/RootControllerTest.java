@@ -1,6 +1,7 @@
 package com.guardjo.simpleboard.controller;
 
 import com.guardjo.simpleboard.config.SecurityConfig;
+import com.guardjo.simpleboard.config.TestSecurityConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(SecurityConfig.class)
+@Import(TestSecurityConfig.class)
 @WebMvcTest(RootController.class)
 class RootControllerTest {
     private final MockMvc mockMvc;

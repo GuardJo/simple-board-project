@@ -26,7 +26,7 @@ public class Comment extends MetaInfoData {
     private Article article;
 
     @Setter
-    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "memberId")
     private Member member;
 

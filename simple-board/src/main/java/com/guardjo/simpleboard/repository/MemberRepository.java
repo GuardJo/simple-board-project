@@ -10,9 +10,12 @@ import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+import java.util.Optional;
+
 @RepositoryRestResource
 public interface MemberRepository extends JpaRepository<Member, Long>,
         QuerydslPredicateExecutor<Member>, QuerydslBinderCustomizer<QMember> {
+    Optional<Member> findByEmail(String email);
     @Override
     default void customize(QuerydslBindings bindings, QMember root) {
         bindings.excludeUnlistedProperties(true);

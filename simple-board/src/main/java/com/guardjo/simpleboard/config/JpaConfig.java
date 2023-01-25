@@ -1,9 +1,13 @@
 package com.guardjo.simpleboard.config;
 
+import com.guardjo.simpleboard.dto.security.SimpleBoardPrincipal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
@@ -12,10 +16,11 @@ import java.util.Optional;
 public class JpaConfig {
     @Bean
     public AuditorAware<String> auditorAware() {
-        /**
-         * TODO 향후 사용자 관련 서비스가 추가되면 변경할 예정
-         * 현재는 의미 없는 임의의 {UserName}으로 지정
-         */
-        return () -> Optional.of("UserName"); 
+        return () -> Optional.ofNullable(SecurityContextHolder.getContext())
+                .map(SecurityContext::getAuthentication)
+                .filter(Authentication::isAuthenticated)
+                .map(Authentication::getPrincipal)
+                .map(SimpleBoardPrincipal.class::cast)
+                .map(SimpleBoardPrincipal::getUsername);
     }
 }

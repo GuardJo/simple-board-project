@@ -13,6 +13,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource
 public interface CommentRepository extends JpaRepository<Comment, Long>,
         QuerydslPredicateExecutor<Comment>, QuerydslBinderCustomizer<QComment> {
+
+    void deleteByIdAndMember_Email(Long id, String memberMail);
     @Override
     default void customize(QuerydslBindings bindings, QComment root) {
         bindings.excludeUnlistedProperties(true);

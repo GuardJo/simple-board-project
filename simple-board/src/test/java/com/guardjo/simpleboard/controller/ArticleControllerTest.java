@@ -1,6 +1,7 @@
 package com.guardjo.simpleboard.controller;
 
 import com.guardjo.simpleboard.config.SecurityConfig;
+import com.guardjo.simpleboard.config.TestSecurityConfig;
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
 import com.guardjo.simpleboard.domain.FormType;
@@ -8,7 +9,9 @@ import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.dto.ArticleWithCommentDto;
+import com.guardjo.simpleboard.dto.MemberDto;
 import com.guardjo.simpleboard.generator.TestDataGenerator;
+import com.guardjo.simpleboard.repository.MemberRepository;
 import com.guardjo.simpleboard.service.ArticleService;
 import com.guardjo.simpleboard.service.PaginationService;
 import com.guardjo.simpleboard.util.DtoConverter;
@@ -26,11 +29,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
@@ -38,7 +45,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Import(SecurityConfig.class)
+@Import(TestSecurityConfig.class)
 @WebMvcTest(ArticleController.class)
 class ArticleControllerTest {
 
@@ -48,6 +55,10 @@ class ArticleControllerTest {
     private PaginationService paginationService;
     private final MockMvc mockMvc;
     private final TestDataGenerator testDataGenerator;
+
+    private final static String MEMBER_MAIL = "test@mail.com";
+    @Autowired
+    private MemberRepository memberRepository;
 
     ArticleControllerTest(@Autowired MockMvc mockMvc) {
         this.mockMvc = mockMvc;
@@ -121,7 +132,22 @@ class ArticleControllerTest {
         then(paginationService).should().getPaginationNumbers(0, Page.empty(pageable).getTotalPages());
     }
 
-    @DisplayName("특정 Artile 페이지 반환 테스트")
+    @DisplayName("로그인 없이 특정 Article 페이지 반환 테스트")
+    @Test
+    void testGetArticleDetailViewWithoutLogin() throws Exception {
+        Long articleId = 1L;
+        given(articleService.findArticle(1L)).willReturn(
+                DtoConverter.fromArticleWithComment(testDataGenerator.generateArticle("test")));
+
+        mockMvc.perform(get("/article/" + articleId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+
+        then(articleService).shouldHaveNoInteractions();
+    }
+
+    @DisplayName("특정 Article 페이지 반환 테스트")
+    @WithMockUser
     @Test
     void testGetArticleDetailView() throws Exception {
         Long articleId = 1L;
@@ -138,11 +164,12 @@ class ArticleControllerTest {
     }
 
     @DisplayName("특정 Article 삭제 요청 테스트")
+    @WithUserDetails(value = MEMBER_MAIL, setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     void testDeleteArticle() throws Exception {
         Long articleId = 1L;
 
-        willDoNothing().given(articleService).deleteArticle(articleId);
+        willDoNothing().given(articleService).deleteArticle(articleId, MEMBER_MAIL);
 
         mockMvc.perform(delete("/article/" + articleId)
                         .with(csrf()))
@@ -150,7 +177,7 @@ class ArticleControllerTest {
                 .andExpect(view().name("redirect:/article"))
                 .andExpect(redirectedUrl("/article"));
 
-        then(articleService).should().deleteArticle(articleId);
+        then(articleService).should().deleteArticle(articleId, MEMBER_MAIL);
     }
 
     @Disabled
@@ -187,6 +214,7 @@ class ArticleControllerTest {
     }
 
     @DisplayName("게시글 수정 페이지 반환 테스트")
+    @WithUserDetails(value = MEMBER_MAIL, setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     void testUpdateFormView() throws Exception {
         Long articleId = 1L;
@@ -194,7 +222,7 @@ class ArticleControllerTest {
 
         given(articleService.findArticle(articleId)).willReturn(article);
 
-        mockMvc.perform(get("/article/update-view/"  + articleId))
+        mockMvc.perform(get("/article/update-view/" + articleId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(view().name("article/form"))
@@ -204,7 +232,23 @@ class ArticleControllerTest {
         then(articleService).should().findArticle(articleId);
     }
 
+    @DisplayName("권한 없는 게시글 수정 페이지 반환 테스트")
+    @Test
+    void testUpdateFormViewWithoutAuth() throws Exception {
+        Long articleId = 1L;
+        ArticleWithCommentDto article = DtoConverter.fromArticleWithComment(testDataGenerator.generateArticle("update test"));
+
+        given(articleService.findArticle(articleId)).willReturn(article);
+
+        mockMvc.perform(get("/article/update-view/" + articleId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+
+        then(articleService).shouldHaveNoInteractions();
+    }
+
     @DisplayName("게시글 수정 요청 테스트")
+    @WithUserDetails(value = MEMBER_MAIL, setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     void testUpdateForm() throws Exception {
         Long articleId = 1L;
@@ -215,7 +259,8 @@ class ArticleControllerTest {
         formParams.add("title", articleUpdateDto.title());
         formParams.add("content", articleUpdateDto.content());
 
-        willDoNothing().given(articleService).updateArticle(any(ArticleUpdateDto.class));
+        willDoNothing().given(articleService).updateArticle(any(ArticleUpdateDto.class), anyString());
+        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(Member.of(MEMBER_MAIL, "tester", "pwd")));
 
         mockMvc.perform(post("/article/update-view/" + articleId)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -225,10 +270,36 @@ class ArticleControllerTest {
                 .andExpect(view().name("redirect:/article/" + articleId))
                 .andExpect(redirectedUrl("/article/" + articleId));
 
-        then(articleService).should().updateArticle(any(ArticleUpdateDto.class));
+        then(memberRepository).should().findByEmail(anyString());
+        then(articleService).should().updateArticle(any(ArticleUpdateDto.class), anyString());
+    }
+
+    @DisplayName("권한 없는 게시글에 대한 수정 요청 테스트")
+    @Test
+    void testUpdateFormWithoutAuth() throws Exception {
+        Long articleId = 1L;
+        ArticleUpdateDto articleUpdateDto = new ArticleUpdateDto(1L, "test", "test2", "hashtag");
+        MultiValueMap<String, String> formParams = new LinkedMultiValueMap<>();
+
+        formParams.add("id", Long.toString(articleUpdateDto.id()));
+        formParams.add("title", articleUpdateDto.title());
+        formParams.add("content", articleUpdateDto.content());
+
+        willDoNothing().given(articleService).updateArticle(any(ArticleUpdateDto.class), anyString());
+
+        mockMvc.perform(post("/article/update-view/" + articleId)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .queryParams(formParams)
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+
+        then(articleService).shouldHaveNoInteractions();
+        then(memberRepository).shouldHaveNoInteractions();
     }
 
     @DisplayName("게시글 생성 페이지 요청 테스트")
+    @WithMockUser
     @Test
     void testCreateView() throws Exception {
         mockMvc.perform(get("/article/create-view"))
@@ -237,27 +308,36 @@ class ArticleControllerTest {
                 .andExpect(view().name("article/form"));
     }
 
+    @DisplayName("로그인 없이 게시글 생성 페이지 요청 테스트")
+    @Test
+    void testCreateViewWithoutLogin() throws Exception {
+        mockMvc.perform(get("/article/create-view"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+    }
+
     @DisplayName("게시글 생성 요청 테스트")
+    @WithUserDetails(value = MEMBER_MAIL, setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     void testCreateForm() throws Exception {
         Article article = testDataGenerator.generateArticle("save test");
 
-        MultiValueMap<String , String> params = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         params.add("title", article.getTitle());
         params.add("content", article.getContent());
         params.add("hashtag", article.getHashtag());
 
-        willDoNothing().given(articleService).saveArticle(any(ArticleDto.class), any(Member.class));
+        willDoNothing().given(articleService).saveArticle(any(ArticleDto.class), anyString());
 
         mockMvc.perform(post("/article/create-view")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .queryParams(params)
-                .with(csrf()))
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .queryParams(params)
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/article"))
                 .andExpect(redirectedUrl("/article"));
 
-        then(articleService).should().saveArticle(any(ArticleDto.class), any(Member.class));
+        then(articleService).should().saveArticle(any(ArticleDto.class), anyString());
     }
 }
