@@ -43,3 +43,13 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+---
+spring:
+  config:
+    activate:
+      on-profile: "release"
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: ${SIMPLE_BOARD_DB_URL}
+    username: ${SIMPLE_BOARD_DB_USERNAME}
+    password: ${SIMPLE_BOARD_DB_PASSWORD}

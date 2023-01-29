@@ -1,6 +1,19 @@
 # simple-board-project
 간단 게시판 구현 프로젝트
 
+# 구성
+- spring boot 2.7.5
+- build tool : gradle
+- jdk 17
+- DB (h2, mariadb, mysql)
+- thymeleaf
+- spring security
+- JPA
+- querydsl
+
+# 데모 페이지
+- [간단 게시판](https://port-0-simple-board-project-1b5xkk2fldh9dtng.gksl2.cloudtype.app/)
+
 # git branch 전략
 - git hub 전략 사용 (main, feature) 만 사용하는 것
 -- 단, git flow 생성 간 임시로 dev 브랜치 생성
