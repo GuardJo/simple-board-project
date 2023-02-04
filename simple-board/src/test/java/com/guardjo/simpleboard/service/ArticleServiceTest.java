@@ -54,7 +54,7 @@ class ArticleServiceTest {
         Pageable pageable = Pageable.ofSize(PAGE_SIZE);
 
         switch (searchType) {
-            case HASHTAG -> given(articleRepository.findByHashtag(searchValue, pageable)).willReturn(Page.empty(pageable));
+            case HASHTAG -> given(articleRepository.findArticlesByHashtagsContainsIgnoreCase(searchValue, pageable)).willReturn(Page.empty(pageable));
             case CREATOR -> given(articleRepository.findByCreatorContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
             case CONTENT -> given(articleRepository.findByContentContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
             case TITLE -> given(articleRepository.findByTitleContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
@@ -97,12 +97,12 @@ class ArticleServiceTest {
         Pageable pageable = Pageable.ofSize(PAGE_SIZE);
         String searchValue = "test";
 
-        given(articleRepository.findByHashtag(searchValue, pageable)).willReturn(Page.empty(pageable));
+        given(articleRepository.findArticlesByHashtagsContainsIgnoreCase(searchValue, pageable)).willReturn(Page.empty(pageable));
 
         Page<ArticleDto> articleDtos = articleService.findArticlesViaHashtag(searchValue, pageable);
 
         assertThat(articleDtos).isEqualTo(Page.empty(pageable));
-        then(articleRepository).should().findByHashtag(searchValue, pageable);
+        then(articleRepository).should().findArticlesByHashtagsContainsIgnoreCase(searchValue, pageable);
     }
 
     @DisplayName("전체 게시글들의 해시태그 목록 반환 테스트")
@@ -151,7 +151,7 @@ class ArticleServiceTest {
         Pageable pageable = Pageable.ofSize(PAGE_SIZE);
 
         switch (searchType) {
-            case HASHTAG -> given(articleRepository.findByHashtag(searchValue, pageable)).willReturn(Page.empty(pageable));
+            case HASHTAG -> given(articleRepository.findArticlesByHashtagsContainsIgnoreCase(searchValue, pageable)).willReturn(Page.empty(pageable));
             case CREATOR -> given(articleRepository.findByCreatorContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
             case CONTENT -> given(articleRepository.findByContentContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
             case TITLE -> given(articleRepository.findByTitleContaining(searchValue, pageable)).willReturn(Page.empty(pageable));

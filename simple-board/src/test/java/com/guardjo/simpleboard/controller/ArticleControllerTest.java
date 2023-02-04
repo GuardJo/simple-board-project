@@ -252,7 +252,7 @@ class ArticleControllerTest {
     @Test
     void testUpdateForm() throws Exception {
         Long articleId = 1L;
-        ArticleUpdateDto articleUpdateDto = new ArticleUpdateDto(1L, "test", "test2", "hashtag");
+        ArticleUpdateDto articleUpdateDto = new ArticleUpdateDto(1L, "test", "test2");
         MultiValueMap<String, String> formParams = new LinkedMultiValueMap<>();
 
         formParams.add("id", Long.toString(articleUpdateDto.id()));
@@ -278,7 +278,7 @@ class ArticleControllerTest {
     @Test
     void testUpdateFormWithoutAuth() throws Exception {
         Long articleId = 1L;
-        ArticleUpdateDto articleUpdateDto = new ArticleUpdateDto(1L, "test", "test2", "hashtag");
+        ArticleUpdateDto articleUpdateDto = new ArticleUpdateDto(1L, "test", "test2");
         MultiValueMap<String, String> formParams = new LinkedMultiValueMap<>();
 
         formParams.add("id", Long.toString(articleUpdateDto.id()));
@@ -326,7 +326,7 @@ class ArticleControllerTest {
 
         params.add("title", article.getTitle());
         params.add("content", article.getContent());
-        params.add("hashtag", article.getHashtag());
+        // TODO : 해시태그는 content 필드 내용을 통해 적용할 예정
 
         willDoNothing().given(articleService).saveArticle(any(ArticleDto.class), anyString());
 

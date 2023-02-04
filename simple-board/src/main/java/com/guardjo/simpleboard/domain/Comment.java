@@ -11,7 +11,6 @@ import java.util.Objects;
 @ToString
 @Table(indexes = {
         @Index(columnList = "content"),
-        @Index(columnList = "hashtag"),
         @Index(columnList = "creator"),
         @Index(columnList = "createTime")
 })
@@ -35,7 +34,9 @@ public class Comment extends MetaInfoData {
     private String content;
 
     @Setter
-    private String hashtag;
+    @ManyToOne
+    @JoinColumn(name = "parent_comment_id")
+    private Comment parentComment;
 
     public void setMember(Member member) {
         this.member = member;
@@ -45,15 +46,14 @@ public class Comment extends MetaInfoData {
 
     }
 
-    private Comment(Member member, Article article, String content, String hashtag) {
+    private Comment(Member member, Article article, String content) {
         this.member = member;
         this.article = article;
         this.content = content;
-        this.hashtag = hashtag;
     }
 
-    public static Comment of(Member member, Article article, String content, String hashtag) {
-        return new Comment(member, article, content, hashtag);
+    public static Comment of(Member member, Article article, String content) {
+        return new Comment(member, article, content);
     }
 
     @Override

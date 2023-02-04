@@ -4,6 +4,7 @@ import com.guardjo.simpleboard.config.JpaConfig;
 import com.guardjo.simpleboard.config.TestJpaConfig;
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.Comment;
+import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.domain.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ class JpaRepositoryTest {
         Member member = memberRepository.findById(1L).orElseThrow();
 
         articleRepository.save(Article.of(member,
-                "title", "content", "#hashtag"));
+                "title", "content"));
 
         assertThat(articleRepository.count()).isEqualTo(101);
     }
@@ -54,13 +55,14 @@ class JpaRepositoryTest {
     @Test
     void testUpdateArticle() {
         Article article = articleRepository.findById(1L).orElseThrow();
-        String updateHashtag = "#Update";
-        article.setHashtag(updateHashtag);
+        String updateHashtagName = "#Update";
+        Hashtag updateHashtag = Hashtag.of(updateHashtagName);
+        article.addHashtag(updateHashtag);
 
         // @DataJpaTest를 사용함으로써 메소드들이 트랜잭션 간 rollback이 일어나 변경 서항이 저장되지 않기에 saveAndFlush()를 사용해서 저장
         Article updateArticle = articleRepository.saveAndFlush(article);
         
-        assertThat(updateHashtag).isEqualTo(articleRepository.findById(1L).get().getHashtag());
+        assertThat(articleRepository.findById(1L).get().getHashtags().contains(updateHashtag)).isTrue();
     }
 
     @DisplayName("게시글 삭제 테스트")
@@ -83,8 +85,7 @@ class JpaRepositoryTest {
         int oldCount = article.getComments().size();
         Member member = memberRepository.findById(1L).orElseThrow();
 
-        commentRepository.save(Comment.of(member,
-                article, "content", "#hashtag"));
+        commentRepository.save(Comment.of(member, article, "content"));
 
         assertThat(commentRepository.count()).isEqualTo(COMMENT_TEST_DATA_SIZE + 1);
         assertThat(article.getComments().size()).isEqualTo(oldCount);
@@ -102,13 +103,12 @@ class JpaRepositoryTest {
     @Test
     void testUpdateComment() {
         Comment comment = commentRepository.findById(1L).orElseThrow();
-        String updateHashtag = "updateTag";
-
-        comment.setHashtag(updateHashtag);
+        String updateContent = "update test";
+        comment.setContent(updateContent);
 
         commentRepository.saveAndFlush(comment);
 
-        assertThat(updateHashtag).isEqualTo(commentRepository.findById(1L).get().getHashtag());
+        assertThat(updateContent).isEqualTo(commentRepository.findById(1L).get().getContent());
     }
 
     @DisplayName("댓글 삭제 테스트")

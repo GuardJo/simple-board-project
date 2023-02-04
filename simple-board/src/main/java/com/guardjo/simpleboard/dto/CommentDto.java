@@ -9,19 +9,22 @@ import java.time.LocalDateTime;
 /**
  * A DTO for the {@link com.guardjo.simpleboard.domain.Comment} entity
  */
-public record CommentDto(Long id, Long articleId, String creator, LocalDateTime createTime, String content,
-                         String hashtag) {
-    public static CommentDto of(Long id, Long articleId, String creator, LocalDateTime createTime, String content, String hashtag) {
-        return new CommentDto(id, articleId, creator, createTime, content, hashtag);
+public record CommentDto(Long id, Long articleId, Long parentCommentId, String creator, LocalDateTime createTime, String content) {
+    public static CommentDto of(Long id, Long articleId, Long parentCommentId, String creator, LocalDateTime createTime, String content) {
+        return new CommentDto(id, articleId, parentCommentId, creator, createTime, content);
     }
 
-    public static Comment toEntity(CommentDto commentDto, Member member, Article article) {
-
-        return Comment.of(
+    public static Comment toEntity(CommentDto commentDto, Member member, Article article, Comment parentComment) {
+        Comment comment = Comment.of(
                 member,
                 article,
-                commentDto.content,
-                commentDto.hashtag
+                commentDto.content()
         );
+
+        if (parentComment != null) {
+            comment.setParentComment(parentComment);
+        }
+
+        return comment;
     }
 }
