@@ -84,8 +84,7 @@ class JpaRepositoryTest {
         int oldCount = article.getComments().size();
         Member member = memberRepository.findById(1L).orElseThrow();
 
-        commentRepository.save(Comment.of(member,
-                article, "content", "#hashtag"));
+        commentRepository.save(Comment.of(member, article, "content"));
 
         assertThat(commentRepository.count()).isEqualTo(COMMENT_TEST_DATA_SIZE + 1);
         assertThat(article.getComments().size()).isEqualTo(oldCount);
@@ -103,13 +102,12 @@ class JpaRepositoryTest {
     @Test
     void testUpdateComment() {
         Comment comment = commentRepository.findById(1L).orElseThrow();
-        String updateHashtag = "updateTag";
-
-        comment.setHashtag(updateHashtag);
+        String updateContent = "update test";
+        comment.setContent(updateContent);
 
         commentRepository.saveAndFlush(comment);
 
-        assertThat(updateHashtag).isEqualTo(commentRepository.findById(1L).get().getHashtag());
+        assertThat(updateContent).isEqualTo(commentRepository.findById(1L).get().getContent());
     }
 
     @DisplayName("댓글 삭제 테스트")

@@ -44,7 +44,6 @@ class DtoConverterTest {
         assertThat(commentDto.creator()).isEqualTo(comment.getCreator());
         assertThat(commentDto.createTime()).isEqualTo(comment.getCreateTime());
         assertThat(commentDto.content()).isEqualTo(comment.getContent());
-        assertThat(commentDto.hashtag()).isEqualTo(comment.getHashtag());
     }
 
     @DisplayName("Member -> MemberDto 테스트")

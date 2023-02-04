@@ -18,10 +18,9 @@ public interface CommentRepository extends JpaRepository<Comment, Long>,
     @Override
     default void customize(QuerydslBindings bindings, QComment root) {
         bindings.excludeUnlistedProperties(true);
-        bindings.including(root.content, root.hashtag, root.creator, root.createTime);
+        bindings.including(root.content, root.creator, root.createTime);
 
         bindings.bind(root.content).first(StringExpression::containsIgnoreCase);
-        bindings.bind(root.hashtag).first(StringExpression::containsIgnoreCase);
         bindings.bind(root.creator).first(StringExpression::containsIgnoreCase);
         bindings.bind(root.createTime).first(DateTimeExpression::eq);
     }

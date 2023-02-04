@@ -32,17 +32,17 @@ public class TestDataGenerator {
     }
 
     public Comment generateComment(String content, Long articleId) {
-        return Comment.of(generateMember(), generateArticle("test"), content, "#commment");
+        return Comment.of(generateMember(), generateArticle("test"), content);
     }
 
     public CommentDto convertCommentDto(Comment comment) {
         return CommentDto.of(
                 comment.getId(),
                 comment.getArticle().getId(),
+                comment.getParentComment() == null ? null : comment.getParentComment().getId(),
                 comment.getCreator(),
                 comment.getCreateTime(),
-                comment.getContent(),
-                comment.getHashtag()
+                comment.getContent()
         );
     }
 }

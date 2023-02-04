@@ -46,7 +46,7 @@ class CommentServiceTest {
     void testFindComments() {
         Article article = testDataGenerator.generateArticle("test");
 
-        article.getComments().add(Comment.of(testMember, article, "test comtent", "hahstag"));
+        article.getComments().add(Comment.of(testMember, article, "test comtent"));
 
         given(articleRepository.getReferenceById(any(Long.class))).willReturn(article);
 
@@ -74,7 +74,7 @@ class CommentServiceTest {
         String memberId = testMember.getEmail();
 
         given(articleRepository.getReferenceById(any())).willReturn(article);
-        given(commentRepository.save(any(Comment.class))).willReturn(CommentDto.toEntity(commentDto, testMember, article));
+        given(commentRepository.save(any(Comment.class))).willReturn(CommentDto.toEntity(commentDto, testMember, article, null));
         given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(testMember));
 
         commentService.saveComment(commentDto, memberId);
