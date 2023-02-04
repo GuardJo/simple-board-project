@@ -35,15 +35,17 @@ public class Article extends MetaInfoData {
     @JoinColumn(name = "memberId")
     private Member member;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     @OrderBy("id")
     private final Set<Comment> comments = new LinkedHashSet<>();
 
+    @ToString.Exclude
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "article_hashtag",
-            joinColumns = @JoinColumn(name = "hashtag_id"),
-            inverseJoinColumns = @JoinColumn(name = "id")
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "hashtag_id")
     )
     private Set<Hashtag> hashtags = new LinkedHashSet<>();
 

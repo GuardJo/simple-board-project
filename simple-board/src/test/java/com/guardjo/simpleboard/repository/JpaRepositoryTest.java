@@ -55,13 +55,14 @@ class JpaRepositoryTest {
     @Test
     void testUpdateArticle() {
         Article article = articleRepository.findById(1L).orElseThrow();
-        String updateHashtag = "#Update";
-        article.addHashtag(Hashtag.of(updateHashtag));
+        String updateHashtagName = "#Update";
+        Hashtag updateHashtag = Hashtag.of(updateHashtagName);
+        article.addHashtag(updateHashtag);
 
         // @DataJpaTest를 사용함으로써 메소드들이 트랜잭션 간 rollback이 일어나 변경 서항이 저장되지 않기에 saveAndFlush()를 사용해서 저장
         Article updateArticle = articleRepository.saveAndFlush(article);
         
-        assertThat(updateHashtag).isEqualTo(articleRepository.findById(1L).get().getHashtags().stream().findFirst().get().getName());
+        assertThat(articleRepository.findById(1L).get().getHashtags().contains(updateHashtag)).isTrue();
     }
 
     @DisplayName("게시글 삭제 테스트")
