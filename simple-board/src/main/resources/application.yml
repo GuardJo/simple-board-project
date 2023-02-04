@@ -14,10 +14,10 @@ logging:
 
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/simple_board
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/simple_board
     username: kyeongho
-    password: 1q2w3e4r
+    password: 1q2w3e4r!
   jpa:
     defer-datasource-initialization: true
     hibernate:
