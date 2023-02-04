@@ -4,6 +4,7 @@ import com.guardjo.simpleboard.config.JpaConfig;
 import com.guardjo.simpleboard.config.TestJpaConfig;
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.Comment;
+import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.domain.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ class JpaRepositoryTest {
         Member member = memberRepository.findById(1L).orElseThrow();
 
         articleRepository.save(Article.of(member,
-                "title", "content", "#hashtag"));
+                "title", "content"));
 
         assertThat(articleRepository.count()).isEqualTo(101);
     }
@@ -55,12 +56,12 @@ class JpaRepositoryTest {
     void testUpdateArticle() {
         Article article = articleRepository.findById(1L).orElseThrow();
         String updateHashtag = "#Update";
-        article.setHashtag(updateHashtag);
+        article.addHashtag(Hashtag.of(updateHashtag));
 
         // @DataJpaTest를 사용함으로써 메소드들이 트랜잭션 간 rollback이 일어나 변경 서항이 저장되지 않기에 saveAndFlush()를 사용해서 저장
         Article updateArticle = articleRepository.saveAndFlush(article);
         
-        assertThat(updateHashtag).isEqualTo(articleRepository.findById(1L).get().getHashtag());
+        assertThat(updateHashtag).isEqualTo(articleRepository.findById(1L).get().getHashtags().stream().findFirst().get().getName());
     }
 
     @DisplayName("게시글 삭제 테스트")

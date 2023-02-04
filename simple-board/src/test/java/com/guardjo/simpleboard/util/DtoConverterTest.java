@@ -2,13 +2,17 @@ package com.guardjo.simpleboard.util;
 
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.Comment;
+import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.CommentDto;
+import com.guardjo.simpleboard.dto.HashtagDto;
 import com.guardjo.simpleboard.dto.MemberDto;
 import com.guardjo.simpleboard.generator.TestDataGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,13 +24,15 @@ class DtoConverterTest {
     @Test
     void testConvertArticleToArticleDto() {
         Article article = testDataGenerator.generateArticle("test");
+        article.addHashtag(Hashtag.of("testHahtag"));
+
         ArticleDto articleDto = dtoConverter.from(article);
 
         assertThat(articleDto.creator()).isEqualTo(article.getCreator());
         assertThat(articleDto.createTime()).isEqualTo(article.getCreateTime());
         assertThat(articleDto.title()).isEqualTo(article.getTitle());
         assertThat(articleDto.content()).isEqualTo(article.getContent());
-        assertThat(articleDto.hashtag()).isEqualTo(article.getHashtag());
+        assertThat(isEqualBetweenHashtags(article.getHashtags(), articleDto.hashtagDtos())).isTrue();
     }
 
     @DisplayName("Comment -> CommentDto 테스트")
@@ -50,5 +56,13 @@ class DtoConverterTest {
         assertThat(memberDto.email()).isEqualTo(member.getEmail());
         assertThat(memberDto.name()).isEqualTo(member.getName());
         assertThat(memberDto.password()).isEqualTo(member.getPassword());
+    }
+
+    private boolean isEqualBetweenHashtags(Set<Hashtag> hashtags, Set<HashtagDto> hashtagDtos) {
+        return hashtags.stream()
+                .allMatch(hashtag -> {
+                    return hashtagDtos.stream()
+                            .anyMatch(hashtagDto -> hashtagDto.name().equals(hashtag.getName()));
+                });
     }
 }

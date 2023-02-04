@@ -69,7 +69,7 @@ class CommentServiceTest {
     @DisplayName("특정 댓글 저장 테스트")
     @Test
     void testSaveComment() {
-        Article article = Article.of(testMember, "title", "content", "#hashtag");
+        Article article = Article.of(testMember, "title", "content");
         CommentDto commentDto = testDataGenerator.convertCommentDto(testDataGenerator.generateComment("test content", 1L));
         String memberId = testMember.getEmail();
 

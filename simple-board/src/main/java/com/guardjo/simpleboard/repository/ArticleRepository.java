@@ -20,18 +20,17 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, Article
     Page<Article> findByTitleContaining(String title, Pageable pageable);
     Page<Article> findByContentContaining(String content, Pageable pageable);
     Page<Article> findByCreatorContaining(String creator, Pageable pageable);
-    Page<Article> findByHashtag(String hashtag, Pageable pageable);
+    Page<Article> findArticlesByHashtagsContainsIgnoreCase(String hashtagName, Pageable pageable);
 
     void deleteByIdAndMember_Email(Long articleId, String mail);
 
     @Override
     default void customize(QuerydslBindings bindings, QArticle root) {
         bindings.excludeUnlistedProperties(true);
-        bindings.including(root.title, root.content, root.hashtag, root.creator, root.createTime);
+        bindings.including(root.title, root.content, root.creator, root.createTime);
 
         bindings.bind(root.title).first(StringExpression::containsIgnoreCase);
         bindings.bind(root.content).first(StringExpression::containsIgnoreCase);
-        bindings.bind(root.hashtag).first(StringExpression::containsIgnoreCase);
         bindings.bind(root.creator).first(StringExpression::containsIgnoreCase);
         bindings.bind(root.createTime).first(DateTimeExpression::eq);
     }

@@ -47,7 +47,7 @@ public class ArticleService {
             case TITLE -> articleRepository.findByTitleContaining(searchValue, pageable).map(DtoConverter::from);
             case CONTENT -> articleRepository.findByContentContaining(searchValue, pageable).map(DtoConverter::from);
             case CREATOR -> articleRepository.findByCreatorContaining(searchValue, pageable).map(DtoConverter::from);
-            case HASHTAG -> articleRepository.findByHashtag(searchValue, pageable).map(DtoConverter::from);
+            case HASHTAG -> articleRepository.findArticlesByHashtagsContainsIgnoreCase(searchValue, pageable).map(DtoConverter::from);
         };
 
         return articleDtoPage;
@@ -95,7 +95,7 @@ public class ArticleService {
         } else {
             article.setTitle(updateDto.title());
             article.setContent(updateDto.content());
-            article.setHashtag(updateDto.hashtag());
+            // TODO article.contest를 통해 hastag 추출하기
         }
     }
 
@@ -127,6 +127,6 @@ public class ArticleService {
             return Page.empty(pageable);
         }
 
-        return articleRepository.findByHashtag(searchValue, pageable).map(DtoConverter::from);
+        return articleRepository.findArticlesByHashtagsContainsIgnoreCase(searchValue, pageable).map(DtoConverter::from);
     }
 }

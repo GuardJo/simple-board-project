@@ -1,7 +1,9 @@
 package com.guardjo.simpleboard.repository.querydsl;
 
 import com.guardjo.simpleboard.domain.Article;
+import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.domain.QArticle;
+import com.guardjo.simpleboard.domain.QHashtag;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
@@ -13,17 +15,17 @@ public class ArticleHashtagRepositoryImpl extends QuerydslRepositorySupport impl
      *
      */
     public ArticleHashtagRepositoryImpl() {
-        super(Article.class);
+        super(Hashtag.class);
     }
 
     @Override
     public List<String> findAllDistinctHashtags() {
-        QArticle qArticle = QArticle.article;
+        QHashtag qHashtag = QHashtag.hashtag;
 
-        JPQLQuery<String> query = from(qArticle)
+        JPQLQuery<String> query = from(qHashtag)
                 .distinct()
-                .select(qArticle.hashtag)
-                .where(qArticle.hashtag.isNotNull());
+                .select(qHashtag.name)
+                .where(qHashtag.isNotNull());
 
         return query.fetch();
     }

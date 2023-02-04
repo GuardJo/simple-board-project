@@ -17,7 +17,7 @@ public record ArticleWithCommentResponse(Long id, ArticleResponse articleRespons
                         articleWithCommentDto.id(),
                         articleWithCommentDto.title(),
                         articleWithCommentDto.content(),
-                        articleWithCommentDto.hashtag(),
+                        ArticleResponse.flatHashtags(articleWithCommentDto.hashtagDtos()),
                         articleWithCommentDto.creator(),
                         articleWithCommentDto.createTime()
                 ),
