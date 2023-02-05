@@ -22,6 +22,7 @@ class JpaRepositoryTest {
     private final int MEMBER_TEST_DATA_SIZE = 50;
     private final int ARTICLE_TEST_DATA_SIZE = 100;
     private final int COMMENT_TEST_DATA_SIZE = 500;
+    private final int HASHTAG_TEST_DATA_SIZE = 50;
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -31,6 +32,9 @@ class JpaRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private HashtagRepository hashtagRepository;
 
     @DisplayName("게시글 저장 테스트")
     @Test
@@ -155,5 +159,54 @@ class JpaRepositoryTest {
         memberRepository.deleteById(4L);
 
         assertThat(memberRepository.count()).isEqualTo(MEMBER_TEST_DATA_SIZE - 1);
+    }
+
+    @DisplayName("해시태그 저장 테스트")
+    @Test
+    void testSaveHashtag() {
+        Hashtag hashtag = Hashtag.of("test");
+
+        hashtagRepository.save(hashtag);
+
+        assertThat(hashtagRepository.count()).isEqualTo(HASHTAG_TEST_DATA_SIZE + 1);
+    }
+    
+    @DisplayName("저장된 해시태그 전체 목록 반환")
+    @Test
+    void testReadHashtags() {
+        List<Hashtag> hashtags = hashtagRepository.findAll();
+
+        assertThat(hashtags.size()).isEqualTo(HASHTAG_TEST_DATA_SIZE);
+    }
+    
+    @DisplayName("해시태그 이름 변경 테스트")
+    @Test
+    void testUpdateHashtagName() {
+        Hashtag hashtag = hashtagRepository.findById(1L).get();
+        String updateName = "updateName";
+        hashtag.setName(updateName);
+
+        hashtagRepository.flush();
+
+        Hashtag updateHashtag = hashtagRepository.findById(1L).get();
+
+        assertThat(updateHashtag.getName()).isEqualTo(updateName);
+    }
+
+    @DisplayName("특정 해시태그 삭제 테스트")
+    @Test
+    void testDeleteHashtag() {
+        hashtagRepository.deleteById(1L);
+
+        assertThat(hashtagRepository.count()).isEqualTo(HASHTAG_TEST_DATA_SIZE - 1);
+    }
+    
+    @DisplayName("특정 해시태그명 존재 여부 테스트")
+    @Test
+    void testExistHashtagName() {
+        // 현재 data.sql로 넣어주었던 데이터
+        boolean actual = hashtagRepository.existsByName("1");
+
+        assertThat(actual).isTrue();
     }
 }
