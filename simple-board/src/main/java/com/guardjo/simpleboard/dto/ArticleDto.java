@@ -23,7 +23,7 @@ public record ArticleDto(Long id, String creator, LocalDateTime createTime, Stri
 
     public static Article toEntity(ArticleDto articleDto, Member member, Set<HashtagDto> hashtagDtos) {
         Article article = toEntity(articleDto, member);
-        Set<Hashtag> hashtags = hashtagDtos.stream().map(hashtagDto -> HashtagDto.toEntity(hashtagDto, member)).collect(Collectors.toSet());
+        Set<Hashtag> hashtags = hashtagDtos.stream().map(hashtagDto -> HashtagDto.toEntity(hashtagDto)).collect(Collectors.toSet());
         article.addHashtags(hashtags);
 
         return article;

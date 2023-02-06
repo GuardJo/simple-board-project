@@ -11,19 +11,18 @@ import java.util.stream.Collectors;
 /**
  * A DTO for the {@link com.guardjo.simpleboard.domain.Hashtag} entity
  */
-public record HashtagDto(String creator, LocalDateTime createTime, String modifier, LocalDateTime modifiedTime, Long id,
-                         String name, Set<ArticleDto> articles) implements Serializable {
-    public static HashtagDto of(String creator, LocalDateTime createTime, String modifier, LocalDateTime modifiedTime, Long id, String name, Set<ArticleDto> articles) {
-        return new HashtagDto(creator, createTime, modifier, modifiedTime, id, name, articles);
+public record HashtagDto(Long id, String name) implements Serializable {
+    public static HashtagDto of(Long id, String name) {
+        return new HashtagDto(id, name);
     }
 
-    public static Hashtag toEntity(HashtagDto hashtagDto, Member member) {
+    public static Hashtag toEntity(HashtagDto hashtagDto) {
         return Hashtag.of(
                 hashtagDto.name
         );
     }
 
-    public static Set<Hashtag> toEntity(Set<HashtagDto> hashtagDtos, Member member) {
-        return hashtagDtos.stream().map(hashtagDto -> HashtagDto.toEntity(hashtagDto, member)).collect(Collectors.toSet());
+    public static Set<Hashtag> toEntity(Set<HashtagDto> hashtagDtos) {
+        return hashtagDtos.stream().map(hashtagDto -> HashtagDto.toEntity(hashtagDto)).collect(Collectors.toSet());
     }
 }

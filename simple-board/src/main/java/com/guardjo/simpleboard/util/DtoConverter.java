@@ -62,14 +62,8 @@ public class DtoConverter {
 
     public static HashtagDto from(Hashtag hashtag) {
         return HashtagDto.of(
-                hashtag.getCreator(),
-                hashtag.getCreateTime(),
-                hashtag.getModifier(),
-                hashtag.getModifiedTime(),
                 hashtag.getId(),
-                hashtag.getName(),
-                hashtag.getArticles().stream()
-                        .map(article -> DtoConverter.from(article)).collect(Collectors.toSet())
+                hashtag.getName()
         );
     }
 

@@ -48,6 +48,8 @@ public class ArticleController {
         modelMap.addAttribute("articles", articleResponseList);
         modelMap.addAttribute("paginationNumbers", paginationNumbers);
         modelMap.addAttribute("articleSearchTypes", ArticleSearchType.values());
+        modelMap.addAttribute("hashtagSearch", ArticleSearchType.HASHTAG);
+
         return "article/index";
     }
 
