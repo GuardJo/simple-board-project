@@ -2,11 +2,13 @@ package com.guardjo.simpleboard.service;
 
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
+import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.dto.ArticleWithCommentDto;
 import com.guardjo.simpleboard.repository.ArticleRepository;
+import com.guardjo.simpleboard.repository.HashtagRepository;
 import com.guardjo.simpleboard.repository.MemberRepository;
 import com.guardjo.simpleboard.util.DtoConverter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Transactional
@@ -90,21 +93,19 @@ public class ArticleService {
 
         if (member.isEmpty()) {
             throw new EntityNotFoundException("Not Found User " + userMail);
-        } else if (member.get().getEmail() != article.getCreator()) {
-            // FIXME 본인이 생성한 게시글 수정 시 해당 Exception이 반환되고 있음
+        } else if (!member.get().getEmail().equals(article.getCreator())) {
             throw new EntityNotFoundException("This User is No forbidden Update Article, " + userMail);
         } else {
             article.setTitle(updateDto.title());
             article.setContent(updateDto.content());
-            // TODO article.contest를 통해 hastag 추출하기
         }
     }
 
-    public void saveArticle(ArticleDto articleDto, String memberMail) {
+    public void saveArticle(ArticleDto articleDto, String memberMail, Set<Hashtag> hashtags) {
         log.info("[Test] Save Article, title = {}", articleDto.title());
         Member member = memberRepository.findByEmail(memberMail).get();
         Article article = ArticleDto.toEntity(articleDto, member);
-        // TODO content를 기반으로 hashtag 추출 후 저장하기
+        article.addHashtags(hashtags);
 
         articleRepository.save(article);
     }
