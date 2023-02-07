@@ -47,7 +47,7 @@ public class ArticleService {
             case TITLE -> articleRepository.findByTitleContaining(searchValue, pageable).map(DtoConverter::from);
             case CONTENT -> articleRepository.findByContentContaining(searchValue, pageable).map(DtoConverter::from);
             case CREATOR -> articleRepository.findByCreatorContaining(searchValue, pageable).map(DtoConverter::from);
-            case HASHTAG -> articleRepository.findArticlesByHashtagsContainsIgnoreCase(searchValue, pageable).map(DtoConverter::from);
+            case HASHTAG -> articleRepository.findByHashtagName(searchValue, pageable).map(DtoConverter::from);
         };
 
         return articleDtoPage;
@@ -91,6 +91,7 @@ public class ArticleService {
         if (member.isEmpty()) {
             throw new EntityNotFoundException("Not Found User " + userMail);
         } else if (member.get().getEmail() != article.getCreator()) {
+            // FIXME 본인이 생성한 게시글 수정 시 해당 Exception이 반환되고 있음
             throw new EntityNotFoundException("This User is No forbidden Update Article, " + userMail);
         } else {
             article.setTitle(updateDto.title());
@@ -103,6 +104,7 @@ public class ArticleService {
         log.info("[Test] Save Article, title = {}", articleDto.title());
         Member member = memberRepository.findByEmail(memberMail).get();
         Article article = ArticleDto.toEntity(articleDto, member);
+        // TODO content를 기반으로 hashtag 추출 후 저장하기
 
         articleRepository.save(article);
     }
@@ -127,6 +129,6 @@ public class ArticleService {
             return Page.empty(pageable);
         }
 
-        return articleRepository.findArticlesByHashtagsContainsIgnoreCase(searchValue, pageable).map(DtoConverter::from);
+        return articleRepository.findByHashtagName(searchValue, pageable).map(DtoConverter::from);
     }
 }

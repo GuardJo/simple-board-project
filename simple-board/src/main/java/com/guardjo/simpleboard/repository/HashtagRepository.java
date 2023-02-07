@@ -9,8 +9,6 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 
-import java.util.List;
-
 public interface HashtagRepository extends JpaRepository<Hashtag, Long>,
         QuerydslBinderCustomizer<QHashtag>, QuerydslPredicateExecutor<Hashtag> {
     boolean existsByName(String name);
