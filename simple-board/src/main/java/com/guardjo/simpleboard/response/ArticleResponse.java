@@ -1,14 +1,15 @@
 package com.guardjo.simpleboard.response;
 
+import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.HashtagDto;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-public record ArticleResponse(Long id, String title, String content, String hastags, String creator, LocalDateTime createTime) {
-    public static ArticleResponse of(Long id, String title, String content, String hashtags, String creator, LocalDateTime createTime) {
-        return new ArticleResponse(id, title, content, hashtags, creator, createTime);
+public record ArticleResponse(Long id, String title, String content, Set<HashtagDto> hashtagDtos, String creator, LocalDateTime createTime) {
+    public static ArticleResponse of(Long id, String title, String content, Set<HashtagDto> hashtagDtos, String creator, LocalDateTime createTime) {
+        return new ArticleResponse(id, title, content, hashtagDtos, creator, createTime);
     }
 
     public static ArticleResponse from(ArticleDto articleDto) {
@@ -16,16 +17,8 @@ public record ArticleResponse(Long id, String title, String content, String hast
                 articleDto.id(),
                 articleDto.title(),
                 articleDto.content(),
-                flatHashtags(articleDto.hashtagDtos()),
+                articleDto.hashtagDtos(),
                 articleDto.creator(),
                 articleDto.createTime());
-    }
-
-    protected static String flatHashtags(Set<HashtagDto> hashtagDtoSet) {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        hashtagDtoSet.forEach(hashtagDto -> stringBuilder.append(hashtagDto.name() + " "));
-
-        return stringBuilder.toString();
     }
 }

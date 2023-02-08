@@ -8,7 +8,9 @@
     <attr sel="#article-creator" th:text="${article.articleResponse.creator}"/>
     <attr sel="#article-create-time" th:datetime="${article.articleResponse.createTime}"
           th:text="${#temporals.format(article.articleResponse.createTime, 'yyyy-MM-dd HH:mm:ss')}"/>
-    <attr sel="#article-hashtag" th:text="${article.articleResponse.hashtag}"/>
+    <attr sel="#article-hashtags" th:each="hashtag : ${article.articleResponse.hashtagDtos}">
+        <attr sel="span" th:text="${hashtag.name}"/>
+    </attr>
 
     <attr sel="#article-control-li"
           th:if="${#authorization.expression('isAuthenticated()')} and ${article.articleResponse.creator} == ${#authentication.getName()}">

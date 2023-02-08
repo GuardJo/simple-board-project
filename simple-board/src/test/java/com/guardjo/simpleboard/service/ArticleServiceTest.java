@@ -2,6 +2,7 @@ package com.guardjo.simpleboard.service;
 
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
+import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
@@ -28,6 +29,7 @@ import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,7 +56,7 @@ class ArticleServiceTest {
         Pageable pageable = Pageable.ofSize(PAGE_SIZE);
 
         switch (searchType) {
-            case HASHTAG -> given(articleRepository.findArticlesByHashtagsContainsIgnoreCase(searchValue, pageable)).willReturn(Page.empty(pageable));
+            case HASHTAG -> given(articleRepository.findByHashtagName(searchValue, pageable)).willReturn(Page.empty(pageable));
             case CREATOR -> given(articleRepository.findByCreatorContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
             case CONTENT -> given(articleRepository.findByContentContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
             case TITLE -> given(articleRepository.findByTitleContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
@@ -97,12 +99,12 @@ class ArticleServiceTest {
         Pageable pageable = Pageable.ofSize(PAGE_SIZE);
         String searchValue = "test";
 
-        given(articleRepository.findArticlesByHashtagsContainsIgnoreCase(searchValue, pageable)).willReturn(Page.empty(pageable));
+        given(articleRepository.findByHashtagName(searchValue, pageable)).willReturn(Page.empty(pageable));
 
         Page<ArticleDto> articleDtos = articleService.findArticlesViaHashtag(searchValue, pageable);
 
         assertThat(articleDtos).isEqualTo(Page.empty(pageable));
-        then(articleRepository).should().findArticlesByHashtagsContainsIgnoreCase(searchValue, pageable);
+        then(articleRepository).should().findByHashtagName(searchValue, pageable);
     }
 
     @DisplayName("전체 게시글들의 해시태그 목록 반환 테스트")
@@ -151,7 +153,7 @@ class ArticleServiceTest {
         Pageable pageable = Pageable.ofSize(PAGE_SIZE);
 
         switch (searchType) {
-            case HASHTAG -> given(articleRepository.findArticlesByHashtagsContainsIgnoreCase(searchValue, pageable)).willReturn(Page.empty(pageable));
+            case HASHTAG -> given(articleRepository.findByHashtagName(searchValue, pageable)).willReturn(Page.empty(pageable));
             case CREATOR -> given(articleRepository.findByCreatorContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
             case CONTENT -> given(articleRepository.findByContentContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
             case TITLE -> given(articleRepository.findByTitleContaining(searchValue, pageable)).willReturn(Page.empty(pageable));
@@ -192,7 +194,7 @@ class ArticleServiceTest {
         given(articleRepository.getReferenceById(1L)).willReturn(article);
         given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(Member.of(memberMail, "tester", "pwd")));
 
-        articleService.updateArticle(updateDto, memberMail);
+        articleService.updateArticle(updateDto, memberMail, Set.of(Hashtag.of("test")));
 
         then(articleRepository).should().getReferenceById(1L);
         then(memberRepository).should().findByEmail(anyString());
@@ -206,7 +208,7 @@ class ArticleServiceTest {
 
         given(articleRepository.getReferenceById(0L)).willReturn(null);
 
-        Throwable t = catchThrowable(() -> articleService.updateArticle(updateDto, memberMail));
+        Throwable t = catchThrowable(() -> articleService.updateArticle(updateDto, memberMail, Set.of(Hashtag.of("test"))));
 
         assertThat(t).isInstanceOf(EntityNotFoundException.class);
     }
@@ -219,7 +221,7 @@ class ArticleServiceTest {
         given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(Member.of("test@mail.com", "tester", "pwd")));
 
         articleService.saveArticle(testDataGenerator.convertArticleDto(testDataGenerator.generateArticle("test")),
-                "test@mail.com");
+                "test@mail.com", Set.of());
 
         then(articleRepository).should().save(any(Article.class));
     }

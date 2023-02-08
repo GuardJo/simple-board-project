@@ -2,11 +2,13 @@ package com.guardjo.simpleboard.service;
 
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
+import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.dto.ArticleWithCommentDto;
 import com.guardjo.simpleboard.repository.ArticleRepository;
+import com.guardjo.simpleboard.repository.HashtagRepository;
 import com.guardjo.simpleboard.repository.MemberRepository;
 import com.guardjo.simpleboard.util.DtoConverter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Transactional
@@ -47,7 +50,7 @@ public class ArticleService {
             case TITLE -> articleRepository.findByTitleContaining(searchValue, pageable).map(DtoConverter::from);
             case CONTENT -> articleRepository.findByContentContaining(searchValue, pageable).map(DtoConverter::from);
             case CREATOR -> articleRepository.findByCreatorContaining(searchValue, pageable).map(DtoConverter::from);
-            case HASHTAG -> articleRepository.findArticlesByHashtagsContainsIgnoreCase(searchValue, pageable).map(DtoConverter::from);
+            case HASHTAG -> articleRepository.findByHashtagName(searchValue, pageable).map(DtoConverter::from);
         };
 
         return articleDtoPage;
@@ -78,7 +81,7 @@ public class ArticleService {
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Article : " + id));
     }
 
-    public void updateArticle(ArticleUpdateDto updateDto, String userMail) {
+    public void updateArticle(ArticleUpdateDto updateDto, String userMail, Set<Hashtag> hashtags) {
         log.info("[Test] Request Update Article, id = {}", updateDto.id());
 
         Article article = articleRepository.getReferenceById(updateDto.id());
@@ -90,19 +93,21 @@ public class ArticleService {
 
         if (member.isEmpty()) {
             throw new EntityNotFoundException("Not Found User " + userMail);
-        } else if (member.get().getEmail() != article.getCreator()) {
+        } else if (!member.get().getEmail().equals(article.getCreator())) {
             throw new EntityNotFoundException("This User is No forbidden Update Article, " + userMail);
         } else {
             article.setTitle(updateDto.title());
             article.setContent(updateDto.content());
-            // TODO article.contest를 통해 hastag 추출하기
+            article.clearHashtags();
+            article.addHashtags(hashtags);
         }
     }
 
-    public void saveArticle(ArticleDto articleDto, String memberMail) {
+    public void saveArticle(ArticleDto articleDto, String memberMail, Set<Hashtag> hashtags) {
         log.info("[Test] Save Article, title = {}", articleDto.title());
         Member member = memberRepository.findByEmail(memberMail).get();
         Article article = ArticleDto.toEntity(articleDto, member);
+        article.addHashtags(hashtags);
 
         articleRepository.save(article);
     }
@@ -127,6 +132,6 @@ public class ArticleService {
             return Page.empty(pageable);
         }
 
-        return articleRepository.findArticlesByHashtagsContainsIgnoreCase(searchValue, pageable).map(DtoConverter::from);
+        return articleRepository.findByHashtagName(searchValue, pageable).map(DtoConverter::from);
     }
 }

@@ -2,12 +2,15 @@ package com.guardjo.simpleboard.controller;
 
 import com.guardjo.simpleboard.domain.ArticleSearchType;
 import com.guardjo.simpleboard.domain.FormType;
+import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.dto.security.SimpleBoardPrincipal;
+import com.guardjo.simpleboard.repository.HashtagRepository;
 import com.guardjo.simpleboard.response.ArticleResponse;
 import com.guardjo.simpleboard.response.ArticleWithCommentResponse;
 import com.guardjo.simpleboard.service.ArticleService;
+import com.guardjo.simpleboard.service.HashtagService;
 import com.guardjo.simpleboard.service.PaginationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Controller
@@ -28,11 +32,14 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
     private final PaginationService paginationService;
+    private final HashtagService hashtagService;
 
     public ArticleController(@Autowired ArticleService articleService,
-                             @Autowired PaginationService paginationService) {
+                             @Autowired PaginationService paginationService,
+                             @Autowired HashtagService hashtagService) {
         this.articleService = articleService;
         this.paginationService = paginationService;
+        this.hashtagService = hashtagService;
     }
 
     @GetMapping
@@ -48,6 +55,8 @@ public class ArticleController {
         modelMap.addAttribute("articles", articleResponseList);
         modelMap.addAttribute("paginationNumbers", paginationNumbers);
         modelMap.addAttribute("articleSearchTypes", ArticleSearchType.values());
+        modelMap.addAttribute("hashtagSearch", ArticleSearchType.HASHTAG);
+
         return "article/index";
     }
 
@@ -105,7 +114,9 @@ public class ArticleController {
                                 @AuthenticationPrincipal SimpleBoardPrincipal simpleBoardPrincipal) {
         log.info("Request Update Article : {}", articleUpdateDto.title());
 
-        articleService.updateArticle(articleUpdateDto, simpleBoardPrincipal.getUsername());
+        Set<Hashtag> hashtags = hashtagService.parseHashtagsInContent(articleUpdateDto.content());
+
+        articleService.updateArticle(articleUpdateDto, simpleBoardPrincipal.getUsername(), hashtags);
 
         return "redirect:/article/" + articleId;
     }
@@ -123,7 +134,8 @@ public class ArticleController {
     public String createArticle(ArticleDto articleDto, @AuthenticationPrincipal SimpleBoardPrincipal principal) {
         log.info("[Test] Request Create Article : {}", articleDto.title());
 
-        articleService.saveArticle(articleDto, principal.getUsername());
+        Set<Hashtag> hashtags = hashtagService.parseHashtagsInContent(articleDto.content());
+        articleService.saveArticle(articleDto, principal.getUsername(), hashtags);
 
         return "redirect:/article";
     }
