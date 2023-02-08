@@ -13,6 +13,7 @@ import com.guardjo.simpleboard.dto.MemberDto;
 import com.guardjo.simpleboard.generator.TestDataGenerator;
 import com.guardjo.simpleboard.repository.MemberRepository;
 import com.guardjo.simpleboard.service.ArticleService;
+import com.guardjo.simpleboard.service.HashtagService;
 import com.guardjo.simpleboard.service.PaginationService;
 import com.guardjo.simpleboard.util.DtoConverter;
 import org.junit.jupiter.api.Disabled;
@@ -53,6 +54,8 @@ class ArticleControllerTest {
     private ArticleService articleService;
     @MockBean
     private PaginationService paginationService;
+    @MockBean
+    private HashtagService hashtagService;
     private final MockMvc mockMvc;
     private final TestDataGenerator testDataGenerator;
 
@@ -259,7 +262,7 @@ class ArticleControllerTest {
         formParams.add("title", articleUpdateDto.title());
         formParams.add("content", articleUpdateDto.content());
 
-        willDoNothing().given(articleService).updateArticle(any(ArticleUpdateDto.class), anyString());
+        willDoNothing().given(articleService).updateArticle(any(ArticleUpdateDto.class), anyString(), anySet());
         given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(Member.of(MEMBER_MAIL, "tester", "pwd")));
 
         mockMvc.perform(post("/article/update-view/" + articleId)
@@ -271,7 +274,7 @@ class ArticleControllerTest {
                 .andExpect(redirectedUrl("/article/" + articleId));
 
         then(memberRepository).should().findByEmail(anyString());
-        then(articleService).should().updateArticle(any(ArticleUpdateDto.class), anyString());
+        then(articleService).should().updateArticle(any(ArticleUpdateDto.class), anyString(), anySet());
     }
 
     @DisplayName("권한 없는 게시글에 대한 수정 요청 테스트")
@@ -285,7 +288,7 @@ class ArticleControllerTest {
         formParams.add("title", articleUpdateDto.title());
         formParams.add("content", articleUpdateDto.content());
 
-        willDoNothing().given(articleService).updateArticle(any(ArticleUpdateDto.class), anyString());
+        willDoNothing().given(articleService).updateArticle(any(ArticleUpdateDto.class), anyString(), anySet());
 
         mockMvc.perform(post("/article/update-view/" + articleId)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -328,7 +331,7 @@ class ArticleControllerTest {
         params.add("content", article.getContent());
         // TODO : 해시태그는 content 필드 내용을 통해 적용할 예정
 
-        willDoNothing().given(articleService).saveArticle(any(ArticleDto.class), anyString());
+        willDoNothing().given(articleService).saveArticle(any(ArticleDto.class), anyString(), anySet());
 
         mockMvc.perform(post("/article/create-view")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -338,6 +341,6 @@ class ArticleControllerTest {
                 .andExpect(view().name("redirect:/article"))
                 .andExpect(redirectedUrl("/article"));
 
-        then(articleService).should().saveArticle(any(ArticleDto.class), anyString());
+        then(articleService).should().saveArticle(any(ArticleDto.class), anyString(), anySet());
     }
 }

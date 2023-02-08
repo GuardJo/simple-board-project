@@ -81,7 +81,7 @@ public class ArticleService {
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Article : " + id));
     }
 
-    public void updateArticle(ArticleUpdateDto updateDto, String userMail) {
+    public void updateArticle(ArticleUpdateDto updateDto, String userMail, Set<Hashtag> hashtags) {
         log.info("[Test] Request Update Article, id = {}", updateDto.id());
 
         Article article = articleRepository.getReferenceById(updateDto.id());
@@ -98,6 +98,8 @@ public class ArticleService {
         } else {
             article.setTitle(updateDto.title());
             article.setContent(updateDto.content());
+            article.clearHashtags();
+            article.addHashtags(hashtags);
         }
     }
 
