@@ -26,7 +26,6 @@ public class DtoConverter {
         return CommentDto.of(
                 comment.getId(),
                 comment.getArticle().getId(),
-                comment.getParentComment() == null ? null : comment.getParentComment().getId(),
                 comment.getCreator(),
                 comment.getCreateTime(),
                 comment.getContent()
