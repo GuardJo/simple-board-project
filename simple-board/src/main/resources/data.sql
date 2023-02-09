@@ -153,7 +153,7 @@ insert into article (title, content, member_id, creator, create_time, modifier, 
 insert into article (title, content, member_id, creator, create_time, modifier, modified_time) values ('a feugiat et eros vestibulum ac est lacinia nisi venenatis tristique fusce congue diam id ornare', 'accumsan tellus nisi eu orci mauris lacinia sapien quis libero nullam sit amet turpis elementum ligula vehicula consequat', 5, 'Nicoli Holt', '2021-12-19 05:06:44', 'Alanah O'' Mahony', '2022-07-04 00:54:23');
 
 -- 500개의 Comment Test data
-insert into comment (content, create_time, member_id, article_id, creator, modified_time, modifier) values ('sit amet nulla quisque arcu libero rutrum ac lobortis vel dapibus at', '2022-07-18 03:53:48', 37, 12, 'Danika Bryenton', '2022-03-25 17:31:17', 'Perla Capponer');
+insert into comment (content, create_time, member_id, article_id, creator, modified_time, modifier) values ('sit amet nulla quisque arcu libero rutrum ac lobortis vel dapibus at', '2022-07-18 03:53:48', 1, 12, 'test@mail.com', '2022-03-25 17:31:17', 'Perla Capponer');
 insert into comment (content, create_time, member_id, article_id, creator, modified_time, modifier) values ('eleifend pede libero quis orci nullam molestie nibh in lectus pellentesque', '2022-02-25 00:27:17', 17, 83, 'Salli Froggatt', '2021-12-28 00:28:29', 'Bernita Alessandretti');
 insert into comment (content, create_time, member_id, article_id, creator, modified_time, modifier) values ('faucibus orci luctus et ultrices posuere cubilia curae mauris viverra diam vitae quam suspendisse potenti nullam porttitor lacus at turpis', '2022-10-04 23:41:34', 37, 26, 'Hubey Hendrickson', '2021-12-15 22:00:56', 'Alfie Pruce');
 insert into comment (content, create_time, member_id, article_id, creator, modified_time, modifier) values ('magna ac consequat metus sapien ut nunc vestibulum ante ipsum primis in', '2021-11-16 03:43:37', 5, 70, 'Luella Erie', '2022-05-22 07:21:06', 'Johann Gooke');
@@ -653,6 +653,14 @@ insert into comment (content, create_time, member_id, article_id, creator, modif
 insert into comment (content, create_time, member_id, article_id, creator, modified_time, modifier) values ('sapien a libero nam dui proin leo odio porttitor id consequat in consequat', '2022-04-25 17:42:43', 45, 71, 'Teena Oultram', '2022-02-14 08:37:54', 'Son Burdus');
 insert into comment (content, create_time, member_id, article_id, creator, modified_time, modifier) values ('quam a odio in hac habitasse platea dictumst maecenas ut massa quis augue luctus tincidunt nulla mollis', '2022-03-23 00:37:25', 8, 98, 'Duffie McHugh', '2021-12-02 06:03:06', 'Flemming Muscroft');
 insert into comment (content, create_time, member_id, article_id, creator, modified_time, modifier) values ('a libero nam dui proin leo odio porttitor id consequat in consequat ut', '2022-01-11 18:15:16', 23, 42, 'Catharina Ryan', '2021-11-25 23:14:37', 'Bambie Dominetti');
+
+-- 5개의 sub comments in id {1} --
+insert into comment (content, create_time, member_id, article_id, creator, modified_time, modifier, parent_comment_id) values ('at velit eu est congue elementum in hac habitasse platea dictumst morbi vestibulum velit id', '2022-09-04 03:16:47', 24, 12, 'Demetrius Wilmut', '2021-11-20 19:14:48', 'Steffie Paddock', 1);
+insert into comment (content, create_time, member_id, article_id, creator, modified_time, modifier, parent_comment_id) values ('bibendum imperdiet nullam orci pede venenatis non sodales sed tincidunt', '2022-02-10 01:21:59', 13, 12, 'Beauregard Vettore', '2022-02-14 07:32:49', 'Zelma Prest', 1);
+insert into comment (content, create_time, member_id, article_id, creator, modified_time, modifier, parent_comment_id) values ('porttitor lorem id ligula suspendisse ornare consequat lectus in est', '2022-06-10 10:46:22', 8, 12, 'Sari Blakeney', '2022-04-02 07:12:01', 'Shawnee Mansour', 1);
+insert into comment (content, create_time, member_id, article_id, creator, modified_time, modifier, parent_comment_id) values ('sem praesent id massa id nisl venenatis lacinia aenean sit amet justo morbi ut odio', '2022-01-05 06:31:13', 35, 12, 'Gilberta Deplacido', '2022-09-14 14:34:27', 'Tom Southey', 1);
+insert into comment (content, create_time, member_id, article_id, creator, modified_time, modifier, parent_comment_id) values ('dapibus duis at velit eu est congue elementum in hac habitasse platea', '2022-10-16 17:43:24', 29, 12, 'Prudence Vasilchikov', '2022-02-03 04:53:01', 'Lief Falvey', 1);
+
 
 -- 50개의 hashtag 테이블 --
 insert into hashtag (name, creator, create_time, modifier, modified_time) values (1, 'Peri Bartomeu', '2022-07-24 11:22:54', 'Austin Zanazzi', '2021-12-07 02:25:27');
