@@ -70,7 +70,7 @@ class CommentServiceTest {
         String memberId = testMember.getEmail();
 
         given(articleRepository.getReferenceById(any())).willReturn(article);
-        given(commentRepository.save(any(Comment.class))).willReturn(CommentDto.toEntity(commentDto, testMember, article, null));
+        given(commentRepository.save(any(Comment.class))).willReturn(CommentDto.toEntity(commentDto, testMember, article));
         given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(testMember));
 
         commentService.saveComment(commentDto, memberId);
