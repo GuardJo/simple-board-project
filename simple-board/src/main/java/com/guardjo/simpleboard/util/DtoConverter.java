@@ -23,13 +23,21 @@ public class DtoConverter {
     }
 
     public static CommentDto from(Comment comment) {
-        return CommentDto.of(
+        CommentDto commentDto = CommentDto.of(
                 comment.getId(),
                 comment.getArticle().getId(),
+                comment.getParentCommentId(),
                 comment.getCreator(),
                 comment.getCreateTime(),
                 comment.getContent()
         );
+
+        if (comment.hasChildComments()) {
+            commentDto.addAllChildComments(comment.getChildComments().stream()
+                    .map(DtoConverter::from).collect(Collectors.toSet()));
+        }
+
+        return commentDto;
     }
 
     public static MemberDto from(Member member) {

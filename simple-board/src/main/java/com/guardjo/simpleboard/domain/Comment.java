@@ -79,4 +79,17 @@ public class Comment extends MetaInfoData {
         childComment.setParentCommentId(this.getId());
         this.getChildComments().add(childComment);
     }
+
+    public void addAllChildComment(Set<Comment> comments) {
+        childComments.forEach(
+                comment -> {
+                    comment.setParentCommentId(this.id);
+                    this.addChildComment(comment);
+                }
+        );
+    }
+
+    public boolean hasChildComments() {
+        return this.childComments.size() == 0 ? false : true;
+    }
 }

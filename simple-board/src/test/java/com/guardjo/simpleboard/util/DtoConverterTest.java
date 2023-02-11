@@ -9,6 +9,7 @@ import com.guardjo.simpleboard.dto.CommentDto;
 import com.guardjo.simpleboard.dto.HashtagDto;
 import com.guardjo.simpleboard.dto.MemberDto;
 import com.guardjo.simpleboard.generator.TestDataGenerator;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -44,6 +45,24 @@ class DtoConverterTest {
         assertThat(commentDto.creator()).isEqualTo(comment.getCreator());
         assertThat(commentDto.createTime()).isEqualTo(comment.getCreateTime());
         assertThat(commentDto.content()).isEqualTo(comment.getContent());
+    }
+
+    @DisplayName("CommentWithSubComments -> CommentDto 테스트")
+    @Test
+    void testConvertCommentToCommentDtoWithSubComments() {
+        Comment comment = testDataGenerator.generateComment("test", 1L);
+        Comment subComment = testDataGenerator.generateComment("test2", 1L);
+        comment.addChildComment(subComment);
+
+        CommentDto commentDto = dtoConverter.from(comment);
+
+        assertThat(commentDto.creator()).isEqualTo(comment.getCreator());
+        assertThat(commentDto.createTime()).isEqualTo(comment.getCreateTime());
+        assertThat(commentDto.content()).isEqualTo(comment.getContent());
+
+        assertThat(commentDto).hasFieldOrPropertyWithValue("parentCommentId", null)
+                .extracting("childComments", InstanceOfAssertFactories.COLLECTION)
+                .hasSize(1);
     }
 
     @DisplayName("Member -> MemberDto 테스트")
