@@ -20,8 +20,8 @@
         <attr sel="#article-delete-form" th:action="@{'/article/' + ${article.id}}" th:method="delete"/>
     </attr>
 
-    <attr sel="#comment-list" th:remove="all-but-first">
-        <attr sel=".parent-comment[0]" th:each="comment : ${comments}">
+    <attr sel=".article-comments" th:remove="all-but-first" th:fragment="articleComments(childComments)">
+        <attr sel=".article-comment[0]" th:each="comment : ${childComments} ?: ${comments}">
             <attr sel="div/time" th:datetime="${comment.createTime}"
                   th:text="${#temporals.format(comment.createTime, 'yyyy-MM-dd HH:mm:ss')}"/>
             <attr sel="div/strong" th:text="${comment.creator}"/>
@@ -30,18 +30,7 @@
                   th:if="${#authorization.expression('isAuthenticated()')} and ${comment.creator} == ${#authentication.getName()}">
                 <attr sel="input.article-id" th:value="${article.id}"/>
             </attr>
-            <attr sel="ul" th:if="${!comment.childComments.isEmpty}" th:remove="all-but-first">
-                <attr sel=".child-comment[0]" th:each="childComment : ${comment.childComments}">
-                    <attr sel="div/time" th:datetime="${childComment.createTime}"
-                          th:text="${#temporals.format(childComment.createTime, 'yyyy-MM-dd HH:mm:ss')}"/>
-                    <attr sel="div/strong" th:text="${childComment.creator}"/>
-                    <attr sel="p" th:text="${childComment.content}"/>
-                    <attr sel="div/form.comment-delete-form" th:action="@{'/comment/' + ${childComment.id}}" th:method="delete"
-                          th:if="${#authorization.expression('isAuthenticated()')} and ${childComment.creator} == ${#authentication.getName()}">
-                        <attr sel="input.article-id" th:value="${article.id}"/>
-                    </attr>
-                </attr>
-            </attr>
+            <attr sel=".child-comments" th:unless="${comment.childComments.isEmpty()}" th:replace=":: articleComments(${comment.childComments})"/>
             <attr sel="form.comment-form" th:action="@{/comment}" th:method="post">
                 <attr sel="input.article-id" th:value="${article.id}"/>
                 <attr sel="input.parent-comment-id" th:value="${comment.id}"/>
