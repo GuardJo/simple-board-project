@@ -49,6 +49,9 @@ class CommentResponseTest {
         
     }
 
+    /**
+     * n차 대댓글 관련 view는 제거되었으나 기능은 남겨둠
+     */
     @DisplayName("2차 대댓글 -> CommentResponse 변환 테스트")
     @Test
     void testConvert_2_sub_CommentResponse() {
