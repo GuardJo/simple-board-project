@@ -35,10 +35,15 @@ public class TestDataGenerator {
         return Comment.of(generateMember(), generateArticle("test"), content);
     }
 
+    public Comment generateSubComment(String content, Long articleId, Long parentCommentId) {
+        return Comment.of(generateMember(), generateArticle("test"), content, parentCommentId);
+    }
+
     public CommentDto convertCommentDto(Comment comment) {
         return CommentDto.of(
                 comment.getId(),
                 comment.getArticle().getId(),
+                comment.getParentCommentId(),
                 comment.getCreator(),
                 comment.getCreateTime(),
                 comment.getContent()
