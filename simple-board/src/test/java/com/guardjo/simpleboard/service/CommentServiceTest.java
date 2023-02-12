@@ -8,6 +8,7 @@ import com.guardjo.simpleboard.generator.TestDataGenerator;
 import com.guardjo.simpleboard.repository.ArticleRepository;
 import com.guardjo.simpleboard.repository.CommentRepository;
 import com.guardjo.simpleboard.repository.MemberRepository;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,6 +51,27 @@ class CommentServiceTest {
 
         assertThat(commentDtoList.size()).isEqualTo(1);
         assertThat(commentDtoList.get(0).content()).isEqualTo("test comtent");
+    }
+
+    @DisplayName("게시글 id를 통해 해당 게시글의 댓글 및 대댓글 리스트 반환 테스트")
+    @Test
+    void testFindCommentsWithSubComments() {
+        Article article = testDataGenerator.generateArticle("test");
+        Comment parentComment = Comment.of(testMember, article, "test comtent");
+        Comment childComment = Comment.of(testMember, article, "test sub comment");
+        parentComment.addChildComment(childComment);
+
+        article.getComments().add(parentComment);
+
+        given(articleRepository.getReferenceById(any(Long.class))).willReturn(article);
+
+        List<CommentDto> commentDtoList = commentService.findComments(1L);
+
+        assertThat(commentDtoList.size()).isEqualTo(1);
+        assertThat(commentDtoList.get(0).content()).isEqualTo("test comtent");
+        assertThat(commentDtoList.get(0)).hasFieldOrPropertyWithValue("parentCommentId", null)
+                .extracting("childComments", InstanceOfAssertFactories.COLLECTION)
+                .hasSize(1);
     }
 
     @DisplayName("특정 댓글 삭제 테스트")
