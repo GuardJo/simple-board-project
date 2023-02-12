@@ -6,6 +6,7 @@ import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.*;
 import com.guardjo.simpleboard.dto.security.SimpleBoardPrincipal;
+import org.springframework.boot.autoconfigure.web.servlet.DefaultJerseyApplicationPath;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -59,7 +60,7 @@ public class DtoConverter {
                 article.getContent(),
                 from(article.getHashtags()),
                 from(article.getMember()),
-                from(article.getComments())
+                from(excludeChildComment(article.getComments()))
         );
     }
 
@@ -83,6 +84,12 @@ public class DtoConverter {
                         return from((Comment) t);
                     }
                 })
+                .collect(Collectors.toSet());
+    }
+
+    private static Set<Comment> excludeChildComment(Set<Comment> comments) {
+        return comments.stream()
+                .filter(comment -> comment.getParentCommentId() == null)
                 .collect(Collectors.toSet());
     }
 }
