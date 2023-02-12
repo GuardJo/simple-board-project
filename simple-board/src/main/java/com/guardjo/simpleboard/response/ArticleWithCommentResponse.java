@@ -2,9 +2,7 @@ package com.guardjo.simpleboard.response;
 
 import com.guardjo.simpleboard.dto.ArticleWithCommentDto;
 
-import java.util.Comparator;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public record ArticleWithCommentResponse(Long id, ArticleResponse articleResponse, String content, Set<CommentResponse> commentResponses) {

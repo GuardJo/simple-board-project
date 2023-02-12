@@ -5,11 +5,8 @@ import com.guardjo.simpleboard.domain.Comment;
 import com.guardjo.simpleboard.domain.Member;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 /**
  * A DTO for the {@link com.guardjo.simpleboard.domain.Comment} entity
