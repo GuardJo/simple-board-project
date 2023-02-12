@@ -64,6 +64,32 @@ class CommentControllerTest {
         then(commentService).should().saveComment(any(CommentDto.class), anyString());
     }
 
+    @DisplayName("대댓글 저장 요청 테스트")
+    @WithUserDetails(value = "test@mail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    void testSaveSubComment() throws Exception {
+        Long articleId = 1L;
+        Long parentCommentId = 1L;
+        CommentDto commentDto = testDataGenerator.convertCommentDto(testDataGenerator.generateSubComment("test content", articleId, parentCommentId));
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("articleId", String.valueOf(articleId));
+        params.add("content", commentDto.content());
+        params.add("parentCommentId", String.valueOf(commentDto.parentCommentId()));
+
+        willDoNothing().given(commentService).saveComment(any(CommentDto.class), anyString());
+
+        mockMvc.perform(post("/comment")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .queryParams(params)
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/article/" + articleId))
+                .andExpect(redirectedUrl("/article/" + articleId));
+
+        then(commentService).should().saveComment(any(CommentDto.class), anyString());
+    }
+
     @DisplayName("로그인 없이 댓글 저장 요청 테스트")
     @Test
     void testSaveCommentWithoutLogin() throws Exception {

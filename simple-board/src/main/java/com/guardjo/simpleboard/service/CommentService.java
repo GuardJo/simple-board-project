@@ -48,6 +48,6 @@ public class CommentService {
         Article article = articleRepository.getReferenceById(commentDto.articleId());
         Member member = memberRepository.findByEmail(memberMail).get();
 
-        commentRepository.save(CommentDto.toEntity(commentDto, member, article, null));
+        commentRepository.save(CommentDto.toEntity(commentDto, member, article));
     }
 }

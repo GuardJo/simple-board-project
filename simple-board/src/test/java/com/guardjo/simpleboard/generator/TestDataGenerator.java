@@ -8,6 +8,8 @@ import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.dto.CommentDto;
 import com.guardjo.simpleboard.util.DtoConverter;
 
+import java.time.LocalDateTime;
+
 public class TestDataGenerator {
     public Member generateMember() {
         return Member.of("test@mail.com", "tester", "1234");
@@ -35,11 +37,19 @@ public class TestDataGenerator {
         return Comment.of(generateMember(), generateArticle("test"), content);
     }
 
+    public Comment generateSubComment(String content, Long articleId, Long parentCommentId) {
+        return Comment.of(generateMember(), generateArticle("test"), content, parentCommentId);
+    }
+
+    public CommentDto generateCommentDto(Long id, Long articleId, Long parentCommentId, String content) {
+        return CommentDto.of(id, articleId, parentCommentId, "tester", LocalDateTime.now(), content);
+    }
+
     public CommentDto convertCommentDto(Comment comment) {
         return CommentDto.of(
                 comment.getId(),
                 comment.getArticle().getId(),
-                comment.getParentComment() == null ? null : comment.getParentComment().getId(),
+                comment.getParentCommentId(),
                 comment.getCreator(),
                 comment.getCreateTime(),
                 comment.getContent()

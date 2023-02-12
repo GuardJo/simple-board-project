@@ -23,14 +23,21 @@ public class DtoConverter {
     }
 
     public static CommentDto from(Comment comment) {
-        return CommentDto.of(
+        CommentDto commentDto = CommentDto.of(
                 comment.getId(),
                 comment.getArticle().getId(),
-                comment.getParentComment() == null ? null : comment.getParentComment().getId(),
+                comment.getParentCommentId(),
                 comment.getCreator(),
                 comment.getCreateTime(),
                 comment.getContent()
         );
+
+        if (comment.hasChildComments()) {
+            commentDto.addAllChildComments(comment.getChildComments().stream()
+                    .map(DtoConverter::from).collect(Collectors.toSet()));
+        }
+
+        return commentDto;
     }
 
     public static MemberDto from(Member member) {
@@ -52,7 +59,7 @@ public class DtoConverter {
                 article.getContent(),
                 from(article.getHashtags()),
                 from(article.getMember()),
-                from(article.getComments())
+                from(excludeChildComment(article.getComments()))
         );
     }
 
@@ -76,6 +83,12 @@ public class DtoConverter {
                         return from((Comment) t);
                     }
                 })
+                .collect(Collectors.toSet());
+    }
+
+    private static Set<Comment> excludeChildComment(Set<Comment> comments) {
+        return comments.stream()
+                .filter(comment -> comment.getParentCommentId() == null)
                 .collect(Collectors.toSet());
     }
 }

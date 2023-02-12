@@ -22,7 +22,7 @@ public record ArticleWithCommentResponse(Long id, ArticleResponse articleRespons
                         articleWithCommentDto.createTime()
                 ),
                 articleWithCommentDto.content(),
-                articleWithCommentDto.commentDtos().stream().map(CommentResponse::from).collect(Collectors.toSet())
+                CommentUtil.sortComments(articleWithCommentDto.commentDtos().stream().map(CommentResponse::from).collect(Collectors.toSet()))
         );
     }
 }
