@@ -2,7 +2,9 @@ package com.guardjo.simpleboard.response;
 
 import com.guardjo.simpleboard.dto.ArticleWithCommentDto;
 
+import java.util.Comparator;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public record ArticleWithCommentResponse(Long id, ArticleResponse articleResponse, String content, Set<CommentResponse> commentResponses) {
@@ -22,7 +24,7 @@ public record ArticleWithCommentResponse(Long id, ArticleResponse articleRespons
                         articleWithCommentDto.createTime()
                 ),
                 articleWithCommentDto.content(),
-                articleWithCommentDto.commentDtos().stream().map(CommentResponse::from).collect(Collectors.toSet())
+                CommentUtil.sortComments(articleWithCommentDto.commentDtos().stream().map(CommentResponse::from).collect(Collectors.toSet()))
         );
     }
 }

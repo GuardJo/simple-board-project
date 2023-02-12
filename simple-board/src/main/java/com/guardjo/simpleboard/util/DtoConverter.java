@@ -6,7 +6,6 @@ import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.*;
 import com.guardjo.simpleboard.dto.security.SimpleBoardPrincipal;
-import org.springframework.boot.autoconfigure.web.servlet.DefaultJerseyApplicationPath;
 
 import java.util.Set;
 import java.util.stream.Collectors;

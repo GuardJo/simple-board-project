@@ -3,7 +3,9 @@ package com.guardjo.simpleboard.response;
 import com.guardjo.simpleboard.dto.CommentDto;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public record CommentResponse(Long id, LocalDateTime createTime, String creator, String content, Long parentCommentId, Set<CommentResponse> childComments)  {
@@ -18,9 +20,9 @@ public record CommentResponse(Long id, LocalDateTime createTime, String creator,
                 commentDto.creator(),
                 commentDto.content(),
                 commentDto.parentCommentId(),
-                commentDto.childComments().stream()
+                CommentUtil.sortComments(commentDto.childComments().stream()
                         .map(CommentResponse::from)
-                        .collect(Collectors.toSet())
+                        .collect(Collectors.toSet()))
         );
 
         return commentResponse;
