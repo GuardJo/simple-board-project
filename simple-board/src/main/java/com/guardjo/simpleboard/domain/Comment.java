@@ -52,14 +52,19 @@ public class Comment extends MetaInfoData {
 
     }
 
-    private Comment(Member member, Article article, String content) {
+    private Comment(Member member, Article article, String content, Long parentCommentId) {
         this.member = member;
         this.article = article;
         this.content = content;
+        this.parentCommentId = parentCommentId;
     }
 
     public static Comment of(Member member, Article article, String content) {
-        return new Comment(member, article, content);
+        return Comment.of(member, article, content, null);
+    }
+
+    public static Comment of(Member member, Article article, String content, Long parentCommentId) {
+        return new Comment(member, article, content, parentCommentId);
     }
 
     @Override

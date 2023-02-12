@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /**
  * A DTO for the {@link com.guardjo.simpleboard.domain.Comment} entity
@@ -26,22 +27,11 @@ public record CommentDto(Long id, Long articleId, Long parentCommentId, Set<Comm
         Comment comment = Comment.of(
                 member,
                 article,
-                commentDto.content()
+                commentDto.content(),
+                commentDto.parentCommentId
         );
 
-        if (!commentDto.childComments.isEmpty()) {
-            toEntity(commentDto.childComments);
-        }
-
         return comment;
-    }
-
-    public static Set<Comment> toEntity(Set<CommentDto> commentDtos) {
-        Set<Comment> comments = new HashSet<>();
-
-        // TODO : 하위 댓글들 entity 변환 로직 추가
-
-        return comments;
     }
 
     public void addAllChildComments(Set<CommentDto> commentDtos) {
