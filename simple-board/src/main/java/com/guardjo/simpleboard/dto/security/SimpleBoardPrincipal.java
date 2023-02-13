@@ -66,4 +66,8 @@ public record SimpleBoardPrincipal(String email, String name, String password,
     public boolean isEnabled() {
         return true;
     }
+
+    public String getNickName() {
+        return this.name;
+    }
 }
