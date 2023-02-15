@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Getter
-@ToString
+@ToString(callSuper = true)
 @Entity
 @Table(indexes = {
         @Index(name = "email", columnList = "email"),
@@ -51,10 +51,12 @@ public class Member extends MetaInfoData{
         this.articles = articles;
     }
 
-    protected Member(String email, String name, String password) {
+    protected Member(String email, String name, String password, String creator) {
         this.email = email;
         this.name = name;
         this.password = password;
+        this.creator = creator;
+        this.modifier = creator;
     }
 
     public Member() {
@@ -62,7 +64,19 @@ public class Member extends MetaInfoData{
     }
 
     public static Member of(String email, String name, String password) {
-        return new Member(email, name, password);
+        return new Member(email, name, password, null);
+    }
+
+    /**
+     * OAuth2를 통해 외부로부터 회원을 받기 위해 생성자를 별도 파라미터로 추가
+     * @param email 회원 메일 및 id
+     * @param name 회원명
+     * @param password 회원 비밀번호
+     * @param creator 생성자
+     * @return 회원 Entity
+     */
+    public static Member of(String email, String name, String password, String creator) {
+        return new Member(email, name, password, creator);
     }
 
     @Override

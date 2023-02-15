@@ -23,19 +23,19 @@ public class MetaInfoData {
     @CreatedBy
     @Column(nullable = false, updatable = false)
     @Setter
-    private String creator;
+    protected String creator;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime createTime;
+    protected LocalDateTime createTime;
 
     @LastModifiedBy
     @Column(nullable = false)
-    private String modifier;
+    protected String modifier;
 
     @LastModifiedDate
     @Column(nullable = false)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime modifiedTime;
+    protected LocalDateTime modifiedTime;
 }
