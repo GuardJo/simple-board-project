@@ -3,6 +3,7 @@ package com.guardjo.simpleboard.config;
 import com.guardjo.simpleboard.dto.MemberDto;
 import com.guardjo.simpleboard.dto.security.SimpleBoardPrincipal;
 import com.guardjo.simpleboard.repository.MemberRepository;
+import com.guardjo.simpleboard.service.MemberService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,12 +40,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(MemberRepository memberRepository) {
+    public UserDetailsService userDetailsService(MemberService memberService) {
         return username ->
-                memberRepository.findByEmail(username)
-                        .map(MemberDto::from)
+                memberService.searchMember(username)
                         .map(SimpleBoardPrincipal::from)
-                        .orElseThrow(() -> new UsernameNotFoundException("Not Found Member : " + username));
+                        .orElseThrow(() -> new UsernameNotFoundException("Not Foud Member : " + username));
 
     }
 
