@@ -21,6 +21,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -60,8 +61,6 @@ class ArticleControllerTest {
     private final TestDataGenerator testDataGenerator;
 
     private final static String MEMBER_MAIL = "test@mail.com";
-    @Autowired
-    private MemberRepository memberRepository;
 
     ArticleControllerTest(@Autowired MockMvc mockMvc) {
         this.mockMvc = mockMvc;
@@ -263,7 +262,6 @@ class ArticleControllerTest {
         formParams.add("content", articleUpdateDto.content());
 
         willDoNothing().given(articleService).updateArticle(any(ArticleUpdateDto.class), anyString(), anySet());
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(Member.of(MEMBER_MAIL, "tester", "pwd")));
 
         mockMvc.perform(post("/article/update-view/" + articleId)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -273,7 +271,6 @@ class ArticleControllerTest {
                 .andExpect(view().name("redirect:/article/" + articleId))
                 .andExpect(redirectedUrl("/article/" + articleId));
 
-        then(memberRepository).should().findByEmail(anyString());
         then(articleService).should().updateArticle(any(ArticleUpdateDto.class), anyString(), anySet());
     }
 
@@ -298,7 +295,6 @@ class ArticleControllerTest {
                 .andExpect(redirectedUrlPattern("**/login"));
 
         then(articleService).shouldHaveNoInteractions();
-        then(memberRepository).shouldHaveNoInteractions();
     }
 
     @DisplayName("게시글 생성 페이지 요청 테스트")
