@@ -49,7 +49,7 @@ public class SecurityConfig {
         return username ->
                 memberService.searchMember(username)
                         .map(SimpleBoardPrincipal::from)
-                        .orElseThrow(() -> new UsernameNotFoundException("Not Foud Member : " + username));
+                        .orElseThrow(() -> new UsernameNotFoundException("Not Found Member : " + username));
     }
 
     @Bean
