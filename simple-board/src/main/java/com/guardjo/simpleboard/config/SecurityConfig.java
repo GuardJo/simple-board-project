@@ -19,6 +19,8 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.util.UUID;
+
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -62,7 +64,7 @@ public class SecurityConfig {
 
             MemberDto memberDto = memberService.searchMember(kakaoOAuth2UserResponse.kakaoAccount().email())
                     .orElseGet(() -> memberService.saveMember(
-                            kakaoOAuth2UserResponse.kakaoAccount().email(),
+                            generateTemporaryIdAndMailOfKakaoAccount(kakaoOAuth2UserResponse.id()),
                             kakaoOAuth2UserResponse.kakaoAccount().profile().nickname(),
                             passwordEncoder.encode("{bcryp}dummy")
                     ));
@@ -74,5 +76,9 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    private String generateTemporaryIdAndMailOfKakaoAccount(long kakaoRequestId) {
+        return "kakao_oauth2_account_" + String.valueOf(kakaoRequestId);
     }
 }
