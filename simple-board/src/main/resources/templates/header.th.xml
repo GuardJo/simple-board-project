@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <thlogic>
-    <attr sel="#home" th:href="@{/}" />
-    <attr sel="#hashtags" th:href="@{/article/search-hashtag}" />
+    <attr sel="#home" th:href="@{/}"/>
+    <attr sel="#hashtags" th:href="@{/article/search-hashtag}"/>
     <attr sel="#login-url" th:href="@{/login}" sec:authorize="!isAuthenticated()"/>
-    <attr sel="#logout-url" th:href="@{/logout}" sec:authorize="isAuthenticated()" />
+    <attr sel="#kakao-login-url" th:href="@{/oauth2/authorization/kakao}" sec:authorize="!isAuthenticated()"/>
+    <attr sel="#logout-url" th:href="@{/logout}" sec:authorize="isAuthenticated()"/>
 </thlogic>

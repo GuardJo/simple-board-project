@@ -1,7 +1,8 @@
 package com.guardjo.simpleboard.config;
 
 import com.guardjo.simpleboard.domain.Member;
-import com.guardjo.simpleboard.repository.MemberRepository;
+import com.guardjo.simpleboard.service.MemberService;
+import com.guardjo.simpleboard.util.DtoConverter;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -13,19 +14,20 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 @TestConfiguration
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class})
 public class TestSecurityConfig {
     @MockBean
-    private MemberRepository memberRepository;
+    private MemberService memberService;
 
     @BeforeTestMethod
     public void testMockMemberRepository() {
-        given(memberRepository.findByEmail(anyString())).willReturn(
-                Optional.of(
-                        Member.of(
-                                "test@mail.com",
-                                "tester",
-                                "pwd"
+        given(memberService.searchMember(anyString())).willReturn(Optional.of(
+                        DtoConverter.from(
+                                Member.of(
+                                        "test@mail.com",
+                                        "tester",
+                                        "pwd"
+                                )
                         )
                 )
         );
