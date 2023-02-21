@@ -16,11 +16,12 @@ import java.util.Optional;
 public class JpaConfig {
     @Bean
     public AuditorAware<String> auditorAware() {
+        // TODO : 차후 닉네임을 통해 creator를 저장하면서 수정 및 삭제 권한 이슈도 해결할 예정
         return () -> Optional.ofNullable(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
                 .filter(Authentication::isAuthenticated)
                 .map(Authentication::getPrincipal)
                 .map(SimpleBoardPrincipal.class::cast)
-                .map(SimpleBoardPrincipal::getNickName);
+                .map(SimpleBoardPrincipal::getName);
     }
 }
