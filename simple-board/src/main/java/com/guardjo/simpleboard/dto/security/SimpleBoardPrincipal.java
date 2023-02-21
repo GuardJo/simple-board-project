@@ -87,7 +87,7 @@ public record SimpleBoardPrincipal(String email, String name, String password,
     // Oauth2 관련 메소드
     @Override
     public Map<String, Object> getAttributes() {
-        return null;
+        return this.oAuth2Attributes;
     }
 
     @Override
