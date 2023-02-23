@@ -15,6 +15,9 @@ logging:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
+    url: ${LOCAL_DB_URL}
+    username: ${LOCAL_DB_USERNAME}
+    password: ${LOCAL_DB_PASSWORD}
   jpa:
     defer-datasource-initialization: true
     hibernate:
@@ -57,16 +60,6 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-  application:
-    name: "simple-board"
-  cloud:
-    vault:
-      scheme: http
-      uri: http://localhost:8200
-      connection-timeout: 5000
-      read-timeout: 15000
-  config:
-    import: "vault://"
 ---
 spring:
   config:
