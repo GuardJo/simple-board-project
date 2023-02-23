@@ -70,3 +70,11 @@ spring:
     url: ${SIMPLE_BOARD_DB_URL}
     username: ${SIMPLE_BOARD_DB_USERNAME}
     password: ${SIMPLE_BOARD_DB_PASSWORD}
+---
+spring:
+  config:
+    activate:
+      on-profile: "test"
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
