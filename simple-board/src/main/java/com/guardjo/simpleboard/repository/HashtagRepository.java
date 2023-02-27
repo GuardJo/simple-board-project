@@ -13,14 +13,14 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource
 public interface HashtagRepository extends JpaRepository<Hashtag, Long>,
         QuerydslBinderCustomizer<QHashtag>, QuerydslPredicateExecutor<Hashtag> {
-    boolean existsByName(String name);
+    boolean existsByHashtagName(String hashtagName);
 
     @Override
     default void customize(QuerydslBindings bindings, QHashtag root) {
         bindings.excludeUnlistedProperties(true);
-        bindings.including(root.name);
+        bindings.including(root.hashtagName);
 
-        bindings.bind(root.name).first(StringExpression::containsIgnoreCase);
+        bindings.bind(root.hashtagName).first(StringExpression::containsIgnoreCase);
         bindings.bind(root.createTime).first(DateTimeExpression::eq);
     }
 }

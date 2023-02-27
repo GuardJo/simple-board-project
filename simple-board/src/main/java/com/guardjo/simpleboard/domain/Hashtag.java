@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Entity
 @Table(indexes = {
-        @Index(name = "name", columnList = "name"),
+        @Index(name = "hashtagName", columnList = "hashtagName"),
         @Index(name = "creator", columnList = "creator"),
         @Index(name = "createTime", columnList = "createTime")
 })
@@ -22,7 +22,7 @@ public class Hashtag extends MetaInfoData {
     @Column(name = "hashtag_id")
     private Long id;
     @Column(length = 100, nullable = false, unique = true)
-    private String name;
+    private String hashtagName;
 
     @ToString.Exclude
     @ManyToMany(mappedBy = "hashtags", cascade = CascadeType.ALL)
@@ -32,12 +32,12 @@ public class Hashtag extends MetaInfoData {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Hashtag hashtag)) return false;
-        return Objects.equals(name, hashtag.name) && Objects.equals(articles, hashtag.articles);
+        return Objects.equals(hashtagName, hashtag.hashtagName) && Objects.equals(articles, hashtag.articles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, articles);
+        return Objects.hash(hashtagName, articles);
     }
 
     protected Hashtag() {
@@ -45,7 +45,7 @@ public class Hashtag extends MetaInfoData {
     }
 
     private Hashtag(String name) {
-        this.name = name;
+        this.hashtagName = name;
     }
 
     public static Hashtag of(String name) {

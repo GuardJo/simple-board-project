@@ -1,6 +1,5 @@
 package com.guardjo.simpleboard.repository;
 
-import com.guardjo.simpleboard.config.JpaConfig;
 import com.guardjo.simpleboard.config.TestJpaConfig;
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.Comment;
@@ -14,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -247,13 +245,13 @@ class JpaRepositoryTest {
     void testUpdateHashtagName() {
         Hashtag hashtag = hashtagRepository.findById(1L).get();
         String updateName = "updateName";
-        hashtag.setName(updateName);
+        hashtag.setHashtagName(updateName);
 
         hashtagRepository.flush();
 
         Hashtag updateHashtag = hashtagRepository.findById(1L).get();
 
-        assertThat(updateHashtag.getName()).isEqualTo(updateName);
+        assertThat(updateHashtag.getHashtagName()).isEqualTo(updateName);
     }
 
     @DisplayName("특정 해시태그 삭제 테스트")
@@ -268,7 +266,7 @@ class JpaRepositoryTest {
     @Test
     void testExistHashtagName() {
         // 현재 data.sql로 넣어주었던 데이터
-        boolean actual = hashtagRepository.existsByName("1");
+        boolean actual = hashtagRepository.existsByHashtagName("1");
 
         assertThat(actual).isTrue();
     }

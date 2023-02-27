@@ -1,24 +1,22 @@
 package com.guardjo.simpleboard.dto;
 
 import com.guardjo.simpleboard.domain.Hashtag;
-import com.guardjo.simpleboard.domain.Member;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * A DTO for the {@link com.guardjo.simpleboard.domain.Hashtag} entity
  */
-public record HashtagDto(Long id, String name) implements Serializable {
+public record HashtagDto(Long id, String hashtagName) implements Serializable {
     public static HashtagDto of(Long id, String name) {
         return new HashtagDto(id, name);
     }
 
     public static Hashtag toEntity(HashtagDto hashtagDto) {
         return Hashtag.of(
-                hashtagDto.name
+                hashtagDto.hashtagName
         );
     }
 

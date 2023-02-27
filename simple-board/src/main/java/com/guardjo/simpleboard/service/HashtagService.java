@@ -6,9 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -57,7 +55,7 @@ public class HashtagService {
      */
     public void saveHashtag(Set<Hashtag> hashtags) {
         hashtags.forEach(hashtag -> {
-            if (!hashtagRepository.existsByName(hashtag.getName())) {
+            if (!hashtagRepository.existsByHashtagName(hashtag.getHashtagName())) {
                 hashtagRepository.save(hashtag);
             }
         });
