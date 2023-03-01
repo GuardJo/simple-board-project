@@ -36,7 +36,7 @@
                           th:text="${#temporals.format(childComment.createTime, 'yyyy-MM-dd HH:mm:ss')}"/>
                     <attr sel="div/strong" th:text="${childComment.creator}"/>
                     <attr sel="p" th:text="${childComment.content}"/>
-                    <attr sel="div/form.comment-delete-form" th:action="@{'/comment/' + ${childComment.id}}" th:method="delete"
+                    <attr sel="div/form.child-comment-delete-form" th:action="@{'/comment/' + ${childComment.id}}" th:method="delete"
                           th:if="${#authorization.expression('isAuthenticated()')} and ${childComment.creator} == ${#authentication.getPrincipal().getNickName()}">
                         <attr sel="input.article-id" th:value="${article.id}"/>
                     </attr>

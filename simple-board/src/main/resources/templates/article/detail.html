@@ -34,7 +34,7 @@
                     <li class="parent-comment">
                         <div class="form-label d-flex">
                             <strong>kyeongho2</strong>
-                            <time>2022-01-01</time>
+                            <time class="ms-2">2022-01-01</time>
                             <form class="comment-delete-form justify-content-end">
                                 <input type="hidden" class="article-id" name="articleId"/>
                                 <button type="submit" class="btn btn-danger px-1 py-0">X</button>
@@ -45,8 +45,8 @@
                             <li class="child-comment">
                                 <div class="form-label d-flex">
                                     <strong>kyeongho2</strong>
-                                    <time>2022-01-01</time>
-                                    <form class="comment-delete-form justify-content-end">
+                                    <time class="ms-2">2022-01-01</time>
+                                    <form class="child-comment-delete-form justify-content-end">
                                         <input type="hidden" class="article-id" name="articleId"/>
                                         <button type="submit" class="btn btn-danger px-1 py-0">X</button>
                                     </form>
@@ -60,7 +60,7 @@
                                 <form class="comment-form">
                                     <input type="hidden" class="article-id" name="articleId"/>
                                     <input type="hidden" class="parent-comment-id" name="parentCommentId">
-                                    <input type="text" class="form-control" placeholder="댓글" name="content"/>
+                                    <input type="text" class="form-control mb-2" placeholder="댓글" name="content"/>
                                     <button class="btn btn-light btn-sm btn-icon-text">쓰기</button>
                                 </form>
                             </details>
@@ -71,7 +71,7 @@
             <div class="card-body">
                 <form class="comment-form">
                     <input type="hidden" class="article-id" name="articleId"/>
-                    <input type="text" class="form-control" placeholder="댓글" name="content"/>
+                    <input type="text" class="form-control mb-2" placeholder="댓글" name="content"/>
                     <button class="btn btn-light btn-sm btn-icon-text">쓰기</button>
                 </form>
             </div>
