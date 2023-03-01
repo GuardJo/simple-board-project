@@ -5,7 +5,7 @@
 - spring boot 2.7.5
 - build tool : gradle
 - jdk 17
-- DB (h2, mariadb, mysql)
+- DB (h2, postgresql)
 - thymeleaf
 - spring security
 - JPA
@@ -13,6 +13,13 @@
 
 # 데모 페이지
 - [간단 게시판](https://port-0-simple-board-project-1b5xkk2fldh9dtng.gksl2.cloudtype.app/)
+
+## 실행 간 필요 환경 변수
+- `SIMPLE_BOARD_DB_URL` : postgres DB URL
+- `SIMPLE_BOARD_DB_USERNAME` : DB UserName
+- `SIMPLE_BOARD_DB_PASSWORD` : DB Password
+- `KAKAO_OAUTH2_LOGIN_KEY` : kakao 로그인 인증 관련 key
+- `KAKAO_OAUTH2_LOGIN_SECRET` : kakao 로그인 인증 관련 secret
 
 # git branch 전략
 - git hub 전략 사용 (main, feature) 만 사용하는 것
