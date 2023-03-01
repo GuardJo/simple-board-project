@@ -45,6 +45,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, Article
         bindings.bind(root.content).first(StringExpression::containsIgnoreCase);
         bindings.bind(root.creator).first(StringExpression::containsIgnoreCase);
         bindings.bind(root.createTime).first(DateTimeExpression::eq);
-        bindings.bind(root.hashtags.any().name).first(StringExpression::containsIgnoreCase);
+        bindings.bind(root.hashtags.any().hashtagName).first(StringExpression::containsIgnoreCase);
     }
 }

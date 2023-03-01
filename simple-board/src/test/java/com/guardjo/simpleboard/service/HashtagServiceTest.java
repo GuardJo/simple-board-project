@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -56,7 +55,7 @@ class HashtagServiceTest {
     void testSaveOldHashtags() {
         Set<Hashtag> hashtags = Set.of(Hashtag.of("test"));
 
-        given(hashtagRepository.existsByName(anyString())).willReturn(true);
+        given(hashtagRepository.existsByHashtagName(anyString())).willReturn(true);
 
         hashtagService.saveHashtag(hashtags);
 

@@ -40,8 +40,8 @@
                 <attr sel="td.article-title/a" th:text="${article.title}"
                       th:href="@{'/article/' + ${article.id}}"/>
                 <attr sel="td.article-hashtags/span" th:each="hashtag : ${article.hashtagDtos}">
-                    <attr sel="a" th:text="${hashtag.name}"
-                    th:href="@{/article(articleSearchType=${hashtagSearch}, searchValue=${hashtag.name})}"/>
+                    <attr sel="a" th:text="${hashtag.hashtagName}"
+                    th:href="@{/article(articleSearchType=${hashtagSearch}, searchValue=${hashtag.hashtagName})}"/>
                 </attr>
                 <attr sel="td.article-creator" th:text="${article.creator}"/>
                 <attr sel="td.article-create-time" th:datetime="${article.createTime}"

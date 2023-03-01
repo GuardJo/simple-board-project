@@ -70,7 +70,7 @@ public class DtoConverter {
     public static HashtagDto from(Hashtag hashtag) {
         return HashtagDto.of(
                 hashtag.getId(),
-                hashtag.getName()
+                hashtag.getHashtagName()
         );
     }
 

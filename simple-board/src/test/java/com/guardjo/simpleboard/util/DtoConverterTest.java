@@ -80,7 +80,7 @@ class DtoConverterTest {
         return hashtags.stream()
                 .allMatch(hashtag -> {
                     return hashtagDtos.stream()
-                            .anyMatch(hashtagDto -> hashtagDto.name().equals(hashtag.getName()));
+                            .anyMatch(hashtagDto -> hashtagDto.hashtagName().equals(hashtag.getHashtagName()));
                 });
     }
 }

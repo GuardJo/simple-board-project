@@ -26,7 +26,7 @@ public class ArticleHashtagRepositoryImpl extends QuerydslRepositorySupport impl
 
         JPQLQuery<String> query = from(qHashtag)
                 .distinct()
-                .select(qHashtag.name)
+                .select(qHashtag.hashtagName)
                 .where(qHashtag.isNotNull());
 
         return query.fetch();
@@ -39,7 +39,7 @@ public class ArticleHashtagRepositoryImpl extends QuerydslRepositorySupport impl
 
         JPQLQuery<Article> query = from(article)
                 .innerJoin(article.hashtags, hashtag)
-                .where(hashtag.name.in(hashtagName));
+                .where(hashtag.hashtagName.in(hashtagName));
 
         List<Article> articles = getQuerydsl().applyPagination(pageable, query).fetch();
 
