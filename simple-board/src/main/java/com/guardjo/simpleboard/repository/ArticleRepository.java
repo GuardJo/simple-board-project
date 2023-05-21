@@ -4,6 +4,7 @@ import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.domain.QArticle;
 import com.guardjo.simpleboard.domain.QHashtag;
+import com.guardjo.simpleboard.domain.projection.ArticleProjection;
 import com.guardjo.simpleboard.repository.querydsl.ArticleHashtagRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.CollectionExpression;
@@ -26,7 +27,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-@RepositoryRestResource
+@RepositoryRestResource(excerptProjection = ArticleProjection.class)
 public interface ArticleRepository extends JpaRepository<Article, Long>, ArticleHashtagRepository,
         QuerydslPredicateExecutor<Article>, QuerydslBinderCustomizer<QArticle> {
 
