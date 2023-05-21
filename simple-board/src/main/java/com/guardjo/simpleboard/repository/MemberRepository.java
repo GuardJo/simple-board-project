@@ -2,6 +2,7 @@ package com.guardjo.simpleboard.repository;
 
 import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.domain.QMember;
+import com.guardjo.simpleboard.domain.projection.MemberProjection;
 import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +13,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.Optional;
 
-@RepositoryRestResource
+@RepositoryRestResource(excerptProjection = MemberProjection.class)
 public interface MemberRepository extends JpaRepository<Member, Long>,
         QuerydslPredicateExecutor<Member>, QuerydslBinderCustomizer<QMember> {
     Optional<Member> findByEmail(String email);
