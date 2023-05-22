@@ -44,10 +44,6 @@ public class Comment extends MetaInfoData {
     @OrderBy("createTime ASC")
     private Set<Comment> childComments = new LinkedHashSet<>();
 
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
     protected Comment() {
 
     }

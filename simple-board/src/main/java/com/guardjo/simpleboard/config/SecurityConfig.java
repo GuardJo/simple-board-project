@@ -34,12 +34,15 @@ public class SecurityConfig {
                                         "/article",
                                         "/article/search-hashtag"
                                 ).permitAll()
+                                .mvcMatchers("/api/**")
+                                .permitAll()
                                 .anyRequest().authenticated()
                 ).formLogin(withDefaults())
                 .logout(logOutConfig -> logOutConfig.logoutSuccessUrl("/"))
                 .oauth2Login(config -> config.userInfoEndpoint(
                         oAuth2 -> oAuth2.userService(oAuth2UserService)
-                ));
+                ))
+                .csrf(configure -> configure.ignoringAntMatchers("/api/**"));
 
         return httpSecurity.build();
     }
