@@ -12,7 +12,7 @@ public interface ArticleProjection {
     LocalDateTime getCreateTime();
     String getModifier();
     LocalDateTime getModifiedTime();
-    long getId();
+    Long getId();
     String getTitle();
     String getContent();
     Member getMember();

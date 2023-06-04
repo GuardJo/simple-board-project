@@ -12,8 +12,8 @@ public interface CommentProjection {
     LocalDateTime getCreateTime();
     String getModifier();
     LocalDateTime getModifiedTime();
-    long getId();
-    long getParentCommentId();
+    Long getId();
+    Long getParentCommentId();
     String getContent();
     Member getMember();
 }

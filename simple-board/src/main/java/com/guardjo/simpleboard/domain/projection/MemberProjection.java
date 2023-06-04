@@ -11,7 +11,7 @@ public interface MemberProjection {
     LocalDateTime getCreateTime();
     String getModifier();
     LocalDateTime getModifiedTime();
-    long getMemberId();
+    Long getMemberId();
     String getEmail();
     String getName();
 }
