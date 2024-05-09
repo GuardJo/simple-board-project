@@ -1,3 +1,4 @@
+import Header from "@/components/Header";
 import "./globals.css";
 
 import type { Metadata } from "next";
@@ -14,6 +15,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="ko" className="h-full">
       <body className="h-full">
+        <Header />
         {children}
       </body>
     </html>
