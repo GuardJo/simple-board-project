@@ -34,3 +34,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# StorybookJs #
+storybook-static/
+
+# End of https://www.toptal.com/developers/gitignore/api/storybookjs

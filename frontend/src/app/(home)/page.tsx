@@ -1,3 +1,4 @@
+import SearchBar from "@/components/SearchBar";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,8 +7,8 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div className="flex">
-      <h1 className="text-3xl underline">Simple Board</h1>
+    <div className="flex flex-auto justify-center">
+      <SearchBar />
     </div>
   );
 }
