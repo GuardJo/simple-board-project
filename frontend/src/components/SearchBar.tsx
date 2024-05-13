@@ -9,7 +9,7 @@ export default () => {
 
     return (
         <form>
-            <div className="flex lg:w-96">
+            <div className="flex md:w-[600px]">
                 <Listbox value={searchType} onChange={(selected) => (setSearchType(selected))}>
                     {({ open }) => (
                         <div className="relative">

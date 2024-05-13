@@ -1,22 +1,19 @@
-interface ArticleList {
-    page: {
-        size: number,
-        totalElements: number,
-        totalPage: number,
-        number: number,
-    },
-    _embedded: ArticleInfo[],
+export interface ArticleList {
+    number: number,
+    totalPage: number,
+    articles: ArticleInfo[],
 };
 
-interface ArticleInfo {
+export interface ArticleInfo {
     id: number,
     title: string,
+    content: string,
     creator: string,
     hashtags: HashtagInfo[],
     createtime: string,
 };
 
-interface HashtagInfo {
+export interface HashtagInfo {
     id: number,
     name: string,
 }

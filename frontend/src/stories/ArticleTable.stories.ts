@@ -1,3 +1,4 @@
+import { ArticleList } from "@/interface";
 import ArticleTable from "../components/ArticleTable";
 import { Meta, StoryObj } from "@storybook/react";
 
@@ -7,22 +8,19 @@ const meta = {
 } satisfies Meta<typeof ArticleTable>
 
 const articles = {
-    page: {
-        number: 0,
-        totalPage: 10,
-        totalElements: 100,
-        size: 10,
-    },
-    _embedded: [
+    number: 1,
+    totalPage: 1,
+    articles: [
         {
             id: 1,
             title: "Test1",
+            content: "Test Content",
             creator: "Tester1",
             hashtags: [],
             createtime: "2024-05-13 10:47",
         },
     ],
-} satisfies Partial<ArticleList>
+} satisfies ArticleList
 
 export default meta;
 type Story = StoryObj<typeof ArticleTable>
