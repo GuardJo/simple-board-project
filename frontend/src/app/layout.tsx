@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import "./globals.css";
 
 import type { Metadata } from "next";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: {
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="h-full pb-20">
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );
