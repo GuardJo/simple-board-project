@@ -17,7 +17,7 @@ const articles = {
             content: "Test Content",
             creator: "Tester1",
             hashtags: [],
-            createtime: "2024-05-13 10:47",
+            createTime: "2024-05-15T13:33:88"
         },
     ],
 } satisfies ArticleList

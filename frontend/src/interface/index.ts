@@ -10,7 +10,7 @@ export interface ArticleInfo {
     content: string,
     creator: string,
     hashtags: HashtagInfo[],
-    createtime: string,
+    createTime: string,
 };
 
 export interface HashtagInfo {
