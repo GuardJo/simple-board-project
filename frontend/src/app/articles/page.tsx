@@ -10,7 +10,6 @@ export const metadata: Metadata = {
   title: "게시판",
 }
 
-
 export default async ({ searchParams }: ArticleQueryParams) => {
   const { page, searchType, searchValue } = searchParams;
   const articles = await getArticlePage(page ?? 1, searchType ?? "TITLE", searchValue ?? "");

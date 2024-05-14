@@ -13,7 +13,5 @@ export const Default: Story = {
     args: {
         number: 1,
         totalPage: 10,
-        prevLink: "/last",
-        nextLink: "/next",
     },
 };

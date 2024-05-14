@@ -7,7 +7,7 @@ const currentPageStyle = "relative z-10 inline-flex items-center bg-indigo-600 p
 const defaultStyle = "relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0";
 
 function getPageIndex(number: number, totalPage: number): number[] {
-    let startNumber = (number == totalPage) ? totalPage - defaultRange + 1 : Math.max((number - (Math.ceil(defaultRange / 2))), 1)
+    let startNumber = Math.max((number - (Math.ceil(defaultRange / 2))), 1)
     let finishNumber = Math.min(startNumber + defaultRange, totalPage + 1);
 
     return [startNumber, finishNumber];
@@ -69,13 +69,7 @@ export default ({ number, totalPage, searchType, searchValue }: Props) => {
                     Next
                 </a>
             </div>
-            <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-                <div>
-                    <p className="text-sm text-gray-700">
-                        Showing <span className="font-medium">10</span> to <span className="font-medium">{number}</span> of{' '}
-                        <span className="font-medium">{totalPage}</span> results
-                    </p>
-                </div>
+            <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-center">
                 <div>
                     <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
                         <a
