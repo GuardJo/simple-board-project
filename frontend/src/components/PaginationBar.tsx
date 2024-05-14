@@ -13,7 +13,7 @@ function getPageIndex(number: number, totalPage: number): number[] {
     return [startNumber, finishNumber];
 }
 
-function initPages(number: number, totalPage: number) {
+function initPages(number: number, totalPage: number, searchType?: string, searchValue?: string) {
     const result = [];
     let [startNumber, finishNumber] = getPageIndex(number, totalPage);
 
@@ -21,7 +21,7 @@ function initPages(number: number, totalPage: number) {
         if (i == number) {
             result.push(
                 <a
-                    href="#"
+                    href={makeAnchorLink(i, searchType, searchValue)}
                     className={currentPageStyle}
                 >
                     {i}
@@ -30,7 +30,7 @@ function initPages(number: number, totalPage: number) {
         } else {
             result.push(
                 <a
-                    href="#"
+                    href={makeAnchorLink(i, searchType, searchValue)}
                     className={(i == 0) ? currentPageStyle : defaultStyle}
                 >
                     {i}
@@ -42,18 +42,28 @@ function initPages(number: number, totalPage: number) {
     return result;
 }
 
-export default ({ number, totalPage }: Props) => {
+function makeAnchorLink(nextPage: number, searchType?: string, searchValue?: string) {
+    searchType = searchType ?? "TITLE";
+    searchValue = searchValue ?? "";
+
+    return `/articles?page=${nextPage}&searchType=${searchType}&searchValue=${searchValue}`;
+}
+
+export default ({ number, totalPage, searchType, searchValue }: Props) => {
+    const prevLink = Math.max(number - 1, 1);
+    const nextLink = Math.min(number + 1, totalPage)
+
     return (
-        <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+        <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 lg:w-[1000px]">
             <div className="flex flex-1 justify-between sm:hidden">
                 <a
-                    href="#"
+                    href={makeAnchorLink(prevLink, searchType, searchValue)}
                     className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
                     Previous
                 </a>
                 <a
-                    href="#"
+                    href={makeAnchorLink(nextLink, searchType, searchValue)}
                     className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
                     Next
@@ -62,22 +72,22 @@ export default ({ number, totalPage }: Props) => {
             <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                 <div>
                     <p className="text-sm text-gray-700">
-                        Showing <span className="font-medium">{number}</span> to <span className="font-medium">10</span> of{' '}
+                        Showing <span className="font-medium">10</span> to <span className="font-medium">{number}</span> of{' '}
                         <span className="font-medium">{totalPage}</span> results
                     </p>
                 </div>
                 <div>
                     <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
                         <a
-                            href="#"
+                            href={makeAnchorLink(prevLink, searchType, searchValue)}
                             className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                         >
                             <span className="sr-only">Previous</span>
                             <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
                         </a>
-                        {initPages(number, totalPage)}
+                        {initPages(number, totalPage, searchType, searchValue)}
                         <a
-                            href="#"
+                            href={makeAnchorLink(nextLink, searchType, searchValue)}
                             className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                         >
                             <span className="sr-only">Next</span>
@@ -93,4 +103,6 @@ export default ({ number, totalPage }: Props) => {
 interface Props {
     number: number,
     totalPage: number,
+    searchType?: string,
+    searchValue?: string,
 };

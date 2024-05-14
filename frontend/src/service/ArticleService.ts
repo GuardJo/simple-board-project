@@ -1,7 +1,9 @@
+import { ArticleList } from "@/interface";
+
 const baseUrl = "http://localhost:8080/api/v2"
 
-export async function getArticlePage() {
-    const response = await fetch(`${baseUrl}/articles`);
+export async function getArticlePage(page: number, searchType: string, searchValue: string) {
+    const response = await fetch(`${baseUrl}/articles?page=${page - 1}&searchType=${searchType}&searchValue=${searchValue}`);
 
     return response.json();
 }
