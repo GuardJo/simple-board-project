@@ -8,7 +8,6 @@ import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
 import com.guardjo.simpleboard.dto.ArticleWithCommentDto;
 import com.guardjo.simpleboard.repository.ArticleRepository;
-import com.guardjo.simpleboard.repository.HashtagRepository;
 import com.guardjo.simpleboard.repository.MemberRepository;
 import com.guardjo.simpleboard.util.DtoConverter;
 import lombok.extern.slf4j.Slf4j;
@@ -34,9 +33,7 @@ public class ArticleService {
     private MemberRepository memberRepository;
     @Autowired
     private ArticleRepository articleRepository;
-
-    private DtoConverter dtoConverter = new DtoConverter();
-
+    
     @Transactional(readOnly = true)
     public Page<ArticleDto> findArticles(@Nullable ArticleSearchType searchType, @Nullable String searchValue, Pageable pageable) {
         log.info("[Test] Request findArtciles searchType = {}, seachValue = {}", searchType, searchValue);
@@ -46,14 +43,12 @@ public class ArticleService {
             return articleRepository.findAll(pageable).map(DtoConverter::from);
         }
 
-        Page<ArticleDto> articleDtoPage = switch (searchType) {
-            case TITLE -> articleRepository.findByTitleContaining(searchValue, pageable).map(DtoConverter::from);
+        return switch (searchType) {
             case CONTENT -> articleRepository.findByContentContaining(searchValue, pageable).map(DtoConverter::from);
             case CREATOR -> articleRepository.findByCreatorContaining(searchValue, pageable).map(DtoConverter::from);
             case HASHTAG -> articleRepository.findByHashtagName(searchValue, pageable).map(DtoConverter::from);
+            default -> articleRepository.findByTitleContaining(searchValue, pageable).map(DtoConverter::from);
         };
-
-        return articleDtoPage;
     }
 
     @Transactional(readOnly = true)
