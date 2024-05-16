@@ -4,7 +4,7 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions, Transition } fro
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { Fragment, useState } from "react";
 
-export default ({ page }: Props) => {
+export default function SearchBar() {
     const [searchType, setSearchType] = useState(articleSearchTypes[0]);
 
     return (

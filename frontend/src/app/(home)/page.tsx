@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
 
-export default () => {
+export default function RootPage() {
   redirect("/articles?page=1");
 }

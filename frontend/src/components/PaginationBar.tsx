@@ -49,7 +49,7 @@ function makeAnchorLink(nextPage: number, searchType?: string, searchValue?: str
     return `/articles?page=${nextPage}&searchType=${searchType}&searchValue=${searchValue}`;
 }
 
-export default ({ number, totalPage, searchType, searchValue }: Props) => {
+export default function PaginationBar({ number, totalPage, searchType, searchValue }: Props) {
     const prevLink = Math.max(number - 1, 1);
     const nextLink = Math.min(number + 1, totalPage)
 

@@ -1,6 +1,6 @@
-import { ArticleList } from "@/interface";
+import { ArticleList, HashtagInfo } from "@/interface";
 
-export default ({ data }: Props = {}) => {
+export default function ArticleTable({ data }: Props = {}) {
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table className="lg:w-[1000px] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -15,9 +15,9 @@ export default ({ data }: Props = {}) => {
                 <tbody>
                     {
                         (data === undefined || data.articles === undefined) ? null : data.articles.map((article) => (
-                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <tr key={article.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <td className="px-6 py-4">{article.title}</td>
-                                <td className="px-6 py-4">Tag</td>
+                                <td className="px-6 py-4">tags</td>
                                 <td className="px-6 py-4">{article.creator}</td>
                                 <td className="px-6 py-4">{formatDate(article.createTime)}</td>
                             </tr>
