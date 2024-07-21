@@ -3,17 +3,22 @@ import Link from "next/link";
 
 export default function HashtagList({ data }: Props = {}) {
     return (
-        <div className="flex gap-1 flex-wrap">
-            {
-                (data === undefined || data === null
-                    ? <p className="text-base font-semibold text-black-600">No Tags</p>
-                    : data.map(hashtagInfo => {
-                        return <Link href={`/articles/search-hashtag?searchValue=${hashtagInfo.name}`}>
-                            <span className={initBadgeStyle()}>{hashtagInfo.name}</span>
-                        </Link>
-                    }))
-            }
-        </div>
+        <>
+            <div>
+                <span className="h-9 w-auto font-bold sm:text-xl">Hashtags</span>
+            </div>
+            <div className="flex gap-1 flex-wrap">
+                {
+                    (data === undefined || data === null
+                        ? <p className="text-base font-semibold text-black-600">No Tags</p>
+                        : data.map(hashtagInfo => {
+                            return <Link href={`/articles/search-hashtags?searchValue=${hashtagInfo.name}`}>
+                                <span className={initBadgeStyle()}>{hashtagInfo.name}</span>
+                            </Link>
+                        }))
+                }
+            </div>
+        </>
     );
 }
 

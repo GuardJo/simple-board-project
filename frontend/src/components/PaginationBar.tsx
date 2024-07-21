@@ -13,7 +13,7 @@ function getPageIndex(number: number, totalPage: number): number[] {
     return [startNumber, finishNumber];
 }
 
-function initPages(number: number, totalPage: number, searchType?: string, searchValue?: string) {
+function initPages(number: number, totalPage: number, searchType?: string, searchValue?: string, isHashTagSearch?: boolean) {
     const result = [];
     let [startNumber, finishNumber] = getPageIndex(number, totalPage);
 
@@ -21,7 +21,7 @@ function initPages(number: number, totalPage: number, searchType?: string, searc
         if (i == number) {
             result.push(
                 <a
-                    href={makeAnchorLink(i, searchType, searchValue)}
+                    href={makeAnchorLink(i, searchType, searchValue, isHashTagSearch)}
                     className={currentPageStyle}
                 >
                     {i}
@@ -30,7 +30,7 @@ function initPages(number: number, totalPage: number, searchType?: string, searc
         } else {
             result.push(
                 <a
-                    href={makeAnchorLink(i, searchType, searchValue)}
+                    href={makeAnchorLink(i, searchType, searchValue, isHashTagSearch)}
                     className={(i == 0) ? currentPageStyle : defaultStyle}
                 >
                     {i}
@@ -42,14 +42,19 @@ function initPages(number: number, totalPage: number, searchType?: string, searc
     return result;
 }
 
-function makeAnchorLink(nextPage: number, searchType?: string, searchValue?: string) {
+function makeAnchorLink(nextPage: number, searchType?: string, searchValue?: string, isHashTagSearch?: boolean) {
     searchType = searchType ?? "TITLE";
     searchValue = searchValue ?? "";
+    isHashTagSearch = isHashTagSearch ?? false;
+
+    if (isHashTagSearch) {
+        return `/articles/search-hashtags?page=${nextPage}&searchValue=${searchValue}`;
+    }
 
     return `/articles?page=${nextPage}&searchType=${searchType}&searchValue=${searchValue}`;
 }
 
-export default function PaginationBar({ number, totalPage, searchType, searchValue }: Props) {
+export default function PaginationBar({ number, totalPage, searchType, searchValue, isHashTagSearch, }: Props) {
     const prevLink = Math.max(number - 1, 1);
     const nextLink = Math.min(number + 1, totalPage)
 
@@ -57,13 +62,13 @@ export default function PaginationBar({ number, totalPage, searchType, searchVal
         <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 lg:w-[1000px]">
             <div className="flex flex-1 justify-between sm:hidden">
                 <a
-                    href={makeAnchorLink(prevLink, searchType, searchValue)}
+                    href={makeAnchorLink(prevLink, searchType, searchValue, isHashTagSearch)}
                     className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
                     Previous
                 </a>
                 <a
-                    href={makeAnchorLink(nextLink, searchType, searchValue)}
+                    href={makeAnchorLink(nextLink, searchType, searchValue, isHashTagSearch,)}
                     className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
                     Next
@@ -73,15 +78,15 @@ export default function PaginationBar({ number, totalPage, searchType, searchVal
                 <div>
                     <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
                         <a
-                            href={makeAnchorLink(prevLink, searchType, searchValue)}
+                            href={makeAnchorLink(prevLink, searchType, searchValue, isHashTagSearch)}
                             className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                         >
                             <span className="sr-only">Previous</span>
                             <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
                         </a>
-                        {initPages(number, totalPage, searchType, searchValue)}
+                        {initPages(number, totalPage, searchType, searchValue, isHashTagSearch)}
                         <a
-                            href={makeAnchorLink(nextLink, searchType, searchValue)}
+                            href={makeAnchorLink(nextLink, searchType, searchValue, isHashTagSearch)}
                             className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                         >
                             <span className="sr-only">Next</span>
@@ -99,4 +104,5 @@ interface Props {
     totalPage: number,
     searchType?: string,
     searchValue?: string,
+    isHashTagSearch?: boolean,
 };
