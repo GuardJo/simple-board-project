@@ -16,7 +16,6 @@ export default function getSearchHashtagPage({ searchParams }: SearchHashtagPara
 interface SearchHashtagParams {
     searchParams: {
         page?: number,
-        searchType?: string,
         searchValue?: string,
     },
 }
