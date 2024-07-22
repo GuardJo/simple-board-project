@@ -33,7 +33,7 @@ class DtoConverterTest {
         assertThat(articleDto.createTime()).isEqualTo(article.getCreateTime());
         assertThat(articleDto.title()).isEqualTo(article.getTitle());
         assertThat(articleDto.content()).isEqualTo(article.getContent());
-        assertThat(isEqualBetweenHashtags(article.getHashtags(), articleDto.hashtagDtos())).isTrue();
+        assertThat(isEqualBetweenHashtags(article.getHashtags(), articleDto.hashtags())).isTrue();
     }
 
     @DisplayName("Comment -> CommentDto 테스트")

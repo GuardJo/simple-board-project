@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * A DTO for the {@link com.guardjo.simpleboard.domain.Article} entity
  */
 public record ArticleDto(Long id, String creator, LocalDateTime createTime, String title, String content,
-                         Set<HashtagDto> hashtagDtos) {
+                         Set<HashtagDto> hashtags) {
     public static ArticleDto of(Long id, String creator, LocalDateTime createTime, String title, String content, Set<HashtagDto> hashtagDtos) {
         return new ArticleDto(id, creator, createTime, title, content, hashtagDtos);
     }

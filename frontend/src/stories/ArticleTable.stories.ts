@@ -19,6 +19,23 @@ const articles = {
             hashtags: [],
             createTime: "2024-05-15T13:33:88"
         },
+        {
+            id: 2,
+            title: "Test2",
+            content: "Test Content2",
+            creator: "Tester2",
+            hashtags: [
+                {
+                    id: 1,
+                    hashtagName: "TestTag1",
+                },
+                {
+                    id: 2,
+                    hashtagName: "TestTag2",
+                },
+            ],
+            createTime: "2024-05-15T13:40:33"
+        },
     ],
 } satisfies ArticleList
 

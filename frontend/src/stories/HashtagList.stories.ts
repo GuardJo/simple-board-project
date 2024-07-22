@@ -9,39 +9,39 @@ const meta = {
 const mockHashtagList = [
     {
         id: 1,
-        name: "tag1",
+        hashtagName: "tag1",
     },
     {
         id: 2,
-        name: "tag2",
+        hashtagName: "tag2",
     },
     {
         id: 3,
-        name: "tag3",
+        hashtagName: "tag3",
     },
     {
         id: 4,
-        name: "tag4",
+        hashtagName: "tag4",
     },
     {
         id: 5,
-        name: "tag5",
+        hashtagName: "tag5",
     },
     {
         id: 6,
-        name: "tag6",
+        hashtagName: "tag6",
     },
     {
         id: 7,
-        name: "tag7",
+        hashtagName: "tag7",
     },
     {
         id: 8,
-        name: "tag8",
+        hashtagName: "tag8",
     },
     {
         id: 9,
-        name: "tag9",
+        hashtagName: "tag9",
     },
 ];
 

@@ -1,4 +1,5 @@
 import { ArticleList, HashtagInfo } from "@/interface";
+import HashtagBadge from "./HashtagBadge";
 
 export default function ArticleTable({ data }: Props = {}) {
     return (
@@ -17,8 +18,12 @@ export default function ArticleTable({ data }: Props = {}) {
                         (data === undefined || data.articles === undefined) ? null : data.articles.map((article) => (
                             <tr key={article.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <td className="px-6 py-4">{article.title}</td>
-                                <td className="px-6 py-4">tags</td>
-                                <td className="px-6 py-4">{article.creator}</td>
+                                <td className="px-6 py-4">
+                                    {(article.hashtags === undefined ? null : article.hashtags.map(hashtag => {
+                                        return <HashtagBadge hashtagName={hashtag.hashtagName}></HashtagBadge>
+                                    }))}
+                                </td>
+                                <td className="px-6 py-4 flex flex-wrap gap-1">{article.creator}</td>
                                 <td className="px-6 py-4">{formatDate(article.createTime)}</td>
                             </tr>
                         ))}
