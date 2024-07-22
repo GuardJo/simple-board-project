@@ -6,6 +6,11 @@ import PaginationBar from "@/components/PaginationBar";
 import { ArticleList, HashtagInfo } from "@/interface";
 import HashtagList from "@/components/HashtagList";
 import { getHashTagList } from "@/service/HashtagService";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "해시태그 검색"
+}
 
 export default async function getSearchHashtagPage({ searchParams }: SearchHashtagParams) {
     const { page, searchValue } = searchParams;
