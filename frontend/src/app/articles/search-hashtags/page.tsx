@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default async function getSearchHashtagPage({ searchParams }: SearchHashtagParams) {
     const { page, searchValue } = searchParams;
-    const hashtagList: HashtagInfo[] = getHashTagList();
+    const hashtagList: HashtagInfo[] = await getHashTagList();
     const searchArticles: ArticleList = await getArticlePage(page ?? 1, "HASHTAG", searchValue ?? "");
     return (
         <div className="flex flex-auto flex-col justify-center items-center gap-5">

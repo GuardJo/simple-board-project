@@ -1,6 +1,7 @@
 package com.guardjo.simpleboard.service;
 
 import com.guardjo.simpleboard.domain.Hashtag;
+import com.guardjo.simpleboard.dto.HashtagDto;
 import com.guardjo.simpleboard.repository.HashtagRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -80,5 +82,22 @@ public class HashtagService {
         else {
             log.error("[Test] Failed Delete Hashtag");
         }
+    }
+
+    /**
+     * 저장된 해시태그 목록을 반환한다.
+     * @return 해시태그 목록
+     */
+    @Transactional(readOnly = true)
+    public List<HashtagDto> findAllHashtags() {
+        log.debug("Find all Hashtags");
+
+        List<Hashtag> hashtags = hashtagRepository.findAll();
+
+        log.info("Found all Hashtags, total = {}", hashtags.size());
+
+        return hashtags.stream()
+            .map(HashtagDto::from)
+            .toList();
     }
 }

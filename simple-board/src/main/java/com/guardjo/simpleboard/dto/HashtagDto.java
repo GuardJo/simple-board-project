@@ -23,4 +23,11 @@ public record HashtagDto(Long id, String hashtagName) implements Serializable {
     public static Set<Hashtag> toEntity(Set<HashtagDto> hashtagDtos) {
         return hashtagDtos.stream().map(hashtagDto -> HashtagDto.toEntity(hashtagDto)).collect(Collectors.toSet());
     }
+
+    public static HashtagDto from(Hashtag hashtag) {
+        return new HashtagDto(
+            hashtag.getId(),
+            hashtag.getHashtagName()
+        );
+    }
 }
