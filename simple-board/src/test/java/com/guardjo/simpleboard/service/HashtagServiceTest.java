@@ -1,17 +1,20 @@
 package com.guardjo.simpleboard.service;
 
 import com.guardjo.simpleboard.domain.Hashtag;
+import com.guardjo.simpleboard.dto.HashtagDto;
 import com.guardjo.simpleboard.generator.TestDataGenerator;
 import com.guardjo.simpleboard.repository.HashtagRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -90,7 +93,29 @@ class HashtagServiceTest {
         then(hashtagRepository).shouldHaveNoMoreInteractions();
     }
 
-    private static Stream parsingContents() {
+    @DisplayName("해시태그 전체 목록 조회")
+    @Test
+    void test_findAllHashtags() {
+        List<Hashtag> expectedList = List.of(
+            Hashtag.of("Test1"),
+            Hashtag.of("Test2"),
+            Hashtag.of("Test3")
+        );
+
+        given(hashtagRepository.findAll()).willReturn(expectedList);
+
+        List<HashtagDto> actualList = hashtagService.findAllHashtags();
+
+        assertThat(actualList.size()).isEqualTo(expectedList.size());
+
+        for (int i = 0; i < actualList.size(); i++) {
+            assertThat(actualList.get(i).hashtagName()).isEqualTo(expectedList.get(i).getHashtagName());
+        }
+
+        then(hashtagRepository).should().findAll();
+    }
+
+    private static Stream<Arguments> parsingContents() {
         return Stream.of(
                 arguments("#java", Set.of(Hashtag.of("java"))),
                 arguments("#test, test #test2", Set.of(Hashtag.of("test"), Hashtag.of("test2"))),

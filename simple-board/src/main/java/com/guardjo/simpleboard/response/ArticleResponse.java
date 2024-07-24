@@ -1,6 +1,5 @@
 package com.guardjo.simpleboard.response;
 
-import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.HashtagDto;
 
@@ -17,7 +16,7 @@ public record ArticleResponse(Long id, String title, String content, Set<Hashtag
                 articleDto.id(),
                 articleDto.title(),
                 articleDto.content(),
-                articleDto.hashtagDtos(),
+                articleDto.hashtags(),
                 articleDto.creator(),
                 articleDto.createTime());
     }

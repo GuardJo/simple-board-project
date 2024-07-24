@@ -15,5 +15,5 @@ export interface ArticleInfo {
 
 export interface HashtagInfo {
     id: number,
-    name: string,
+    hashtagName: string,
 }

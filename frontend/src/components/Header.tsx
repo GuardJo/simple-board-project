@@ -30,7 +30,7 @@ export default function Header() {
                 </div>
                 <div className="hidden lg:flex lg:gap-x-12">
                     <Link href='/' className="text-sm font-semibold leading-6 text-gray-900">Home</Link>
-                    <Link href='/search-hashtag' className="text-sm font-semibold leading-6 text-gray-900">Hashtags</Link>
+                    <Link href='/articles/search-hashtags' className="text-sm font-semibold leading-6 text-gray-900">Hashtags</Link>
                 </div>
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-5">
                     {(!isLogin) ?

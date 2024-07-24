@@ -15,3 +15,11 @@ export const Default: Story = {
         totalPage: 10,
     },
 };
+
+export const IsHastagSearch: Story = {
+    args: {
+        number: 1,
+        totalPage: 10,
+        isHashTagSearch: true,
+    },
+};
