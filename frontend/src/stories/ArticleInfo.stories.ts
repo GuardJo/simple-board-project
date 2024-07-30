@@ -21,6 +21,14 @@ export const HasHashtag: Story = {
     args: {
         author: "Tester2",
         createdTime: "2024-07-30 00:14",
-        hashtagName: "Test",
+        hashtagNames: ["test"],
     },
 };
+
+export const HasHashtags: Story = {
+    args: {
+        author: "Tester2",
+        createdTime: "2024-07-30 00:14",
+        hashtagNames: ["test", "Test2"],
+    },
+}

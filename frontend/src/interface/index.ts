@@ -17,3 +17,15 @@ export interface HashtagInfo {
     id: number,
     hashtagName: string,
 }
+
+export interface CommentInfo {
+    id: number,
+    creator: string,
+    content: string,
+    createTime: string,
+}
+
+export interface ArticleDetailInfo {
+    article: ArticleInfo,
+    comments: CommentInfo[],
+}

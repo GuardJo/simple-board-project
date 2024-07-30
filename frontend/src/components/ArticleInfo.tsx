@@ -1,6 +1,6 @@
 import HashtagBadge from "./HashtagBadge";
 
-export default function ArticleInfo({ author, createdTime, hashtagName }: ArticleInfoParams) {
+export default function ArticleInfo({ author, createdTime, hashtagNames }: ArticleInfoParams) {
     return (
         <dl className="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
             <div className="flex flex-col pb-3">
@@ -14,7 +14,9 @@ export default function ArticleInfo({ author, createdTime, hashtagName }: Articl
             <div className="flex flex-col pt-3">
                 <dt className="mb-1 text-gray-500 md:text-md dark:text-gray-400">해시태그</dt>
             </div>
-            {(hashtagName === undefined || hashtagName === "") ? null : <HashtagBadge hashtagName={hashtagName}></HashtagBadge>}
+            {(hashtagNames === undefined || hashtagNames.length == 0) ? null : hashtagNames.map(hashtagName => (
+                <HashtagBadge hashtagName={hashtagName} />
+            ))}
         </dl>
     );
 }
@@ -22,5 +24,5 @@ export default function ArticleInfo({ author, createdTime, hashtagName }: Articl
 interface ArticleInfoParams {
     author: string,
     createdTime: string,
-    hashtagName?: string,
+    hashtagNames?: string[],
 }

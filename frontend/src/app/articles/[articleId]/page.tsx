@@ -2,7 +2,8 @@ import ArticleCommentList from "@/components/ArticleCommentList"
 import ArticleContentForm from "@/components/ArticleContentForm"
 import ArticleInfo from "@/components/ArticleInfo"
 import BasicCard from "@/components/BasicCard"
-import { CommentInfo } from "@/interface"
+import { ArticleDetailInfo } from "@/interface"
+import { getArticleDetail } from "@/service/ArticleService"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -11,15 +12,13 @@ export const metadata: Metadata = {
 
 export default function ArticleDetailPage({ params: { articleId } }: PathVariable) {
 
-    const comments: CommentInfo[] = [
-        { id: 1, author: "tester1", createdTime: "2024-07-31 00:00", content: "test" },
-        { id: 2, author: "tester2", createdTime: "2024-07-31 00:02", content: "test2222" }
-    ]
+    const { article, comments }: ArticleDetailInfo = getArticleDetail(articleId);
+
     return (
         <div className="flex justify-center content-start gap-3 px-24 py-10">
             <div className="flex flex-col gap-3 w-2/3 h-full">
-                <BasicCard title="게시글 제목">
-                    <ArticleContentForm content="본문 내용"></ArticleContentForm>
+                <BasicCard title={article.title}>
+                    <ArticleContentForm content={article.content}></ArticleContentForm>
                 </BasicCard>
                 <BasicCard title="댓글">
                     <ArticleCommentList data={comments} />
@@ -27,7 +26,7 @@ export default function ArticleDetailPage({ params: { articleId } }: PathVariabl
             </div>
             <div className="flex w-1/3 h-96">
                 <BasicCard title="게시글 정보">
-                    <ArticleInfo author="Tester" createdTime="2024-07-30 13:00" hashtagName="testTag" />
+                    <ArticleInfo author={article.creator} createdTime={article.createTime} hashtagNames={article.hashtags.map(hashtag => hashtag.hashtagName)} />
                 </BasicCard>
             </div>
         </div>
