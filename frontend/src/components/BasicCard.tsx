@@ -1,19 +1,19 @@
-import { ReactElement, ReactNode } from "react";
+import { PropsWithChildren, ReactElement, ReactNode } from "react";
 
-export default function BasicCard({ title, content }: BasicCardParams) {
+export default function BasicCard({ title, children }: BasicCardParams) {
     return (
-        <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+        <div className="w-full p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <h5 className="mb-2 text-md font-bold tracking-tight text-gray-900 dark:text-white">
                 {title}
             </h5>
-            <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                {content}
-            </p>
+            <div className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                {children}
+            </div>
         </div>
     )
 }
 
 interface BasicCardParams {
     title: String,
-    content: ReactNode,
+    children?: ReactNode,
 }

@@ -16,6 +16,6 @@ export const Default: Story = {
 export const HasChildren: Story = {
     args: {
         title: "Test Title",
-        content: "Test Content~~~~~~~~~",
+        children: "Test~~",
     },
 };
