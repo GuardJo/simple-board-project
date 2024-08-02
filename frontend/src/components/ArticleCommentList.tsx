@@ -7,7 +7,7 @@ export default function ArticleCommentList({ data }: ArticleCommentListParams = 
             <dl className="w-full text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
                 {(data === undefined ? <p>등록된 댓글이 없습니다.</p> : data.map((comment) => (
                     <div className="flex flex-col">
-                        <ArticleComment author={comment.author} content={comment.content} updatedAt={comment.createdTime}></ArticleComment>
+                        <ArticleComment author={comment.creator} content={comment.content} updatedAt={comment.createTime}></ArticleComment>
                     </div>
                 )))}
             </dl>

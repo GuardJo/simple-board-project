@@ -10,9 +10,9 @@ export const metadata: Metadata = {
     title: "게사글 상세"
 }
 
-export default function ArticleDetailPage({ params: { articleId } }: PathVariable) {
+export default async function ArticleDetailPage({ params: { articleId } }: PathVariable) {
 
-    const { article, comments }: ArticleDetailInfo = getArticleDetail(articleId);
+    const { article, comments }: ArticleDetailInfo = await getArticleDetail(articleId);
 
     return (
         <div className="flex justify-center content-start gap-3 px-24 py-10">
@@ -20,7 +20,7 @@ export default function ArticleDetailPage({ params: { articleId } }: PathVariabl
                 <BasicCard title={article.title}>
                     <ArticleContentForm content={article.content}></ArticleContentForm>
                 </BasicCard>
-                <BasicCard title="댓글">
+                <BasicCard title={'댓글 (' + comments.length + ')'}>
                     <ArticleCommentList data={comments} />
                 </BasicCard>
             </div>
@@ -29,7 +29,7 @@ export default function ArticleDetailPage({ params: { articleId } }: PathVariabl
                     <ArticleInfo author={article.creator} createdTime={article.createTime} hashtagNames={article.hashtags.map(hashtag => hashtag.hashtagName)} />
                 </BasicCard>
             </div>
-        </div>
+        </div >
     )
 }
 
