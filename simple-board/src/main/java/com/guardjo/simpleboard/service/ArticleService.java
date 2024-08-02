@@ -85,6 +85,7 @@ public class ArticleService {
 	 * @param articleId 게시글 식별키
 	 * @return 게시글 정보 및 관련 댓글 목록
 	 */
+	@Transactional(readOnly = true)
 	public ArticleDetailInfo findArticleDetailInfo(long articleId) {
 		log.debug("Find ArticleDetailInfo, articleId = {}", articleId);
 
