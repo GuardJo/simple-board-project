@@ -1,5 +1,6 @@
 import { ArticleList, HashtagInfo } from "@/interface";
 import HashtagBadge from "./HashtagBadge";
+import Link from "next/link";
 
 export default function ArticleTable({ data }: Props = {}) {
     return (
@@ -17,7 +18,11 @@ export default function ArticleTable({ data }: Props = {}) {
                     {
                         (data === undefined || data.articles === undefined) ? null : data.articles.map((article) => (
                             <tr key={article.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                <td className="px-6 py-4">{article.title}</td>
+                                <td className="px-6 py-4">
+                                    <Link href={`/articles/${article.id}`}>
+                                        {article.title}
+                                    </Link>
+                                </td>
                                 <td className="px-6 py-4">
                                     {(article.hashtags === undefined ? null : article.hashtags.map(hashtag => {
                                         return <HashtagBadge hashtagName={hashtag.hashtagName}></HashtagBadge>
