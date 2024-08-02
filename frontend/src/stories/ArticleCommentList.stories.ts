@@ -18,15 +18,15 @@ export const HasComments: Story = {
         data: [
             {
                 id: 1,
-                author: "Tester1",
+                creator: "Tester1",
                 content: "First Comment",
-                createdTime: "2024-07-29 23:56",
+                createTime: "2024-07-29 23:56",
             },
             {
                 id: 2,
-                author: "Tester2",
+                creator: "Tester2",
                 content: "Second Comment",
-                createdTime: "2024-07-29 23:59",
+                createTime: "2024-07-29 23:59",
             },
         ],
     },
