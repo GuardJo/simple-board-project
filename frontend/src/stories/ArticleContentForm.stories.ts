@@ -19,3 +19,9 @@ export const HasContents:Story = {
         content: "테스트 게시글",
     },
 };
+
+export const CanWrite: Story = {
+    args: {
+        canWrite: true,
+    },
+};
