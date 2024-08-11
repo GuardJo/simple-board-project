@@ -25,7 +25,7 @@ export default function ArticleTable({ data }: Props = {}) {
                                 </td>
                                 <td className="px-6 py-4">
                                     {(article.hashtags === undefined ? null : article.hashtags.map(hashtag => {
-                                        return <HashtagBadge hashtagName={hashtag.hashtagName}></HashtagBadge>
+                                        return <HashtagBadge key={hashtag.id} hashtagName={hashtag.hashtagName}></HashtagBadge>
                                     }))}
                                 </td>
                                 <td className="px-6 py-4 flex flex-wrap gap-1">{article.creator}</td>
