@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import Button from './../components/Button';
+import { action } from "@storybook/addon-actions";
 
 const meta = {
     title: "components/Button",
@@ -10,15 +11,18 @@ export default meta;
 
 type Story = StoryObj<typeof Button>
 
-export const noUrl: Story = {
+export const noEvent: Story = {
     args: {
-        children: "No Url",
+        children: "test",
     },
 };
 
-export const hasUrl: Story = {
+
+export const hasEvent: Story = {
     args: {
-        children: "Naver",
-        url: "https://naver.com",
+        children: "클릭 이벤트",
+        onClick: () => {
+            action("ClickEvent")("Clicked");
+        }
     },
 };

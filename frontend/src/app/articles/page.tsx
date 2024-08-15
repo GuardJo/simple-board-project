@@ -6,6 +6,7 @@ import PaginationBar from "@/components/PaginationBar";
 import { getArticlePage } from "@/service/ArticleService";
 import Loading from "../loading";
 import Button from "@/components/Button";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "게시판",
@@ -21,7 +22,9 @@ export default async function ArticleListPage({ searchParams }: ArticleQueryPara
       <Suspense fallback={Loading()}>
         <ArticleTable data={articles} />
         <div className="flex justify-end lg:w-[1000px]">
-          <Button url="/articles/create-view">게시글 작성</Button>
+          <Link href="/articles/create-view">
+            <Button>게시글 작성</Button>
+          </Link>
         </div>
         <PaginationBar number={articles.number} totalPage={articles.totalPage} searchType={searchType} searchValue={searchValue} />
       </Suspense>
