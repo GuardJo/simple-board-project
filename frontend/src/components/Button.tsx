@@ -1,3 +1,5 @@
+"use client"
+
 import React, { MouseEventHandler } from "react";
 
 export default function Button({ children, onClick = () => { }, }: ButtonParams) {
