@@ -4,15 +4,24 @@ import ArticleContentForm from "@/components/ArticleContentForm";
 import BasicCard from "@/components/BasicCard";
 import Button from "@/components/Button";
 import TextInput from "@/components/TextInput";
+import { createArticle } from "@/service/ArticleService";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function CreateView() {
     const [titleValue, setTitleValue] = useState("");
     const [contentValue, setContentValue] = useState("");
+    const authorMail = "test@mail.com"; // TODO 인증 기능 구현 후 변경 예정
+    const router = useRouter();
 
-    const saveArticle = () => {
-        console.log(`title = ${titleValue}, content = ${contentValue}`);
-    }
+    const saveArticle = async () => {
+        await createArticle({
+            title: titleValue,
+            content: contentValue,
+            authorMail: authorMail,
+        });
+        router.push("/articles?page=1");
+    };
 
     return (
         <div className="flex justify-center content-start gap-3 px-24 py-10">

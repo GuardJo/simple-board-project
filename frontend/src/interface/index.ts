@@ -29,3 +29,8 @@ export interface ArticleDetailInfo {
     article: ArticleInfo,
     comments: CommentInfo[],
 }
+
+export interface ArticleCreateRequest {
+    title: string,
+    content: string,
+}

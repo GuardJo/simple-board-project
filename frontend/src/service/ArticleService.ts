@@ -1,3 +1,5 @@
+import { ArticleCreateRequest } from "@/interface";
+
 const baseUrl = "http://localhost:8080/api/v2";
 
 export async function getArticlePage(page: number, searchType: string, searchValue: string) {
@@ -17,4 +19,9 @@ export async function getArticleDetail(articleId: number) {
     });
 
     return response.json();
+}
+
+export async function createArticle({title, content} : ArticleCreateRequest) {
+    // TODO API 연동
+    console.log(`title : ${title}, content : ${content}`);
 }
