@@ -3,6 +3,7 @@ package com.guardjo.simpleboard.api;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -10,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,17 +24,21 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guardjo.simpleboard.config.TestSecurityConfig;
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
+import com.guardjo.simpleboard.dto.ArticleCreateRequest;
 import com.guardjo.simpleboard.dto.ArticleDetailInfo;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticlePageDto;
 import com.guardjo.simpleboard.generator.TestDataGenerator;
 import com.guardjo.simpleboard.service.ArticleService;
+import com.guardjo.simpleboard.service.HashtagService;
 import com.guardjo.simpleboard.util.DtoConverter;
 
 @Import(TestSecurityConfig.class)
@@ -40,6 +46,7 @@ import com.guardjo.simpleboard.util.DtoConverter;
 class ArticleRestControllerTest {
 	private final static List<Article> ARTICLE_TEST_DATA = new ArrayList<>();
 	private final static int TEST_DATA_SZIE = 10;
+	private final static String TEST_USER_MAIL = "test@mail.com";
 
 	private final MockMvc mockMvc;
 	private final ObjectMapper objectMapper;
@@ -47,6 +54,9 @@ class ArticleRestControllerTest {
 
 	@MockBean
 	private ArticleService articleService;
+
+	@MockBean
+	private HashtagService hashtagService;
 
 	@Autowired
 	public ArticleRestControllerTest(MockMvc mockMvc, ObjectMapper mapper) {
@@ -114,5 +124,26 @@ class ArticleRestControllerTest {
 		assertThat(actual).isEqualTo(expected);
 
 		then(articleService).should().findArticleDetailInfo(eq(articleId));
+	}
+
+	@WithUserDetails(value = TEST_USER_MAIL, setupBefore = TestExecutionEvent.TEST_EXECUTION)
+	@DisplayName("POST : " + UrlContext.ARTICLES_URL)
+	@Test
+	void test_createNewArticle() throws Exception {
+		ArticleCreateRequest createRequest = new ArticleCreateRequest("Test Title", "test content");
+		String request = objectMapper.writeValueAsString(createRequest);
+
+		given(hashtagService.parseHashtagsInContent(eq(createRequest.content()))).willReturn(Set.of());
+		willDoNothing().given(articleService).saveArticle(eq(createRequest), eq(TEST_USER_MAIL), anySet());
+
+		mockMvc.perform(post(UrlContext.ARTICLES_URL)
+				.contentType(MediaType.APPLICATION_JSON)
+				.with(csrf())
+				.content(request))
+			.andDo(print())
+			.andExpect(status().isOk());
+
+		then(hashtagService).should().parseHashtagsInContent(eq(createRequest.content()));
+		then(articleService).should().saveArticle(eq(createRequest), eq(TEST_USER_MAIL), anySet());
 	}
 }

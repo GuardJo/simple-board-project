@@ -31,6 +31,7 @@ import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
 import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.domain.Member;
+import com.guardjo.simpleboard.dto.ArticleCreateRequest;
 import com.guardjo.simpleboard.dto.ArticleDetailInfo;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
@@ -220,13 +221,15 @@ class ArticleServiceTest {
 	@Test
 	void testSaveArticle() {
 		Article article = testDataGenerator.generateArticle("test");
-		given(articleRepository.save(any(Article.class))).willReturn(article);
-		given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(Member.of("test@mail.com", "tester", "pwd")));
+		String testUserMail = "test@mail.com";
+		ArticleCreateRequest createRequest = new ArticleCreateRequest(article.getTitle(), article.getContent());
 
-		articleService.saveArticle(testDataGenerator.convertArticleDto(testDataGenerator.generateArticle("test")),
-			"test@mail.com", Set.of());
+		given(articleRepository.save(any(Article.class))).willReturn(article);
+		given(memberRepository.findByEmail(eq(testUserMail))).willReturn(Optional.of(Member.of(testUserMail, "tester", "pwd")));
+		articleService.saveArticle(createRequest, testUserMail, Set.of());
 
 		then(articleRepository).should().save(any(Article.class));
+		then(memberRepository).should().findByEmail(eq(testUserMail));
 	}
 
 	@DisplayName("게시글 삭제 테스트")
