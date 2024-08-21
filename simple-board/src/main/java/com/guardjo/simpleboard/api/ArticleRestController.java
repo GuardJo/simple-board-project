@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,18 +24,17 @@ import com.guardjo.simpleboard.dto.ArticlePageDto;
 import com.guardjo.simpleboard.dto.security.SimpleBoardPrincipal;
 import com.guardjo.simpleboard.service.ArticleService;
 import com.guardjo.simpleboard.service.HashtagService;
-import com.guardjo.simpleboard.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(maxAge = 3600)
 @Slf4j
 public class ArticleRestController {
 	private final ArticleService articleService;
 	private final HashtagService hashtagService;
-	private final MemberService memberService;
 
 	@GetMapping(UrlContext.ARTICLES_URL)
 	public ArticlePageDto getArticlePage(@PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable,

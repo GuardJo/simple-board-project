@@ -22,6 +22,17 @@ export async function getArticleDetail(articleId: number) {
 }
 
 export async function createArticle({title, content} : ArticleCreateRequest) {
-    // TODO API 연동
-    console.log(`title : ${title}, content : ${content}`);
+    const response = await fetch(`${baseUrl}/articles`, {
+        method: "POST",
+        cache: 'no-store',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            "title": title,
+            "content": content,
+        }),
+    });
+
+    return response.json();
 }
