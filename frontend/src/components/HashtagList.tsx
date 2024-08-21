@@ -14,7 +14,7 @@ export default function HashtagList({ data }: Props = {}) {
                         ? <p className="text-base font-semibold text-black-600">No Tags</p>
                         : data.map(hashtagInfo => {
                             return <Link href={`/articles/search-hashtags?searchValue=${hashtagInfo.hashtagName}`}>
-                                <HashtagBadge hashtagName={hashtagInfo.hashtagName}></HashtagBadge>
+                                <HashtagBadge key={hashtagInfo.id} hashtagName={hashtagInfo.hashtagName}></HashtagBadge>
                             </Link>
                         }))
                 }

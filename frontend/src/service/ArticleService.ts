@@ -1,3 +1,5 @@
+import { ArticleCreateRequest } from "@/interface";
+
 const baseUrl = "http://localhost:8080/api/v2";
 
 export async function getArticlePage(page: number, searchType: string, searchValue: string) {
@@ -14,6 +16,19 @@ export async function getArticleDetail(articleId: number) {
         headers: {
             "Content-Type": "application/json",
         },
+    });
+
+    return response.json();
+}
+
+export async function createArticle(createRequest : ArticleCreateRequest) {
+    const response = await fetch(`${baseUrl}/articles`, {
+        method: "POST",
+        cache: 'no-store',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(createRequest),
     });
 
     return response.json();

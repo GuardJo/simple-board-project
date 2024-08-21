@@ -19,6 +19,7 @@ import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
 import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.domain.Member;
+import com.guardjo.simpleboard.dto.ArticleCreateRequest;
 import com.guardjo.simpleboard.dto.ArticleDetailInfo;
 import com.guardjo.simpleboard.dto.ArticleDto;
 import com.guardjo.simpleboard.dto.ArticleUpdateDto;
@@ -120,10 +121,17 @@ public class ArticleService {
 		}
 	}
 
-	public void saveArticle(ArticleDto articleDto, String memberMail, Set<Hashtag> hashtags) {
-		log.info("[Test] Save Article, title = {}", articleDto.title());
-		Member member = memberRepository.findByEmail(memberMail).get();
-		Article article = ArticleDto.toEntity(articleDto, member);
+	/**
+	 * 신규 게시글을 저장한다.
+	 * @param createRequest 저장할 게시글 정보 (제목, 본문)
+	 * @param authorMail 직성자 메일
+	 * @param hashtags 함께 저장할 게시글 내 해시태그 목록
+	 */
+	public void saveArticle(ArticleCreateRequest createRequest, String authorMail, Set<Hashtag> hashtags) {
+		log.info("[Test] Save Article, title = {}", createRequest.title());
+		Member member = memberRepository.findByEmail(authorMail)
+			.orElseThrow(() -> new EntityNotFoundException(String.format("Not Found Member, email = %s", authorMail)));
+		Article article = Article.of(member, createRequest.title(), createRequest.content());
 		article.addHashtags(hashtags);
 
 		articleRepository.save(article);
