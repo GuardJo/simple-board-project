@@ -34,3 +34,8 @@ export interface ArticleCreateRequest {
     title: string,
     content: string,
 }
+
+export interface LoginRequest {
+    username: string,
+    password: string,
+}
