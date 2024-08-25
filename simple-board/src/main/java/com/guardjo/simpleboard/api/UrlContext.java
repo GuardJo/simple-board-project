@@ -12,4 +12,6 @@ public class UrlContext {
 	public final static String LOGIN_URL = "/api/v2/login";
 
 	public final static String LOGOUT_URL = "/api/v2/logout";
+
+	public final static String ME_URL = "/api/v2/me";
 }
