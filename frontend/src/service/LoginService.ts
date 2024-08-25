@@ -34,3 +34,12 @@ export async function login(loginRequest: LoginRequest) {
 
     return response;
 }
+
+export async function me() {
+    const response = await fetch(`${baseUrl}/me`, {
+        method: "GET",
+        credentials: "include",
+    })
+
+    return response;
+}

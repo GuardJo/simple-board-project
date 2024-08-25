@@ -6,8 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function Header() {
-    const [isLogin, setIsLogin] = useState(false);
+export default function Header({ isLogin }: HeaderParams) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     return (
@@ -35,12 +34,12 @@ export default function Header() {
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-5">
                     {(!isLogin) ?
                         <>
-                            <Link href='/login' onClick={() => setIsLogin(true)} className="text-sm font-semibold leading-6 text-gray-900">Login</Link>
+                            <Link href='/login' className="text-sm font-semibold leading-6 text-gray-900">Login</Link>
                             <Link href="http://localhost:8080/oauth2/authorization/kakao">
                                 <Image alt='kakao login' src='/images/kakao_login_small.png' width={50} height={20} />
                             </Link>
                         </> :
-                        <Link href='/logout' onAbort={() => setIsLogin(false)} className="text-sm font-semibold leading-6 text-gray-900">Logout</Link>
+                        <Link href='/logout' className="text-sm font-semibold leading-6 text-gray-900">Logout</Link>
                     }
                 </div>
                 <Dialog className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
@@ -66,10 +65,10 @@ export default function Header() {
                             <div className="py-6 mt-10">
                                 {(!isLogin) ?
                                     <div className="flex gap-2">
-                                        <Link href='/login' onClick={() => setIsLogin(true)} className="text-sm font-semibold leading-6 text-gray-900">Login</Link>
+                                        <Link href='/login' className="text-sm font-semibold leading-6 text-gray-900">Login</Link>
                                         <Image alt='kakao login' src='/images/kakao_login_small.png' width={50} height={20} />
                                     </div> :
-                                    <Link href='/logout' onAbort={() => setIsLogin(false)} className="text-sm font-semibold leading-6 text-gray-900">Logout</Link>
+                                    <Link href='/logout' className="text-sm font-semibold leading-6 text-gray-900">Logout</Link>
                                 }
                             </div>
                         </DialogPanel>
@@ -79,3 +78,7 @@ export default function Header() {
         </header>
     );
 }
+
+interface HeaderParams {
+    isLogin: Boolean,
+};

@@ -3,6 +3,7 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import Footer from "@/components/Footer";
+import { me } from "@/service/LoginService";
 
 export const metadata: Metadata = {
   title: {
@@ -12,11 +13,15 @@ export const metadata: Metadata = {
   description: "Simple Board Project",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
+  const isLogin: Boolean = await me()
+    .then(() => true)
+    .catch(() => false);
+
   return (
     <html lang="ko" className="h-full">
       <body className="h-full pb-20">
-        <Header />
+        <Header isLogin={isLogin} />
         {children}
         <Footer />
       </body>
