@@ -22,14 +22,13 @@ export async function getArticleDetail(articleId: number) {
 }
 
 export async function createArticle(createRequest : ArticleCreateRequest) {
-    const response = await fetch(`${baseUrl}/articles`, {
+    await fetch(`${baseUrl}/articles`, {
         method: "POST",
+        credentials: "include",
         cache: 'no-store',
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(createRequest),
     });
-
-    return response.json();
 }

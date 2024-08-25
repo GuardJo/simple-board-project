@@ -36,7 +36,9 @@ export default function Header() {
                     {(!isLogin) ?
                         <>
                             <Link href='/login' onClick={() => setIsLogin(true)} className="text-sm font-semibold leading-6 text-gray-900">Login</Link>
-                            <Image alt='kakao login' src='/images/kakao_login_small.png' width={50} height={20} />
+                            <Link href="http://localhost:8080/oauth2/authorization/kakao">
+                                <Image alt='kakao login' src='/images/kakao_login_small.png' width={50} height={20} />
+                            </Link>
                         </> :
                         <Link href='/logout' onAbort={() => setIsLogin(false)} className="text-sm font-semibold leading-6 text-gray-900">Logout</Link>
                     }
