@@ -9,14 +9,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const NotLogin: Story = {
+export const Default: Story = {
   args: {
-    isLogin: false,
-  },
-};
 
-export const HasLogin: Story = {
-  args: {
-    isLogin: true,
   },
 };
