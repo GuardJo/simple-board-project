@@ -20,7 +20,6 @@ public class MemberRestController {
 		}
 
 		log.debug("Request FindMe, username = {}", principal.getUsername());
-
 		return principal.getNickName();
 	}
 }

@@ -14,14 +14,10 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
-  const isLogin: Boolean = await me()
-    .then(() => true)
-    .catch(() => false);
-
   return (
     <html lang="ko" className="h-full">
       <body className="h-full pb-20">
-        <Header isLogin={isLogin} />
+        <Header />
         {children}
         <Footer />
       </body>

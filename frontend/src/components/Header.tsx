@@ -1,13 +1,32 @@
 "use client";
 
+import { me } from "@/service/LoginService";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function Header({ isLogin }: HeaderParams) {
+export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [isLogin, setIsLogin] = useState(false);
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await me();
+                if (response.ok) {
+                    setIsLogin(true);
+                } else {
+                    setIsLogin(false);
+                }
+            } catch (e) {
+                console.log(`Error : ${e}`);
+                setIsLogin(false);
+            }
+        }
+        fetchData();
+    }, []);
 
     return (
         <header className="bg-white">
@@ -78,7 +97,3 @@ export default function Header({ isLogin }: HeaderParams) {
         </header>
     );
 }
-
-interface HeaderParams {
-    isLogin: Boolean,
-};

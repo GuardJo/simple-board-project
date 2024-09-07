@@ -16,7 +16,7 @@ export default function LoginPage() {
         const response = await login({ username: userId, password });
 
         if (response) {
-            router.push("/articles?page=1");
+            window.location.href = "/articles?page=1"
         } else {
             alert("로그인에 실패하였습니다.");
         }
