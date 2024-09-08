@@ -23,7 +23,7 @@ export const HasContents:Story = {
 };
 
 const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    action("handleChange")(`Changed Value : ${e.target.value}`);
+    action("handleChange")(`Changed Value : ${e}`);
 }
 
 export const CanWrite: Story = {
