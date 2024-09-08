@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -18,6 +19,9 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -42,7 +46,8 @@ public class SecurityConfig {
                 .oauth2Login(config -> config.userInfoEndpoint(
                         oAuth2 -> oAuth2.userService(oAuth2UserService)
                 ))
-                .csrf(configure -> configure.ignoringAntMatchers("/api/**"));
+                .csrf(configure -> configure.ignoringAntMatchers("/api/**"))
+                .cors(configure -> configure.configurationSource(initCorsConfiguration()));
 
         return httpSecurity.build();
     }
@@ -81,5 +86,19 @@ public class SecurityConfig {
 
     private String generateTemporaryIdAndMailOfKakaoAccount(long kakaoRequestId) {
         return "kakao_oauth2_account_" + String.valueOf(kakaoRequestId);
+    }
+
+    private CorsConfigurationSource initCorsConfiguration() {
+        // TODO origin 서버 경로 외부 환경변수로 추출하기
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.addAllowedOriginPattern("*");
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.addAllowedMethod("*");
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+
+        return source;
     }
 }
