@@ -3,7 +3,6 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import Footer from "@/components/Footer";
-import { me } from "@/service/LoginService";
 
 export const metadata: Metadata = {
   title: {

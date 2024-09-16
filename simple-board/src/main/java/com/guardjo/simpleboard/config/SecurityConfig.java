@@ -1,12 +1,14 @@
 package com.guardjo.simpleboard.config;
 
 import com.guardjo.simpleboard.api.UrlContext;
+import com.guardjo.simpleboard.config.props.CorsProperties;
 import com.guardjo.simpleboard.dto.MemberDto;
 import com.guardjo.simpleboard.dto.security.SimpleBoardPrincipal;
 import com.guardjo.simpleboard.response.KakaoOAuth2UserResponse;
 import com.guardjo.simpleboard.service.MemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +31,9 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
     private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
+
+    @Autowired
+    private CorsProperties corsProperties;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
@@ -65,10 +70,7 @@ public class SecurityConfig {
                     httpSecurityCorsConfigurer.configurationSource(request -> {
                         CorsConfiguration configuration = new CorsConfiguration();
                         // TODO cors 허용 url 별도 환경변수화 시키기
-                        configuration.setAllowedOrigins(List.of(
-                                "http://localhost:8080",
-                                "http://localhost:3000"
-                        ));
+                        configuration.setAllowedOrigins(corsProperties.origins());
                         configuration.setAllowedMethods(List.of(CorsConfiguration.ALL));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(List.of(CorsConfiguration.ALL));
