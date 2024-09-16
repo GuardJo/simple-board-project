@@ -69,7 +69,6 @@ public class SecurityConfig {
                 .cors(httpSecurityCorsConfigurer -> {
                     httpSecurityCorsConfigurer.configurationSource(request -> {
                         CorsConfiguration configuration = new CorsConfiguration();
-                        // TODO cors 허용 url 별도 환경변수화 시키기
                         configuration.setAllowedOrigins(corsProperties.origins());
                         configuration.setAllowedMethods(List.of(CorsConfiguration.ALL));
                         configuration.setAllowCredentials(true);
