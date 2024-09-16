@@ -1,6 +1,6 @@
 "use client";
 
-import { me } from "@/service/LoginService";
+import { logout, me } from "@/service/LoginService";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
@@ -27,6 +27,15 @@ export default function Header() {
         }
         fetchData();
     }, []);
+
+    const handleLogout = async () => {
+        let response = await logout();
+
+        if (response.ok) {
+            setIsLogin(false);
+            window.alert("로그아웃 되었습니다.");
+        }
+    }
 
     return (
         <header className="bg-white">
@@ -58,7 +67,9 @@ export default function Header() {
                                 <Image alt='kakao login' src='/images/kakao_login_small.png' width={50} height={20} />
                             </Link>
                         </> :
-                        <Link href='/logout' className="text-sm font-semibold leading-6 text-gray-900">Logout</Link>
+                        <div onClick={handleLogout}>
+                            <p className="text-sm font-semibold leading-6 text-gray-900">Logout</p>
+                        </div>
                     }
                 </div>
                 <Dialog className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
@@ -87,7 +98,9 @@ export default function Header() {
                                         <Link href='/login' className="text-sm font-semibold leading-6 text-gray-900">Login</Link>
                                         <Image alt='kakao login' src='/images/kakao_login_small.png' width={50} height={20} />
                                     </div> :
-                                    <Link href='/logout' className="text-sm font-semibold leading-6 text-gray-900">Logout</Link>
+                                    <div onClick={handleLogout}>
+                                        <p className="text-sm font-semibold leading-6 text-gray-900">Logout</p>
+                                    </div>
                                 }
                             </div>
                         </DialogPanel>

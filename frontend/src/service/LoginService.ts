@@ -40,3 +40,13 @@ export async function me() {
 
     return response;
 }
+
+export async function logout() {
+    const response = await fetch(`${baseUrl}/logout`, {
+        method: 'POST',
+        cache: 'no-store',
+        credentials: 'include',
+    });
+
+    return response;
+}
