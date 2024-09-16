@@ -1,15 +1,20 @@
 package com.guardjo.simpleboard.config;
 
+import com.guardjo.simpleboard.api.UrlContext;
+import com.guardjo.simpleboard.config.props.CorsProperties;
 import com.guardjo.simpleboard.dto.MemberDto;
 import com.guardjo.simpleboard.dto.security.SimpleBoardPrincipal;
 import com.guardjo.simpleboard.response.KakaoOAuth2UserResponse;
 import com.guardjo.simpleboard.service.MemberService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -20,15 +25,19 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import static org.springframework.security.config.Customizer.withDefaults;
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
+    private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
+
+    @Autowired
+    private CorsProperties corsProperties;
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
+                                                   OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService) throws Exception {
         httpSecurity.authorizeRequests((auth) ->
                         auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                                 .permitAll()
@@ -36,18 +45,38 @@ public class SecurityConfig {
                                         HttpMethod.GET,
                                         "/",
                                         "/article",
-                                        "/article/search-hashtag"
+                                        "/article/search-hashtag",
+                                        "/api/v2/**"
                                 ).permitAll()
-                                .mvcMatchers("/api/**")
-                                .permitAll()
                                 .anyRequest().authenticated()
-                ).formLogin(withDefaults())
-                .logout(logOutConfig -> logOutConfig.logoutSuccessUrl("/"))
+                ).formLogin(configure -> {
+                    configure.loginPage("/login")
+                            .permitAll()
+                            .loginProcessingUrl(UrlContext.LOGIN_URL)
+                            .failureHandler((request, response, exception) -> response.setStatus(HttpStatus.UNAUTHORIZED.value()))
+                            .permitAll();
+                })
+                .logout(logOutConfig -> {
+                    logOutConfig.logoutSuccessUrl("/")
+                            .permitAll()
+                            .logoutUrl(UrlContext.LOGOUT_URL)
+                            .permitAll();
+                })
                 .oauth2Login(config -> config.userInfoEndpoint(
                         oAuth2 -> oAuth2.userService(oAuth2UserService)
                 ))
                 .csrf(configure -> configure.ignoringAntMatchers("/api/**"))
-                .cors(configure -> configure.configurationSource(initCorsConfiguration()));
+                .cors(httpSecurityCorsConfigurer -> {
+                    httpSecurityCorsConfigurer.configurationSource(request -> {
+                        CorsConfiguration configuration = new CorsConfiguration();
+                        configuration.setAllowedOrigins(corsProperties.origins());
+                        configuration.setAllowedMethods(List.of(CorsConfiguration.ALL));
+                        configuration.setAllowCredentials(true);
+                        configuration.setAllowedHeaders(List.of(CorsConfiguration.ALL));
+
+                        return configuration;
+                    });
+                });
 
         return httpSecurity.build();
     }
@@ -86,19 +115,5 @@ public class SecurityConfig {
 
     private String generateTemporaryIdAndMailOfKakaoAccount(long kakaoRequestId) {
         return "kakao_oauth2_account_" + String.valueOf(kakaoRequestId);
-    }
-
-    private CorsConfigurationSource initCorsConfiguration() {
-        // TODO origin 서버 경로 외부 환경변수로 추출하기
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.addAllowedOriginPattern("*");
-        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addAllowedMethod("*");
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);
-
-        return source;
     }
 }

@@ -24,6 +24,7 @@ export async function getArticleDetail(articleId: number) {
 export async function createArticle(createRequest : ArticleCreateRequest) {
     await fetch(`${baseUrl}/articles`, {
         method: "POST",
+        credentials: "include",
         cache: 'no-store',
         credentials: "include",
         headers: {

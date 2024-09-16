@@ -5,20 +5,32 @@ import BasicCard from "@/components/BasicCard";
 import Button from "@/components/Button";
 import TextInput from "@/components/TextInput";
 import { createArticle } from "@/service/ArticleService";
+import { me } from "@/service/LoginService";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function CreateView() {
     const [titleValue, setTitleValue] = useState("");
     const [contentValue, setContentValue] = useState("");
     const router = useRouter();
 
+    useEffect(() => {
+        async function checkLogin() {
+            const response = await me();
+
+            if (!response.ok) {
+                router.push("/login");
+            }
+        }
+        checkLogin();
+    }, []);
+
     const saveArticle = async () => {
         await createArticle({
             title: titleValue,
             content: contentValue,
         });
-        router.push("/articles?page=1");
+        router.push("/");
     };
 
     return (
