@@ -26,7 +26,6 @@ export async function createArticle(createRequest : ArticleCreateRequest) {
         method: "POST",
         credentials: "include",
         cache: 'no-store',
-        credentials: "include",
         headers: {
             "Content-Type": "application/json",
         },
