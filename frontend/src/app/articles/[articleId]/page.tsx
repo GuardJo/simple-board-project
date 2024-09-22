@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default async function ArticleDetailPage({ params: { articleId } }: PathVariable) {
 
-    const { article, comments }: ArticleDetailInfo = await getArticleDetail(articleId);
+    const { article, comments, isOwner }: ArticleDetailInfo = await getArticleDetail(articleId);
 
     return (
         <div className="flex justify-center content-start gap-3 px-24 py-10">
@@ -24,9 +24,9 @@ export default async function ArticleDetailPage({ params: { articleId } }: PathV
                     <ArticleCommentList data={comments} />
                 </BasicCard>
             </div>
-            <div className="flex w-1/3 h-96">
+            <div className="flex-col w-1/3 h-96">
                 <BasicCard title="게시글 정보">
-                    <ArticleInfo author={article.creator} createdTime={article.createTime} hashtagNames={article.hashtags.map(hashtag => hashtag.hashtagName)} />
+                    <ArticleInfo author={article.creator} createdTime={article.createTime} hashtagNames={article.hashtags.map(hashtag => hashtag.hashtagName)} isOwner={isOwner} />
                 </BasicCard>
             </div>
         </div >

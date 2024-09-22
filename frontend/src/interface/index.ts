@@ -28,6 +28,7 @@ export interface CommentInfo {
 export interface ArticleDetailInfo {
     article: ArticleInfo,
     comments: CommentInfo[],
+    isOwner: Boolean,
 }
 
 export interface ArticleCreateRequest {

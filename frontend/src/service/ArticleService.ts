@@ -13,6 +13,7 @@ export async function getArticlePage(page: number, searchType: string, searchVal
 export async function getArticleDetail(articleId: number) {
     const response = await fetch(`${baseUrl}/articles/${articleId}`, {
         cache: 'no-store',
+        credentials: "include",
         headers: {
             "Content-Type": "application/json",
         },
