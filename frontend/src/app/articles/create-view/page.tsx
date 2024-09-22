@@ -4,7 +4,7 @@ import ArticleContentForm from "@/components/ArticleContentForm";
 import BasicCard from "@/components/BasicCard";
 import Button from "@/components/Button";
 import TextInput from "@/components/TextInput";
-import { createArticle } from "@/service/ArticleService";
+import { createArticle } from "@/service/ArticleCreateService";
 import { me } from "@/service/LoginService";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

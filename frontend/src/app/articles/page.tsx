@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import ArticleTable from "@/components/ArticleTable";
 import PaginationBar from "@/components/PaginationBar";
-import { getArticlePage } from "@/service/ArticleService";
+import { getArticlePage } from "@/service/ArticleSearchService";
 import Loading from "../loading";
 import Button from "@/components/Button";
 import Link from "next/link";

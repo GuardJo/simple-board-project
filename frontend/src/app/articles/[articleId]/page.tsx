@@ -3,7 +3,7 @@ import ArticleContentForm from "@/components/ArticleContentForm"
 import ArticleInfo from "@/components/ArticleInfo"
 import BasicCard from "@/components/BasicCard"
 import { ArticleDetailInfo } from "@/interface"
-import { getArticleDetail } from "@/service/ArticleService"
+import { getArticleDetail } from "@/service/ArticleSearchService"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
