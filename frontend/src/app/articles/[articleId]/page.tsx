@@ -2,6 +2,7 @@ import ArticleCommentList from "@/components/ArticleCommentList"
 import ArticleContentForm from "@/components/ArticleContentForm"
 import ArticleInfo from "@/components/ArticleInfo"
 import BasicCard from "@/components/BasicCard"
+import Button from "@/components/Button"
 import { ArticleDetailInfo } from "@/interface"
 import { getArticleDetail } from "@/service/ArticleSearchService"
 import { Metadata } from "next"
@@ -24,10 +25,11 @@ export default async function ArticleDetailPage({ params: { articleId } }: PathV
                     <ArticleCommentList data={comments} />
                 </BasicCard>
             </div>
-            <div className="flex-col w-1/3 h-96">
+            <div className="flex flex-col w-1/3 h-96 gap-3">
                 <BasicCard title="게시글 정보">
-                    <ArticleInfo author={article.creator} createdTime={article.createTime} hashtagNames={article.hashtags.map(hashtag => hashtag.hashtagName)} isOwner={isOwner} />
+                    <ArticleInfo author={article.creator} createdTime={article.createTime} hashtagNames={article.hashtags.map(hashtag => hashtag.hashtagName)}/>
                 </BasicCard>
+                {(isOwner) ? <Button>수정</Button> : null}
             </div>
         </div >
     )

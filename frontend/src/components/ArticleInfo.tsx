@@ -1,7 +1,7 @@
 import Button from "./Button";
 import HashtagBadge from "./HashtagBadge";
 
-export default function ArticleInfo({ author, createdTime, hashtagNames, isOwner = false }: ArticleInfoParams) {
+export default function ArticleInfo({ author, createdTime, hashtagNames }: ArticleInfoParams) {
     return (
         <dl className="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
             <div className="flex flex-col pb-3">
@@ -18,10 +18,6 @@ export default function ArticleInfo({ author, createdTime, hashtagNames, isOwner
             {(hashtagNames === undefined || hashtagNames.length == 0) ? null : hashtagNames.map(hashtagName => (
                 <HashtagBadge key={hashtagName} hashtagName={hashtagName} />
             ))}
-            {(isOwner) ? 
-            <div className="flex flex-col py-3 pt-3">
-                <Button>수정하기</Button>
-            </div> : null}
         </dl>
     );
 }
@@ -30,5 +26,4 @@ interface ArticleInfoParams {
     author: string,
     createdTime: string,
     hashtagNames?: string[],
-    isOwner? : Boolean,
 }

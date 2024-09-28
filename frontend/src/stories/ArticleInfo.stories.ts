@@ -32,12 +32,3 @@ export const HasHashtags: Story = {
         hashtagNames: ["test", "Test2"],
     },
 }
-
-export const IsOwner: Story = {
-    args: {
-        author: "Tester2",
-        createdTime: "2024-09-16 00:00",
-        hashtagNames: ["test"],
-        isOwner: true,
-    },
-}
