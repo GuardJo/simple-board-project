@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Loading from './../../loading';
 import ArticleTable from "@/components/ArticleTable";
-import { getArticlePage } from "@/service/ArticleService";
+import { getArticlePage } from "@/service/ArticleSearchService";
 import PaginationBar from "@/components/PaginationBar";
 import { ArticleList, HashtagInfo } from "@/interface";
 import HashtagList from "@/components/HashtagList";
