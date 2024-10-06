@@ -7,7 +7,6 @@ import BasicCard from "@/components/BasicCard";
 import Button from "@/components/Button";
 import { ArticleDetailInfo } from "@/interface";
 import { useEffect, useState } from "react";
-import ArticleCreateViewContainer from "./ArticleCreateViewContainer";
 import ArticleUpdateFormContainer from "./ArticleUpdateFormContainer";
 
 export default function ArticleDetailViewContainer({ articleId, articleDetail }: ArticleDetailViewContainerParams) {

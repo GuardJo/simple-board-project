@@ -1,4 +1,3 @@
-import Button from "./Button";
 import HashtagBadge from "./HashtagBadge";
 
 export default function ArticleInfo({ author, createdTime, hashtagNames }: ArticleInfoParams) {
