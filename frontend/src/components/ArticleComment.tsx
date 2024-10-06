@@ -2,10 +2,10 @@ export default function ArticleComment({ author, updatedAt, content }: ArticleCo
     return (
         <div className="flex flex-col py-3">
             <dt className="flex gap-1 justify-between">
-                <p className="mb-1 text-gray-500 md:text-md dark:text-gray-400">{author}</p>
+                <p className="mb-1 text-black md:text-md dark:text-gray-400">{author}</p>
                 <p className="mb-1 text-gray-400 md:text-xs dark:text-gray-300">{updatedAt}</p>
             </dt>
-            <dd className="text-sm font-semibold">{content}</dd>
+            <dd className="text-sm mt-2">{content}</dd>
         </div>
     )
 }
