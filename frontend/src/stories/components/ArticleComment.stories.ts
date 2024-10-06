@@ -1,5 +1,5 @@
+import ArticleComment from "@/components/ArticleComment";
 import { Meta, StoryObj } from "@storybook/react";
-import ArticleComment from './../components/ArticleComment';
 
 const meta = {
     title: "components/ArticleComment",

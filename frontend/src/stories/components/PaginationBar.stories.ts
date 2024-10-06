@@ -1,4 +1,4 @@
-import PaginationBar from "../components/PaginationBar";
+import PaginationBar from "@/components/PaginationBar";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {

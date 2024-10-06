@@ -1,5 +1,5 @@
+import BasicCard from "@/components/BasicCard";
 import { Meta, StoryObj } from "@storybook/react";
-import BasicCard from './../components/BasicCard';
 
 const meta = {
     title: "components/BasicCard",

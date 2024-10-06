@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
-import TextInput from './../components/TextInput';
 import { action } from '@storybook/addon-actions';
+import TextInput from '@/components/TextInput';
 
 const meta = {
     title: "components/TextInput",

@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
-import ArticleContentForm from '../components/ArticleContentForm';
 import {action} from '@storybook/addon-actions';
-import { ChangeEvent } from "react";
+import ArticleContentForm from "@/components/ArticleContentForm";
 
 const meta = {
     title: "components/ArticleContentForm",

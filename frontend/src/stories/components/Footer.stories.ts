@@ -1,4 +1,4 @@
-import Footer from "../components/Footer";
+import Footer from "@/components/Footer";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {

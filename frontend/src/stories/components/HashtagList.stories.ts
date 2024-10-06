@@ -1,5 +1,5 @@
+import HashtagList from "@/components/HashtagList";
 import { Meta, StoryObj } from "@storybook/react";
-import HashtagList from './../components/HashtagList';
 
 const meta = {
     title: "Components/HashtagList",

@@ -1,5 +1,5 @@
+import ArticleInfo from "@/components/ArticleInfo";
 import { Meta, StoryObj } from "@storybook/react";
-import ArticleInfo from './../components/ArticleInfo';
 
 const meta = {
     title: "components/ArticleInfo",
