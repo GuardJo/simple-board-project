@@ -13,5 +13,5 @@ export default function ArticleContentForm({ content, canWrite, onChange = () =>
 interface ArticleContentProps {
     content?: string,
     canWrite?: boolean,
-    onChange?: Function,
+    onChange?: (arg:string) => void,
 };

@@ -1,6 +1,8 @@
 "use client"
 
-export default function TextInput({ labelName, placeholder, onChange = () => { }, isSecret = false }: TextInputParams) {
+import { ChangeEvent } from "react"
+
+export default function TextInput({ labelName, placeholder, onChange = (v1:string) => {}, isSecret = false }: TextInputParams) {
     return (
         <div className="mb-6">
             <label htmlFor="default-input" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{labelName}</label>
@@ -13,6 +15,6 @@ interface TextInputParams {
     labelName: string,
     placeholder: string,
     content?: string,
-    onChange?: Function,
-    isSecret?: Boolean,
+    onChange?: (e: string) => void,
+    isSecret?: boolean,
 };

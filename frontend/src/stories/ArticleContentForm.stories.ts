@@ -22,7 +22,7 @@ export const HasContents:Story = {
     },
 };
 
-const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+const handleChange = (e: string) => {
     action("handleChange")(`Changed Value : ${e}`);
 }
 
