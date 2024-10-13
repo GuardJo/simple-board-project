@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guardjo.simpleboard.config.TestSecurityConfig;
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.ArticleSearchType;
-import com.guardjo.simpleboard.dto.ArticleCreateRequest;
-import com.guardjo.simpleboard.dto.ArticleDetailInfo;
-import com.guardjo.simpleboard.dto.ArticleDto;
-import com.guardjo.simpleboard.dto.ArticlePageDto;
+import com.guardjo.simpleboard.dto.*;
 import com.guardjo.simpleboard.generator.TestDataGenerator;
 import com.guardjo.simpleboard.service.ArticleService;
 import com.guardjo.simpleboard.service.HashtagService;
@@ -36,8 +33,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -172,5 +168,46 @@ class ArticleRestControllerTest {
 
         then(hashtagService).should().parseHashtagsInContent(eq(createRequest.content()));
         then(articleService).should().saveArticle(eq(createRequest), eq(TEST_USER_MAIL), anySet());
+    }
+
+    @WithUserDetails(value = TEST_USER_MAIL, setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("PATCH : " + UrlContext.ARTICLES_URL)
+    @Test
+    void test_updateArticle() throws Exception {
+        Long id = 1L;
+        String title = "Test Title";
+        String content = "test content";
+        ArticleUpdateDto updateReq = new ArticleUpdateDto(id, title, content);
+        String request = objectMapper.writeValueAsString(updateReq);
+
+        given(hashtagService.parseHashtagsInContent(eq(updateReq.content()))).willReturn(Set.of());
+        willDoNothing().given(articleService).updateArticle(eq(updateReq), eq(TEST_USER_MAIL), anySet());
+
+        mockMvc.perform(patch(UrlContext.ARTICLES_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .content(request))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        then(hashtagService).should().parseHashtagsInContent(eq(updateReq.content()));
+        then(articleService).should().updateArticle(eq(updateReq), eq(TEST_USER_MAIL), anySet());
+    }
+
+    @DisplayName("PATCH : " + UrlContext.ARTICLES_URL + " : LoginRedirection")
+    @Test
+    void test_updateArticle_loginRedirection() throws Exception {
+        Long id = 1L;
+        String title = "Test Title";
+        String content = "test content";
+        ArticleUpdateDto updateReq = new ArticleUpdateDto(id, title, content);
+        String request = objectMapper.writeValueAsString(updateReq);
+
+        mockMvc.perform(patch(UrlContext.ARTICLES_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .content(request))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection());
     }
 }

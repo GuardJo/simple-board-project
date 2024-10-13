@@ -100,15 +100,13 @@ public class ArticleService {
         Article article = articleRepository.getReferenceById(updateDto.id());
         Optional<Member> member = memberRepository.findByEmail(userMail);
 
-        if (article == null) {
-            throw new EntityNotFoundException("Not Found Article " + updateDto.id());
-        }
-
         if (member.isEmpty()) {
             throw new EntityNotFoundException("Not Found User " + userMail);
-        } else if (!member.get().getEmail().equals(article.getCreator())) {
-            throw new EntityNotFoundException("This User is No forbidden Update Article, " + userMail);
         } else {
+            Member articleCreator = article.getMember();
+
+            checkPossibleUpdateArticle(articleCreator, article);
+
             article.setTitle(updateDto.title());
             article.setContent(updateDto.content());
             article.clearHashtags();
@@ -154,5 +152,16 @@ public class ArticleService {
         }
 
         return articleRepository.findByHashtagName(searchValue, pageable).map(DtoConverter::from);
+    }
+
+    /*
+    주어진 계정이 해당 Article 을 수정할 수 있는 계정인지 여부 확인
+     */
+    private void checkPossibleUpdateArticle(Member articleCreator, Article targetArticle) {
+        String targetMail = targetArticle.getMember().getEmail();
+
+        if (!articleCreator.getEmail().equals(targetMail)) {
+            throw new EntityNotFoundException("This User is No forbidden Update Article, " + targetMail);
+        }
     }
 }

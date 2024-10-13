@@ -2,10 +2,7 @@ package com.guardjo.simpleboard.api;
 
 import com.guardjo.simpleboard.domain.ArticleSearchType;
 import com.guardjo.simpleboard.domain.Hashtag;
-import com.guardjo.simpleboard.dto.ArticleCreateRequest;
-import com.guardjo.simpleboard.dto.ArticleDetailInfo;
-import com.guardjo.simpleboard.dto.ArticleDto;
-import com.guardjo.simpleboard.dto.ArticlePageDto;
+import com.guardjo.simpleboard.dto.*;
 import com.guardjo.simpleboard.dto.security.SimpleBoardPrincipal;
 import com.guardjo.simpleboard.service.ArticleService;
 import com.guardjo.simpleboard.service.HashtagService;
@@ -59,5 +56,14 @@ public class ArticleRestController {
 
         Set<Hashtag> newHashtags = hashtagService.parseHashtagsInContent(createRequest.content());
         articleService.saveArticle(createRequest, principal.getUsername(), newHashtags);
+    }
+
+    @PatchMapping(UrlContext.ARTICLES_URL)
+    public void updateArticle(@RequestBody ArticleUpdateDto articleUpdateDto, @AuthenticationPrincipal SimpleBoardPrincipal principal) {
+        log.info("Request PATCH : {}", UrlContext.ARTICLES_URL);
+
+        Set<Hashtag> newHashtags = hashtagService.parseHashtagsInContent(articleUpdateDto.content());
+
+        articleService.updateArticle(articleUpdateDto, principal.getUsername(), newHashtags);
     }
 }
