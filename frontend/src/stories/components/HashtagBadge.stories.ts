@@ -1,4 +1,4 @@
-import HashtagBadge from "../components/HashtagBadge";
+import HashtagBadge from "@/components/HashtagBadge";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {

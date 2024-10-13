@@ -4,13 +4,11 @@ import BasicCard from "@/components/BasicCard";
 import Button from "@/components/Button";
 import TextInput from "@/components/TextInput";
 import { login } from "@/service/LoginService";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function LoginPage() {
     const [userId, setUserId] = useState("");
     const [password, setPassword] = useState("");
-    const router = useRouter();
 
     const handleLogin = async () => {
         const response = await login({ username: userId, password });

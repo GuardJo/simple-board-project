@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
-import ArticleContentForm from '../components/ArticleContentForm';
 import {action} from '@storybook/addon-actions';
-import { ChangeEvent } from "react";
+import ArticleContentForm from "@/components/ArticleContentForm";
 
 const meta = {
     title: "components/ArticleContentForm",
@@ -22,8 +21,8 @@ export const HasContents:Story = {
     },
 };
 
-const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    action("handleChange")(`Changed Value : ${e.target.value}`);
+const handleChange = (e: string) => {
+    action("handleChange")(`Changed Value : ${e}`);
 }
 
 export const CanWrite: Story = {

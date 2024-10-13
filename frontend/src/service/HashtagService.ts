@@ -1,5 +1,4 @@
-
-const baseUrl = "http://localhost:8080/api/v2";
+const baseUrl = process.env.NEXT_PUBLIC_API_SERVER_URL;
 
 export async function getHashTagList() {
     const response = await fetch(`${baseUrl}/hashtags`,

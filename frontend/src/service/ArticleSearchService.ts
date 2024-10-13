@@ -1,6 +1,6 @@
-import { ArticleCreateRequest } from "@/interface";
+import {cookies} from "next/headers";
 
-const baseUrl = "http://localhost:8080/api/v2";
+const baseUrl = process.env.NEXT_PUBLIC_API_SERVER_URL;
 
 export async function getArticlePage(page: number, searchType: string, searchValue: string) {
     const response = await fetch(`${baseUrl}/articles?page=${page - 1}&searchType=${searchType}&searchValue=${searchValue}`, {
@@ -12,23 +12,13 @@ export async function getArticlePage(page: number, searchType: string, searchVal
 
 export async function getArticleDetail(articleId: number) {
     const response = await fetch(`${baseUrl}/articles/${articleId}`, {
+        method: 'GET',
         cache: 'no-store',
         headers: {
             "Content-Type": "application/json",
+            "Cookie": cookies().toString(),
         },
     });
 
     return response.json();
-}
-
-export async function createArticle(createRequest : ArticleCreateRequest) {
-    await fetch(`${baseUrl}/articles`, {
-        method: "POST",
-        credentials: "include",
-        cache: 'no-store',
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(createRequest),
-    });
 }

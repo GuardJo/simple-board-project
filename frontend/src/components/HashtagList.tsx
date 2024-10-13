@@ -2,7 +2,7 @@ import { HashtagInfo } from "@/interface";
 import Link from "next/link";
 import HashtagBadge from "./HashtagBadge";
 
-export default function HashtagList({ data }: Props = {}) {
+export default function HashtagList({ data = [] }: Props = {}) {
     return (
         <>
             <div>
@@ -10,10 +10,10 @@ export default function HashtagList({ data }: Props = {}) {
             </div>
             <div className="flex gap-1 flex-wrap lg:w-[1000px]">
                 {
-                    (data === undefined || data === null
+                    (data.length === 0
                         ? <p className="text-base font-semibold text-black-600">No Tags</p>
                         : data.map(hashtagInfo => {
-                            return <Link href={`/articles/search-hashtags?searchValue=${hashtagInfo.hashtagName}`}>
+                            return <Link key={hashtagInfo.id} href={`/articles/search-hashtags?searchValue=${hashtagInfo.hashtagName}`}>
                                 <HashtagBadge key={hashtagInfo.id} hashtagName={hashtagInfo.hashtagName}></HashtagBadge>
                             </Link>
                         }))

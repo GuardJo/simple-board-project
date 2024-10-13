@@ -1,4 +1,4 @@
-import Header from '../components/Header';
+import Header from '@/components/Header';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {

@@ -1,5 +1,5 @@
+import ArticleTable from "@/components/ArticleTable";
 import { ArticleList } from "@/interface";
-import ArticleTable from "../components/ArticleTable";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {

@@ -28,6 +28,7 @@ export interface CommentInfo {
 export interface ArticleDetailInfo {
     article: ArticleInfo,
     comments: CommentInfo[],
+    isOwner: Boolean,
 }
 
 export interface ArticleCreateRequest {
@@ -38,4 +39,10 @@ export interface ArticleCreateRequest {
 export interface LoginRequest {
     username: string,
     password: string,
+}
+
+export interface ArticleUpdateRequest {
+    id: number,
+    title: string,
+    content: string,
 }
