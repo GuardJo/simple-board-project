@@ -1,6 +1,6 @@
-import { LoginRequest } from "@/interface";
+import {LoginRequest} from "@/interface";
 
-const baseUrl = "http://localhost:8080/api/v2";
+const baseUrl = process.env.NEXT_PUBLIC_API_SERVER_URL;
 
 export async function login(loginRequest: LoginRequest) {
     let loginParams = new URLSearchParams({
@@ -16,17 +16,17 @@ export async function login(loginRequest: LoginRequest) {
         },
         body: loginParams,
     })
-    .then(res => {
-        if (res.ok) {
-            return true;
-        } else {
+        .then(res => {
+            if (res.ok) {
+                return true;
+            } else {
+                return false;
+            }
+        })
+        .catch(e => {
+            console.log(`Error : ${e}`);
             return false;
-        }
-    })
-    .catch(e => {
-        console.log(`Error : ${e}`);
-        return false;
-    });
+        });
 
     return response;
 }

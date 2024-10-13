@@ -40,3 +40,9 @@ export interface LoginRequest {
     username: string,
     password: string,
 }
+
+export interface ArticleUpdateRequest {
+    id: number,
+    title: string,
+    content: string,
+}

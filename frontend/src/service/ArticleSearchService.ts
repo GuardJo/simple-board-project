@@ -1,6 +1,6 @@
 import {cookies} from "next/headers";
 
-const baseUrl = "http://localhost:8080/api/v2";
+const baseUrl = process.env.NEXT_PUBLIC_API_SERVER_URL;
 
 export async function getArticlePage(page: number, searchType: string, searchValue: string) {
     const response = await fetch(`${baseUrl}/articles?page=${page - 1}&searchType=${searchType}&searchValue=${searchValue}`, {
