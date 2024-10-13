@@ -1,15 +1,15 @@
-import { Meta, StoryObj } from "@storybook/react";
-import { action } from "@storybook/addon-actions";
-import Button from "@/components/Button";
+import {Meta, StoryObj} from "@storybook/react";
+import {action} from "@storybook/addon-actions";
+import BasicButton from "@/components/BasicButton";
 
 const meta = {
-    title: "components/Button",
-    component: Button,
-} satisfies Meta<typeof Button>
+    title: "components/BasicButton",
+    component: BasicButton,
+} satisfies Meta<typeof BasicButton>
 
 export default meta;
 
-type Story = StoryObj<typeof Button>
+type Story = StoryObj<typeof BasicButton>
 
 export const noEvent: Story = {
     args: {

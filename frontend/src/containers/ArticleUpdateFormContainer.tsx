@@ -2,7 +2,7 @@
 
 import ArticleContentForm from "@/components/ArticleContentForm";
 import BasicCard from "@/components/BasicCard";
-import Button from "@/components/Button";
+import BasicButton from "@/components/BasicButton";
 import TextInput from "@/components/TextInput";
 import {createArticle, updateArticle} from "@/service/ArticleUpdateService";
 import {me} from "@/service/LoginService";
@@ -59,7 +59,7 @@ export default function ArticleUpdateFormContainer({
                     <ArticleContentForm onChange={setContentValue} canWrite content={contentValue}></ArticleContentForm>
                 </BasicCard>
                 <div className="flex justify-end">
-                    <Button onClick={handleUpdateArticle}>저장</Button>
+                    <BasicButton onClick={handleUpdateArticle}>저장</BasicButton>
                 </div>
             </div>
         </div>
