@@ -1,5 +1,5 @@
 import ArticleDetailViewContainer from "@/containers/ArticleDetailViewContainer";
-import { Meta, StoryObj } from "@storybook/react";
+import {Meta, StoryObj} from "@storybook/react";
 
 const meta = {
     title: "Containers/ArticleDetailViewContainer",
@@ -64,12 +64,14 @@ export const HasComments: Story = {
                     content: "Test Comment",
                     creator: "Tester2",
                     createTime: "2024-03-03",
+                    childComments: [],
                 },
                 {
                     id: 2,
                     content: "Test Comment2",
                     creator: "Tester3",
                     createTime: "2024-03-03",
+                    childComments: [],
                 },
             ],
             isOwner: false,

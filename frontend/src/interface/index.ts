@@ -23,6 +23,7 @@ export interface CommentInfo {
     creator: string,
     content: string,
     createTime: string,
+    childComments: CommentInfo[],
 }
 
 export interface ArticleDetailInfo {

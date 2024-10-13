@@ -1,18 +1,26 @@
-import { CommentInfo } from "@/interface";
-import ArticleComment from "./ArticleComment";
+import {CommentInfo} from "@/interface";
+import BasicButton from "@/components/BasicButton";
+import ArticleComment from "@/components/ArticleComment";
 
-export default function ArticleCommentList({ data = []}: ArticleCommentListParams = {}) {
+export default function ArticleCommentList({data = []}: ArticleCommentListParams = {}) {
     return (
-        <div>
-            <dl className="w-full text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
-                {(data.length === 0 ? <p>등록된 댓글이 없습니다.</p> : data.map((comment) => (
-                    <div key={comment.id} className="flex flex-col">
-                        <ArticleComment key={comment.id} author={comment.creator} content={comment.content} updatedAt={comment.createTime}></ArticleComment>
-                    </div>
-                )))}
-            </dl>
-        </div>
-    );
+        <div className="max-w-2xl mx-auto p-4">
+            <div className="mb-8">
+                <textarea
+                    placeholder="댓글을 입력하세요..."
+                    onChange={(e) => {
+                    }}
+                    className="w-full p-2"
+                />
+                <BasicButton>댓글 작성</BasicButton>
+            </div>
+            <div className="space-y-4">
+                {(data?.length === 0) ? '등록된 댓글이 없습니다.' : data.map(comment => (
+                    <ArticleComment key={comment.id} id={comment.id} author={comment.creator} content={comment.content}
+                                    updatedAt={comment.createTime} childComments={comment.childComments}/>
+                ))}
+            </div>
+        </div>);
 }
 
 interface ArticleCommentListParams {
