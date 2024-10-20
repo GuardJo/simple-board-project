@@ -3,6 +3,7 @@ package com.guardjo.simpleboard.service;
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.Comment;
 import com.guardjo.simpleboard.domain.Member;
+import com.guardjo.simpleboard.dto.CommentCreateRequest;
 import com.guardjo.simpleboard.dto.CommentDto;
 import com.guardjo.simpleboard.repository.ArticleRepository;
 import com.guardjo.simpleboard.repository.CommentRepository;
@@ -29,21 +30,21 @@ public class CommentService {
     private MemberRepository memberRepository;
 
     /**
-     * 주어진 article에 댓글을 저장한다.
+     * 특정 article에 댓글 혹은 대댓글을 저장한다.
      *
-     * @param articleId   article 식별키
-     * @param content     댓글 내용
-     * @param creatorMail 작성자 메일
+     * @param createRequest 저장할 댓글 정보 (articleId, parentCommentId, content)
+     * @param userMail      작성자 메일
      */
-    public void createComment(long articleId, String content, String creatorMail) {
-        log.debug("Create New Comment, articleId = {}, content = {}, creatorMail = {}", articleId, content, creatorMail);
+    public void createComment(CommentCreateRequest createRequest, String userMail) {
+        log.debug("Create New Comment, articleId = {}, content = {}, parentCommentId = {}, creatorMail = {}",
+                createRequest.articleId(), createRequest.content(), createRequest.parentCommentId(), userMail);
 
-        Member member = memberRepository.findByEmail(creatorMail).orElseThrow(EntityNotFoundException::new);
-        Article article = articleRepository.getReferenceById(articleId);
+        Member member = memberRepository.findByEmail(userMail).orElseThrow(EntityNotFoundException::new);
+        Article article = articleRepository.getReferenceById(createRequest.articleId());
 
-        Comment newComment = commentRepository.save(Comment.of(member, article, content));
+        Comment newComment = commentRepository.save(Comment.of(member, article, createRequest.content(), createRequest.parentCommentId()));
 
-        log.info("Created New Content, commentId = {}, articleId = {}", newComment.getId(), articleId);
+        log.info("Created New Content, commentId = {}, articleId = {}", newComment.getId(), createRequest.articleId());
     }
 
     @Transactional(readOnly = true)

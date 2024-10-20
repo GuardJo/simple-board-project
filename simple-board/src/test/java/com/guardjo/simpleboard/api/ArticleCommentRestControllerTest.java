@@ -42,10 +42,10 @@ class ArticleCommentRestControllerTest {
     void test_createArticleComment() throws Exception {
         long articleId = 99L;
         String content = "test";
-        CommentCreateRequest createRequest = new CommentCreateRequest(articleId, content);
+        CommentCreateRequest createRequest = new CommentCreateRequest(articleId, null, content);
         String request = objectMapper.writeValueAsString(createRequest);
 
-        willDoNothing().given(commentService).createComment(eq(articleId), eq(content), eq(TEST_USER_MAIL));
+        willDoNothing().given(commentService).createComment(eq(createRequest), eq(TEST_USER_MAIL));
 
         mockMvc.perform(post(UrlContext.COMMENTS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -53,6 +53,21 @@ class ArticleCommentRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        then(commentService).should().createComment(eq(articleId), eq(content), eq(TEST_USER_MAIL));
+        then(commentService).should().createComment(eq(createRequest), eq(TEST_USER_MAIL));
+    }
+
+    @DisplayName("POST : " + UrlContext.COMMENTS_URL + " : Redirect Login")
+    @Test
+    void test_createArticleComment_redirect() throws Exception {
+        long articleId = 99L;
+        String content = "test";
+        CommentCreateRequest createRequest = new CommentCreateRequest(articleId, null, content);
+        String request = objectMapper.writeValueAsString(createRequest);
+
+        mockMvc.perform(post(UrlContext.COMMENTS_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection());
     }
 }

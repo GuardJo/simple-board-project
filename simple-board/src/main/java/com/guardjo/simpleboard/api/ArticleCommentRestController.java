@@ -20,6 +20,6 @@ public class ArticleCommentRestController {
     public void createArticleComment(@RequestBody CommentCreateRequest createRequest, @AuthenticationPrincipal SimpleBoardPrincipal principal) {
         log.info("POST : " + UrlContext.COMMENTS_URL);
 
-        commentService.createComment(createRequest.articleId(), createRequest.content(), principal.email());
+        commentService.createComment(createRequest, principal.email());
     }
 }

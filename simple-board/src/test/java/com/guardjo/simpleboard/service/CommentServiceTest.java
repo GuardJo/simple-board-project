@@ -3,6 +3,7 @@ package com.guardjo.simpleboard.service;
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.Comment;
 import com.guardjo.simpleboard.domain.Member;
+import com.guardjo.simpleboard.dto.CommentCreateRequest;
 import com.guardjo.simpleboard.dto.CommentDto;
 import com.guardjo.simpleboard.generator.TestDataGenerator;
 import com.guardjo.simpleboard.repository.ArticleRepository;
@@ -112,6 +113,7 @@ class CommentServiceTest {
         Long articleId = 999L;
         Article article = Article.of(testMember, "title", "content");
         Comment expected = Comment.of(testMember, article, content);
+        CommentCreateRequest createRequest = new CommentCreateRequest(articleId, null, content);
 
         ArgumentCaptor<Comment> commentArgumentCaptor = ArgumentCaptor.forClass(Comment.class);
 
@@ -119,11 +121,40 @@ class CommentServiceTest {
         given(articleRepository.getReferenceById(eq(articleId))).willReturn(article);
         given(commentRepository.save(commentArgumentCaptor.capture())).willReturn(expected);
 
-        assertThatCode(() -> commentService.createComment(articleId, content, memberMail)).doesNotThrowAnyException();
+        assertThatCode(() -> commentService.createComment(createRequest, memberMail)).doesNotThrowAnyException();
         Comment actual = commentArgumentCaptor.getValue();
 
         assertThat(actual).isNotNull();
         assertThat(actual.getContent()).isEqualTo(expected.getContent());
+
+        then(memberRepository).should().findByEmail(eq(memberMail));
+        then(articleRepository).should().getReferenceById(eq(articleId));
+        then(commentRepository).should().save(any(Comment.class));
+    }
+
+    @DisplayName("신규 댓글 저장 테스트 : 대댓글")
+    @Test
+    void test_createComment_childComment() {
+        String memberMail = testMember.getEmail();
+        String content = "test content";
+        Long articleId = 999L;
+        Long parentCommentId = 111L;
+        Article article = Article.of(testMember, "title", "content");
+        Comment expected = Comment.of(testMember, article, content, parentCommentId);
+        CommentCreateRequest createRequest = new CommentCreateRequest(articleId, parentCommentId, content);
+
+        ArgumentCaptor<Comment> commentArgumentCaptor = ArgumentCaptor.forClass(Comment.class);
+
+        given(memberRepository.findByEmail(eq(memberMail))).willReturn(Optional.of(testMember));
+        given(articleRepository.getReferenceById(eq(articleId))).willReturn(article);
+        given(commentRepository.save(commentArgumentCaptor.capture())).willReturn(expected);
+
+        assertThatCode(() -> commentService.createComment(createRequest, memberMail)).doesNotThrowAnyException();
+        Comment actual = commentArgumentCaptor.getValue();
+
+        assertThat(actual).isNotNull();
+        assertThat(actual.getContent()).isEqualTo(expected.getContent());
+        assertThat(actual.getParentCommentId()).isEqualTo(parentCommentId);
 
         then(memberRepository).should().findByEmail(eq(memberMail));
         then(articleRepository).should().getReferenceById(eq(articleId));
