@@ -47,3 +47,8 @@ export interface ArticleUpdateRequest {
     title: string,
     content: string,
 }
+
+export interface CommentCreateRequest {
+    articleId: number,
+    content: string,
+}

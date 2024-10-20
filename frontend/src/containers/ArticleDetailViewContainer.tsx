@@ -32,7 +32,7 @@ export default function ArticleDetailViewContainer({articleId, articleDetail}: A
                             <ArticleContentForm content={article.content}></ArticleContentForm>
                         </BasicCard>
                         <BasicCard title={'댓글 (' + comments.length + ')'}>
-                            <ArticleCommentList data={comments}/>
+                            <ArticleCommentList articleId={articleId} data={comments}/>
                         </BasicCard>
                     </div>
                     <div className="flex flex-col h-96 gap-3" style={{width: "30%"}}>
