@@ -2,7 +2,7 @@ export interface ArticleList {
     number: number,
     totalPage: number,
     articles: ArticleInfo[],
-};
+}
 
 export interface ArticleInfo {
     id: number,
@@ -11,7 +11,7 @@ export interface ArticleInfo {
     creator: string,
     hashtags: HashtagInfo[],
     createTime: string,
-};
+}
 
 export interface HashtagInfo {
     id: number,
@@ -50,5 +50,6 @@ export interface ArticleUpdateRequest {
 
 export interface CommentCreateRequest {
     articleId: number,
+    parentCommentId?: number,
     content: string,
 }

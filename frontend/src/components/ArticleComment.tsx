@@ -5,9 +5,46 @@ import {CommentInfo} from "@/interface";
 import {ChevronDownIcon, ChevronUpIcon} from "@heroicons/react/16/solid";
 import {useState} from "react";
 import BasicButton from "@/components/BasicButton";
+import {saveComment} from "@/service/CommentService";
+import {useRouter} from "next/navigation";
+import {me} from "@/service/LoginService";
 
-export default function ArticleComment({id, author, updatedAt, content, childComments = []}: ArticleCommentParam) {
+export default function ArticleComment({
+                                           id,
+                                           articleId,
+                                           author,
+                                           updatedAt,
+                                           content,
+                                           childComments = []
+                                       }: ArticleCommentParam) {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [childCommentContent, setChildCommentContent] = useState("");
+    const router = useRouter();
+
+    const handleSaveChildComment = async () => {
+        await me()
+            .then((check) => {
+                if (check.ok) {
+                    saveComment({
+                        articleId: articleId,
+                        content: childCommentContent,
+                        parentCommentId: id,
+                    })
+                        .then((res) => {
+                            if (res.ok) {
+                                router.refresh()
+                            } else {
+                                throw new Error("Failed Create Comments");
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(`Error : ${error}`);
+                        });
+                } else {
+                    router.push("/login");
+                }
+            });
+    }
 
     return (
         <div className="border-b border-gray-200 py-4">
@@ -41,20 +78,14 @@ export default function ArticleComment({id, author, updatedAt, content, childCom
                             <p className="text-sm">{reply.content}</p>
                         </div>
                     ))}
-                    <form onSubmit={(e) => {
-                        e.preventDefault()
-                        // TODO API 연동
-                        console.log("댓글 저장");
-                    }} className="mt-2">
-                        <textarea
-                            placeholder="답글을 입력하세요..."
-                            onChange={() => {
-                            }}
-                            className="w-full text-sm p-2"
-                        />
-                        <BasicButton onClick={() => {
-                        }}>답글 작성</BasicButton>
-                    </form>
+                    <textarea
+                        placeholder="답글을 입력하세요..."
+                        onChange={(event) => {
+                            setChildCommentContent(event.target.value);
+                        }}
+                        className="w-full text-sm p-2"
+                    />
+                    <BasicButton onClick={handleSaveChildComment}>답글 작성</BasicButton>
                 </div>
             )}
         </div>
@@ -63,6 +94,7 @@ export default function ArticleComment({id, author, updatedAt, content, childCom
 
 interface ArticleCommentParam {
     id: number,
+    articleId: number,
     author: string,
     updatedAt: string,
     content: string,
