@@ -12,6 +12,7 @@ import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
@@ -100,5 +102,31 @@ class CommentServiceTest {
         then(articleRepository).should().getReferenceById(any());
         then(commentRepository).should().save(any(Comment.class));
         then(memberRepository).should().findByEmail(anyString());
+    }
+
+    @DisplayName("신규 댓글 저장 테스트")
+    @Test
+    void test_createComment() {
+        String memberMail = testMember.getEmail();
+        String content = "test content";
+        Long articleId = 999L;
+        Article article = Article.of(testMember, "title", "content");
+        Comment expected = Comment.of(testMember, article, content);
+
+        ArgumentCaptor<Comment> commentArgumentCaptor = ArgumentCaptor.forClass(Comment.class);
+
+        given(memberRepository.findByEmail(eq(memberMail))).willReturn(Optional.of(testMember));
+        given(articleRepository.getReferenceById(eq(articleId))).willReturn(article);
+        given(commentRepository.save(commentArgumentCaptor.capture())).willReturn(expected);
+
+        assertThatCode(() -> commentService.createComment(articleId, content, memberMail)).doesNotThrowAnyException();
+        Comment actual = commentArgumentCaptor.getValue();
+
+        assertThat(actual).isNotNull();
+        assertThat(actual.getContent()).isEqualTo(expected.getContent());
+
+        then(memberRepository).should().findByEmail(eq(memberMail));
+        then(articleRepository).should().getReferenceById(eq(articleId));
+        then(commentRepository).should().save(any(Comment.class));
     }
 }
