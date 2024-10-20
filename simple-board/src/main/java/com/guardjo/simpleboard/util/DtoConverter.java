@@ -7,6 +7,8 @@ import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.*;
 import com.guardjo.simpleboard.dto.security.SimpleBoardPrincipal;
 
+import java.util.Comparator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -79,6 +81,8 @@ public class DtoConverter {
                 DtoConverter.from(article),
                 article.getComments().stream()
                         .map(DtoConverter::from)
+                        .filter(commentDto -> Objects.isNull(commentDto.parentCommentId()))
+                        .sorted(Comparator.comparing(CommentDto::createTime).reversed())
                         .toList(),
                 article.getMember().getEmail().equals(userMail)
         );
