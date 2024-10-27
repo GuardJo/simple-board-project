@@ -55,9 +55,10 @@ export default function ArticleComment({
         setOpenDialog(true);
     }
 
-    const handleRemoveComment = () => {
-        deleteComment(targetId);
+    const handleRemoveComment = async () => {
+        await deleteComment(targetId);
         setOpenDialog(false);
+        router.refresh();
     }
 
     const handleCloseDialog = () => {

@@ -13,7 +13,18 @@ export async function saveComment(request: CommentCreateRequest): Promise<Respon
     })
 }
 
-export function deleteComment(commentId: number): void {
-    // TODO API 연동하기
-    console.log(`Delete Comment, commentId = ${commentId}`);
+export async function deleteComment(commentId: number): Promise<void> {
+    await fetch(`${baseUrl}/comments/${commentId}`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+        method: "DELETE"
+    }).then((res) => {
+        if (res.ok) {
+            return;
+        } else {
+            throw new Error(res.statusText);
+        }
+    });
 }
