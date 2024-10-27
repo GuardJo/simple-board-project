@@ -3,7 +3,7 @@ import DeleteActionDialog from "@/components/DeleteActionDialog";
 import {action} from "@storybook/addon-actions";
 
 const meta = {
-    title: "Components/ActionDialog",
+    title: "Components/DeleteActionDialog",
     component: DeleteActionDialog,
 } satisfies Meta<typeof DeleteActionDialog>
 
