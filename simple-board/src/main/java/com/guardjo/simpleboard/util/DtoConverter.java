@@ -81,6 +81,7 @@ public class DtoConverter {
                 DtoConverter.from(article),
                 article.getComments().stream()
                         .map(comment -> from(comment, userMail))
+                        .filter(commentInfo -> Objects.isNull(commentInfo.parentCommentId()))
                         .toList(),
                 article.getMember().getEmail().equals(userMail)
         );
@@ -95,7 +96,6 @@ public class DtoConverter {
                 comment.getParentCommentId(),
                 comment.getChildComments().stream()
                         .map(childComment -> DtoConverter.from(childComment, userMail))
-                        .filter(commentInfo -> Objects.isNull(commentInfo.parentCommentId()))
                         .sorted(Comparator.comparing(CommentInfo::createTime).reversed())
                         .toList(),
                 comment.getMember().getEmail().equals(userMail)

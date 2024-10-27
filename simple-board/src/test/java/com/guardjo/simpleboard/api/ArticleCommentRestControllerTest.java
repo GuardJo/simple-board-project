@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -67,6 +68,33 @@ class ArticleCommentRestControllerTest {
         mockMvc.perform(post(UrlContext.COMMENTS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @DisplayName("DELETE : " + UrlContext.COMMENTS_URL)
+    @WithUserDetails(value = TEST_USER_MAIL, setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    void test_removeArticleComment() throws Exception {
+        long commentId = 99L;
+
+        willDoNothing().given(commentService).deleteComment(eq(commentId), eq(TEST_USER_MAIL));
+
+        mockMvc.perform(delete(UrlContext.COMMENTS_URL + "/" + commentId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        then(commentService).should().deleteComment(eq(commentId), eq(TEST_USER_MAIL));
+    }
+
+    @DisplayName("DELETE : " + UrlContext.COMMENTS_URL + " : Redirect Login Page")
+    @Test
+    void test_removeArticleComment_rediect() throws Exception {
+        long commentId = 99L;
+
+        mockMvc.perform(delete(UrlContext.COMMENTS_URL + "/" + commentId)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection());
     }
