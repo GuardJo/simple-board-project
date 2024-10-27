@@ -18,6 +18,17 @@ export const Default: Story = {
     },
 };
 
+export const MyComments: Story = {
+    args: {
+        id: 1,
+        author: "테스터",
+        updatedAt: "2024-07-28 23:55",
+        content: "테스트 댓글",
+        childComments: [],
+        isOwner: true,
+    },
+}
+
 export const HasChildComments: Story = {
     args: {
         id: 1,

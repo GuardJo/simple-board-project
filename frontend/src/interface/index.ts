@@ -24,6 +24,7 @@ export interface CommentInfo {
     content: string,
     createTime: string,
     childComments: CommentInfo[],
+    isOwner?: boolean,
 }
 
 export interface ArticleDetailInfo {

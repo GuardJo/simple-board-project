@@ -51,7 +51,8 @@ export default function ArticleCommentList({articleId, data = []}: ArticleCommen
                 {(data?.length === 0) ? '등록된 댓글이 없습니다.' : data.map(comment => (
                     <ArticleComment key={comment.id} id={comment.id} articleId={articleId} author={comment.creator}
                                     content={comment.content}
-                                    updatedAt={comment.createTime} childComments={comment.childComments}/>
+                                    updatedAt={comment.createTime} childComments={comment.childComments}
+                                    isOwner={comment.isOwner}/>
                 ))}
             </div>
         </div>);

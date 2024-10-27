@@ -12,3 +12,8 @@ export async function saveComment(request: CommentCreateRequest): Promise<Respon
         body: JSON.stringify(request)
     })
 }
+
+export function deleteComment(commentId: number): void {
+    // TODO API 연동하기
+    console.log(`Delete Comment, commentId = ${commentId}`);
+}
