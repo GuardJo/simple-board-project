@@ -1,5 +1,6 @@
 package com.guardjo.simpleboard.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.guardjo.simpleboard.domain.Article;
 import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.domain.Member;
@@ -11,8 +12,15 @@ import java.util.stream.Collectors;
 /**
  * A DTO for the {@link com.guardjo.simpleboard.domain.Article} entity
  */
-public record ArticleDto(Long id, String creator, LocalDateTime createTime, String title, String content,
-                         Set<HashtagDto> hashtags) {
+public record ArticleDto(
+        Long id,
+        String creator,
+        @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+        LocalDateTime createTime,
+        String title,
+        String content,
+        Set<HashtagDto> hashtags
+) {
     public static ArticleDto of(Long id, String creator, LocalDateTime createTime, String title, String content, Set<HashtagDto> hashtagDtos) {
         return new ArticleDto(id, creator, createTime, title, content, hashtagDtos);
     }
