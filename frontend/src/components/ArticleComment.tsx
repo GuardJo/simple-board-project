@@ -2,13 +2,14 @@
 
 import {Button} from "@headlessui/react";
 import {CommentInfo} from "@/interface";
-import {ChevronDownIcon, ChevronUpIcon, TrashIcon} from "@heroicons/react/16/solid";
+import {ChevronDownIcon, ChevronUpIcon, PencilSquareIcon, TrashIcon} from "@heroicons/react/16/solid";
 import {useState} from "react";
 import BasicButton from "@/components/BasicButton";
 import {deleteComment, saveComment} from "@/service/CommentService";
 import {useRouter} from "next/navigation";
 import {me} from "@/service/LoginService";
 import DeleteActionDialog from "@/components/DeleteActionDialog";
+import TextareaActionDialog from "@/components/TextareaActionDialog";
 
 export default function ArticleComment({
                                            id,
@@ -21,8 +22,10 @@ export default function ArticleComment({
                                        }: ArticleCommentParam) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [childCommentContent, setChildCommentContent] = useState("");
-    const [openDialog, setOpenDialog] = useState(false);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [targetId, setTargetId] = useState(id);
+    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+    const [targetContent, setTargetContent] = useState(content);
     const router = useRouter();
 
     const handleSaveChildComment = async () => {
@@ -50,30 +53,55 @@ export default function ArticleComment({
             });
     }
 
-    const handleOpenDialog = (commentId: number) => {
+    const handleOpenDeleteDialog = (commentId: number) => {
         setTargetId(commentId);
-        setOpenDialog(true);
+        setOpenDeleteDialog(true);
     }
 
     const handleRemoveComment = async () => {
         await deleteComment(targetId);
-        setOpenDialog(false);
+        setOpenDeleteDialog(false);
         router.refresh();
     }
 
-    const handleCloseDialog = () => {
-        setOpenDialog(false);
+    const handleCloseDeleteDialog = () => {
+        setOpenDeleteDialog(false);
+    }
+
+    const handleOpenUpdateDialog = (commentId: number, content: string) => {
+        setTargetId(commentId);
+        setTargetContent(content);
+        setOpenUpdateDialog(true);
+    }
+
+    const handleUpdateFormEvent = (changeContent: string) => {
+        setTargetContent(changeContent);
+    }
+
+    const handleCloseUpdateDialog = () => {
+        setOpenUpdateDialog(false);
+    }
+
+    const handleUpdateSubmit = () => {
+        // TODO API 연동
+        console.log(`Update Comment, commentId = ${targetId}, content = ${targetContent}`);
     }
 
     return (
         <div className="border-b border-gray-200 py-4">
             <div className="flex justify-between items-center mb-2">
-                <div className="flex justify-center items-center gap-2">
+                <div className="flex justify-center items-center gap-1">
                     <span className="font-semibold">{author}</span>
-                    {isOwner ? <Button onClick={() => handleOpenDialog(id)}
-                                       className="flex items-center text-sm text-gray-500 hover:text-gray-700">
-                        <TrashIcon className="mr-1 h-4 w-4"/>
-                    </Button> : null}
+                    {isOwner ? <>
+                        <Button onClick={() => handleOpenUpdateDialog(id, content)}
+                                className="flex items-center text-sm text-gray-500 hover:text-gray-700">
+                            <PencilSquareIcon className="h-4 w-4"/>
+                        </Button>
+                        <Button onClick={() => handleOpenDeleteDialog(id)}
+                                className="flex items-center text-sm text-gray-500 hover:text-gray-700">
+                            <TrashIcon className="mr-1 h-4 w-4"/>
+                        </Button>
+                    </> : null}
                 </div>
                 <span className="text-sm text-gray-500 cursor-help">
                   {updatedAt}
@@ -97,10 +125,16 @@ export default function ArticleComment({
                             <div className="flex justify-between items-center mb-1">
                                 <div className="flex justify-center items-center gap-2">
                                     <span className="font-semibold text-sm">{reply.creator}</span>
-                                    {reply.isOwner ? <Button onClick={() => handleOpenDialog(reply.id)}
-                                                             className="flex items-center text-xs text-gray-500 hover:text-gray-700">
-                                        <TrashIcon className="mr-1 h-4 w-4"/>
-                                    </Button> : null}
+                                    {reply.isOwner ? <>
+                                        <Button onClick={() => handleOpenUpdateDialog(reply.id, reply.content)}
+                                                className="flex items-center text-xs text-gray-500 hover:text-gray-700">
+                                            <PencilSquareIcon className="h-4 w-4"/>
+                                        </Button>
+                                        <Button onClick={() => handleOpenDeleteDialog(reply.id)}
+                                                className="flex items-center text-xs text-gray-500 hover:text-gray-700">
+                                            <TrashIcon className="mr-1 h-4 w-4"/>
+                                        </Button>
+                                    </> : null}
                                 </div>
                                 <span className="text-xs text-gray-500 cursor-help">
                           {reply.createTime}
@@ -119,8 +153,11 @@ export default function ArticleComment({
                     <BasicButton onClick={handleSaveChildComment}>답글 작성</BasicButton>
                 </div>
             )}
-            <DeleteActionDialog dialogTitle="댓글 삭제" openDialog={openDialog} closeFn={handleCloseDialog}
+            <DeleteActionDialog dialogTitle="댓글 삭제" openDialog={openDeleteDialog} closeFn={handleCloseDeleteDialog}
                                 deleteFn={handleRemoveComment}/>
+            <TextareaActionDialog dialogTitle="댓글 수정" openDialog={openUpdateDialog} content={targetContent}
+                                  formEventFn={handleUpdateFormEvent} closeFn={handleCloseUpdateDialog}
+                                  submitFn={handleUpdateSubmit}/>
         </div>
     );
 }
