@@ -1,4 +1,4 @@
-import {CommentCreateRequest} from "@/interface";
+import {CommentCreateRequest, CommentUpdateRequest} from "@/interface";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_SERVER_URL;
 
@@ -27,4 +27,22 @@ export async function deleteComment(commentId: number): Promise<void> {
             throw new Error(res.statusText);
         }
     });
+}
+
+export async function updateComment(updateRequest: CommentUpdateRequest): Promise<void> {
+    await fetch(`${baseUrl}/comments`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateRequest),
+    })
+        .then((res) => {
+            if (res.ok) {
+                return;
+            } else {
+                throw new Error(res.statusText);
+            }
+        });
 }

@@ -5,7 +5,7 @@ import {CommentInfo} from "@/interface";
 import {ChevronDownIcon, ChevronUpIcon, PencilSquareIcon, TrashIcon} from "@heroicons/react/16/solid";
 import {useState} from "react";
 import BasicButton from "@/components/BasicButton";
-import {deleteComment, saveComment} from "@/service/CommentService";
+import {deleteComment, saveComment, updateComment} from "@/service/CommentService";
 import {useRouter} from "next/navigation";
 import {me} from "@/service/LoginService";
 import DeleteActionDialog from "@/components/DeleteActionDialog";
@@ -82,9 +82,10 @@ export default function ArticleComment({
         setOpenUpdateDialog(false);
     }
 
-    const handleUpdateSubmit = () => {
-        // TODO API 연동
-        console.log(`Update Comment, commentId = ${targetId}, content = ${targetContent}`);
+    const handleUpdateSubmit = async () => {
+        await updateComment({commentId: targetId, content: targetContent});
+        handleCloseUpdateDialog();
+        router.refresh();
     }
 
     return (

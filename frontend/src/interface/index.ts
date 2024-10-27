@@ -54,3 +54,8 @@ export interface CommentCreateRequest {
     parentCommentId?: number,
     content: string,
 }
+
+export interface CommentUpdateRequest {
+    commentId: number,
+    content: string,
+}
