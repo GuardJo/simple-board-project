@@ -80,11 +80,25 @@ public class DtoConverter {
         return new ArticleDetailInfo(
                 DtoConverter.from(article),
                 article.getComments().stream()
-                        .map(DtoConverter::from)
-                        .filter(commentDto -> Objects.isNull(commentDto.parentCommentId()))
-                        .sorted(Comparator.comparing(CommentDto::createTime).reversed())
+                        .map(comment -> from(comment, userMail))
                         .toList(),
                 article.getMember().getEmail().equals(userMail)
+        );
+    }
+
+    public static CommentInfo from(Comment comment, String userMail) {
+        return new CommentInfo(
+                comment.getId(),
+                comment.getCreator(),
+                comment.getContent(),
+                comment.getCreateTime(),
+                comment.getParentCommentId(),
+                comment.getChildComments().stream()
+                        .map(childComment -> DtoConverter.from(childComment, userMail))
+                        .filter(commentInfo -> Objects.isNull(commentInfo.parentCommentId()))
+                        .sorted(Comparator.comparing(CommentInfo::createTime).reversed())
+                        .toList(),
+                comment.getMember().getEmail().equals(userMail)
         );
     }
 

@@ -4,7 +4,7 @@ import java.util.List;
 
 public record ArticleDetailInfo(
         ArticleDto article,
-        List<CommentDto> comments,
+        List<CommentInfo> comments,
         boolean isOwner
 ) {
 }
