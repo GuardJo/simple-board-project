@@ -15,13 +15,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,41 +39,6 @@ class HashtagServiceTest {
         Set<String> hashtags = hashtagService.parseHashtagsInContent(content);
 
         assertThat(hashtags).isEqualTo(hashtagNames);
-    }
-
-    @DisplayName("신규 해시태그 저장 테스트")
-    @Test
-    void testSaveNewHashtags() {
-        String hashtagName = "test1";
-        Hashtag expected = Hashtag.of(hashtagName);
-        Set<Hashtag> hashtags = Set.of(expected);
-
-        given(hashtagRepository.findByHashtagName(eq(hashtagName))).willReturn(Optional.empty());
-        given(hashtagRepository.save(any(Hashtag.class))).willReturn(expected);
-
-        Set<Hashtag> actual = hashtagService.saveHashtag(hashtags);
-
-        assertThat(actual).isNotNull();
-        assertThat(actual).isEqualTo(hashtags);
-
-        then(hashtagRepository).should().findByHashtagName(eq(hashtagName));
-        then(hashtagRepository).should().save(any(Hashtag.class));
-    }
-
-    @DisplayName("기존 해시태그 저장 테스트")
-    @Test
-    void testSaveOldHashtags() {
-        String hashtagName = "test";
-        Hashtag expected = Hashtag.of(hashtagName);
-        Set<Hashtag> hashtags = Set.of(expected);
-
-        given(hashtagRepository.findByHashtagName(eq(hashtagName))).willReturn(Optional.of(expected));
-
-        Set<Hashtag> actual = hashtagService.saveHashtag(hashtags);
-        assertThat(actual).isNotNull();
-        assertThat(actual).isEqualTo(hashtags);
-
-        then(hashtagRepository).should().findByHashtagName(eq(hashtagName));
     }
 
     @DisplayName("게시글에 사용되지 않는 해시태그 삭제 테스트")

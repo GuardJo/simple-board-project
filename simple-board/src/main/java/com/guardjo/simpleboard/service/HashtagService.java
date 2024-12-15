@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -50,21 +49,6 @@ public class HashtagService {
         }
 
         return hashtagNames;
-    }
-
-    /**
-     * Hahstag들을 저장한다.
-     * 이 때, 이미 저장되어 있는 경우에는 제외한다.
-     *
-     * @param hashtags 저장할 hashtag set
-     */
-    public Set<Hashtag> saveHashtag(Set<Hashtag> hashtags) {
-        return hashtags.stream()
-                .map(hashtag -> {
-                    return hashtagRepository.findByHashtagName(hashtag.getHashtagName())
-                            .orElseGet(() -> hashtagRepository.save(hashtag));
-                })
-                .collect(Collectors.toSet());
     }
 
     /**
