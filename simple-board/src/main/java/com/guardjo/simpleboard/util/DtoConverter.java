@@ -102,7 +102,7 @@ public class DtoConverter {
         );
     }
 
-    public static Set from(Set set) {
+    public static Set from(Set<?> set) {
         return (Set) set.stream()
                 .map((t) -> {
                     if (t instanceof Hashtag) {

@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -66,7 +67,7 @@ class JpaRepositoryTest {
 
         // @DataJpaTest를 사용함으로써 메소드들이 트랜잭션 간 rollback이 일어나 변경 서항이 저장되지 않기에 saveAndFlush()를 사용해서 저장
         Article updateArticle = articleRepository.saveAndFlush(article);
-        
+
         assertThat(articleRepository.findById(1L).get().getHashtags().contains(updateHashtag)).isTrue();
     }
 
@@ -231,7 +232,7 @@ class JpaRepositoryTest {
 
         assertThat(hashtagRepository.count()).isEqualTo(HASHTAG_TEST_DATA_SIZE + 1);
     }
-    
+
     @DisplayName("저장된 해시태그 전체 목록 반환")
     @Test
     void testReadHashtags() {
@@ -239,7 +240,7 @@ class JpaRepositoryTest {
 
         assertThat(hashtags.size()).isEqualTo(HASHTAG_TEST_DATA_SIZE);
     }
-    
+
     @DisplayName("해시태그 이름 변경 테스트")
     @Test
     void testUpdateHashtagName() {
@@ -261,13 +262,16 @@ class JpaRepositoryTest {
 
         assertThat(hashtagRepository.count()).isEqualTo(HASHTAG_TEST_DATA_SIZE - 1);
     }
-    
+
     @DisplayName("특정 해시태그명 존재 여부 테스트")
     @Test
-    void testExistHashtagName() {
+    void testFindByHashtagName() {
         // 현재 data.sql로 넣어주었던 데이터
-        boolean actual = hashtagRepository.existsByHashtagName("1");
+        String hashtagName = "1";
+        Optional<Hashtag> actual = hashtagRepository.findByHashtagName(hashtagName);
 
-        assertThat(actual).isTrue();
+        assertThat(actual).isNotNull();
+        assertThat(actual.isPresent()).isTrue();
+        assertThat(actual.get().getHashtagName()).isEqualTo(hashtagName);
     }
 }

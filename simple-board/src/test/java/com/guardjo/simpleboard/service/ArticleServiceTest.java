@@ -7,6 +7,7 @@ import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.*;
 import com.guardjo.simpleboard.generator.TestDataGenerator;
 import com.guardjo.simpleboard.repository.ArticleRepository;
+import com.guardjo.simpleboard.repository.HashtagRepository;
 import com.guardjo.simpleboard.repository.MemberRepository;
 import com.guardjo.simpleboard.util.DtoConverter;
 import org.junit.jupiter.api.DisplayName;
@@ -29,8 +30,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.*;
@@ -43,6 +43,8 @@ class ArticleServiceTest {
     private ArticleRepository articleRepository;
     @Mock
     private MemberRepository memberRepository;
+    @Mock
+    private HashtagRepository hashtagRepository;
 
     private final TestDataGenerator testDataGenerator = new TestDataGenerator();
     private final int PAGE_SIZE = 10;
@@ -196,14 +198,20 @@ class ArticleServiceTest {
         ArticleUpdateDto updateDto = testDataGenerator.generateArticleUpdateDto(1L, "changeContent");
         Article article = testDataGenerator.generateArticle("test");
         article.setCreator(memberMail);
+        Set<String> hashtagNames = Set.of("test");
 
         given(articleRepository.getReferenceById(1L)).willReturn(article);
         given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(Member.of(memberMail, "tester", "pwd")));
 
-        articleService.updateArticle(updateDto, memberMail, Set.of(Hashtag.of("test")));
+        for (String hashtagName : hashtagNames) {
+            given(hashtagRepository.findByHashtagName(eq(hashtagName))).willReturn(Optional.of(Hashtag.of(hashtagName)));
+        }
+
+        articleService.updateArticle(updateDto, memberMail, hashtagNames);
 
         then(articleRepository).should().getReferenceById(1L);
         then(memberRepository).should().findByEmail(anyString());
+        then(hashtagRepository).should().findByHashtagName(anyString());
     }
 
     @DisplayName("게시글의 제목, 본문, 해시태그 수정 시 기존 값이 없을 경우 테스트")
@@ -214,9 +222,8 @@ class ArticleServiceTest {
 
         given(articleRepository.getReferenceById(0L)).willReturn(null);
 
-        Throwable t = catchThrowable(() -> articleService.updateArticle(updateDto, memberMail, Set.of(Hashtag.of("test"))));
-
-        assertThat(t).isInstanceOf(EntityNotFoundException.class);
+        assertThatCode(() -> articleService.updateArticle(updateDto, memberMail, Set.of(("test"))))
+                .isInstanceOf(EntityNotFoundException.class);
     }
 
     @DisplayName("게시글 저장 테스트")

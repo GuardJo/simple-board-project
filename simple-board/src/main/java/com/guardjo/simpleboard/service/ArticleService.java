@@ -6,10 +6,11 @@ import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.domain.Member;
 import com.guardjo.simpleboard.dto.*;
 import com.guardjo.simpleboard.repository.ArticleRepository;
+import com.guardjo.simpleboard.repository.HashtagRepository;
 import com.guardjo.simpleboard.repository.MemberRepository;
 import com.guardjo.simpleboard.util.DtoConverter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,15 +23,16 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class ArticleService {
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private ArticleRepository articleRepository;
+    private final MemberRepository memberRepository;
+    private final ArticleRepository articleRepository;
+    private final HashtagRepository hashtagRepository;
 
     @Transactional(readOnly = true)
     public Page<ArticleDto> findArticles(@Nullable ArticleSearchType searchType, @Nullable String searchValue, Pageable pageable) {
@@ -94,7 +96,7 @@ public class ArticleService {
         return articleDetailInfo;
     }
 
-    public void updateArticle(ArticleUpdateDto updateDto, String userMail, Set<Hashtag> hashtags) {
+    public void updateArticle(ArticleUpdateDto updateDto, String userMail, Set<String> hashtagNames) {
         log.info("[Test] Request Update Article, id = {}", updateDto.id());
 
         Article article = articleRepository.getReferenceById(updateDto.id());
@@ -104,6 +106,8 @@ public class ArticleService {
             throw new EntityNotFoundException("Not Found User " + userMail);
         } else {
             Member articleCreator = article.getMember();
+
+            Set<Hashtag> hashtags = findAllHashtags(hashtagNames);
 
             checkPossibleUpdateArticle(articleCreator, article);
 
@@ -119,12 +123,15 @@ public class ArticleService {
      *
      * @param createRequest 저장할 게시글 정보 (제목, 본문)
      * @param authorMail    직성자 메일
-     * @param hashtags      함께 저장할 게시글 내 해시태그 목록
+     * @param hashtagNames  함께 저장할 게시글 내 해시태그명 목록
      */
-    public void saveArticle(ArticleCreateRequest createRequest, String authorMail, Set<Hashtag> hashtags) {
+    public void saveArticle(ArticleCreateRequest createRequest, String authorMail, Set<String> hashtagNames) {
         log.info("[Test] Save Article, title = {}", createRequest.title());
         Member member = memberRepository.findByEmail(authorMail)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Not Found Member, email = %s", authorMail)));
+
+        Set<Hashtag> hashtags = findAllHashtags(hashtagNames);
+
         Article article = Article.of(member, createRequest.title(), createRequest.content());
         article.addHashtags(hashtags);
 
@@ -163,5 +170,17 @@ public class ArticleService {
         if (!articleCreator.getEmail().equals(targetMail)) {
             throw new EntityNotFoundException("This User is No forbidden Update Article, " + targetMail);
         }
+    }
+
+    /*
+    Hashtag Name에 해당하는 Hashtag Entity 반환
+     */
+    private Set<Hashtag> findAllHashtags(Set<String> hashtagNames) {
+        return hashtagNames.stream()
+                .map(hashtagName -> {
+                    return hashtagRepository.findByHashtagName(hashtagName)
+                            .orElseGet(() -> hashtagRepository.save(Hashtag.of(hashtagName)));
+                })
+                .collect(Collectors.toSet());
     }
 }

@@ -10,10 +10,12 @@ import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+import java.util.Optional;
+
 @RepositoryRestResource
 public interface HashtagRepository extends JpaRepository<Hashtag, Long>,
         QuerydslBinderCustomizer<QHashtag>, QuerydslPredicateExecutor<Hashtag> {
-    boolean existsByHashtagName(String hashtagName);
+    Optional<Hashtag> findByHashtagName(String hashtagName);
 
     @Override
     default void customize(QuerydslBindings bindings, QHashtag root) {
