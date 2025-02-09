@@ -25,7 +25,7 @@ public class Hashtag extends MetaInfoData {
     private String hashtagName;
 
     @ToString.Exclude
-    @ManyToMany(mappedBy = "hashtags", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "hashtags")
     private final Set<Article> articles = new LinkedHashSet<>();
 
     @Override

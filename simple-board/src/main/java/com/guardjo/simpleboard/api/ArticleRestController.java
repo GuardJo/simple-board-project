@@ -1,7 +1,6 @@
 package com.guardjo.simpleboard.api;
 
 import com.guardjo.simpleboard.domain.ArticleSearchType;
-import com.guardjo.simpleboard.domain.Hashtag;
 import com.guardjo.simpleboard.dto.*;
 import com.guardjo.simpleboard.dto.security.SimpleBoardPrincipal;
 import com.guardjo.simpleboard.service.ArticleService;
@@ -54,23 +53,23 @@ public class ArticleRestController {
     public void createNewArticle(@RequestBody ArticleCreateRequest createRequest, @AuthenticationPrincipal SimpleBoardPrincipal principal) {
         log.info("Request POST : {}", UrlContext.ARTICLES_URL);
 
-        Set<Hashtag> newHashtags = parseHashtagsInContent(createRequest.content());
-        articleService.saveArticle(createRequest, principal.getUsername(), newHashtags);
+        Set<String> newHashtagNames = parseHashtagsInContent(createRequest.content());
+        articleService.saveArticle(createRequest, principal.getUsername(), newHashtagNames);
     }
 
     @PatchMapping(UrlContext.ARTICLES_URL)
     public void updateArticle(@RequestBody ArticleUpdateDto articleUpdateDto, @AuthenticationPrincipal SimpleBoardPrincipal principal) {
         log.info("Request PATCH : {}", UrlContext.ARTICLES_URL);
 
-        Set<Hashtag> newHashtags = parseHashtagsInContent(articleUpdateDto.content());
+        Set<String> hashtagNames = parseHashtagsInContent(articleUpdateDto.content());
 
-        articleService.updateArticle(articleUpdateDto, principal.getUsername(), newHashtags);
+        articleService.updateArticle(articleUpdateDto, principal.getUsername(), hashtagNames);
     }
 
     /*
     컨텐츠 내 해시태그 요소들 생성
      */
-    private Set<Hashtag> parseHashtagsInContent(String content) {
+    private Set<String> parseHashtagsInContent(String content) {
         return hashtagService.parseHashtagsInContent(content);
     }
 }

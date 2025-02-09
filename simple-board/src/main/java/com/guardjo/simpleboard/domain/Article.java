@@ -47,7 +47,7 @@ public class Article extends MetaInfoData {
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "hashtag_id")
     )
-    private Set<Hashtag> hashtags = new LinkedHashSet<>();
+    private final Set<Hashtag> hashtags = new LinkedHashSet<>();
 
     protected Article() {
 
