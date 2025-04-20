@@ -22,6 +22,7 @@ export default function ArticleCommentList({articleId, data = []}: ArticleCommen
                     })
                         .then((res) => {
                             if (res.ok) {
+                                setCommentContent('');
                                 router.refresh();
                             } else {
                                 throw new Error("Failed Create Comment");
@@ -43,6 +44,7 @@ export default function ArticleCommentList({articleId, data = []}: ArticleCommen
                     onChange={(e) => {
                         setCommentContent(e.target.value);
                     }}
+                    value={commentContent}
                     className="w-full p-2"
                 />
                 <BasicButton onClick={handleSaveComment}>댓글 작성</BasicButton>
