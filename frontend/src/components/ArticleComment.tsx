@@ -39,6 +39,7 @@ export default function ArticleComment({
                     })
                         .then((res) => {
                             if (res.ok) {
+                                setChildCommentContent('');
                                 router.refresh()
                             } else {
                                 throw new Error("Failed Create Comments");
@@ -149,6 +150,7 @@ export default function ArticleComment({
                         onChange={(event) => {
                             setChildCommentContent(event.target.value);
                         }}
+                        value={childCommentContent}
                         className="w-full text-sm p-2"
                     />
                     <BasicButton onClick={handleSaveChildComment}>답글 작성</BasicButton>
