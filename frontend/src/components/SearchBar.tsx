@@ -10,34 +10,32 @@ export default function SearchBar() {
     return (
         <div className="flex md:w-[600px]">
             <Listbox value={searchType} onChange={(selected) => (setSearchType(selected))}>
-                {({open}) => (
-                    <div className="relative">
-                        <ListboxButton
-                            className="relative w-full h-full cursor-default rounded-s-lg bg-gray-50 py-2 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
+                <div className="relative">
+                    <ListboxButton
+                        className="relative w-full h-full cursor-default rounded-s-lg bg-gray-50 py-2 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
                             <span className="flex items-center">
                                 <span className="ml-3 block truncate">{searchType.value}</span>
                             </span>
-                            <span
-                                className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
+                        <span
+                            className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
                                 <ChevronUpDownIcon aria-hidden="true" className="h-5 w-5 text-gray-400"/>
                             </span>
-                        </ListboxButton>
-                        <ListboxOptions
-                            anchor="bottom"
-                            className="absolute z-10 mt-1 max-h-56 overflow-auto rounded-md bg-gray-50 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                            {articleSearchTypes.map((articleSearchType) => (
-                                <ListboxOption
-                                    key={articleSearchType.id}
-                                    value={articleSearchType}
-                                    className="group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-white/10"
-                                >
-                                    <CheckIcon className="invisible h-5 w-5 group-data-[selected]:visible"/>
-                                    <div className="text-sm/6 text-black">{articleSearchType.value}</div>
-                                </ListboxOption>
-                            ))}
-                        </ListboxOptions>
-                    </div>
-                )}
+                    </ListboxButton>
+                    <ListboxOptions
+                        anchor="bottom"
+                        className="absolute z-10 mt-1 max-h-56 overflow-auto rounded-md bg-gray-50 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                        {articleSearchTypes.map((articleSearchType) => (
+                            <ListboxOption
+                                key={articleSearchType.id}
+                                value={articleSearchType}
+                                className="group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-white/10"
+                            >
+                                <CheckIcon className="invisible h-5 w-5 group-data-[selected]:visible"/>
+                                <div className="text-sm/6 text-black">{articleSearchType.value}</div>
+                            </ListboxOption>
+                        ))}
+                    </ListboxOptions>
+                </div>
             </Listbox>
             <form className="w-full">
                 <div className="relative w-full">
